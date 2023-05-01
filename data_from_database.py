@@ -4,11 +4,11 @@ import pymysql.cursors
 connection = pymysql.connect(host='localhost',
                              user='root',
                              password='',
-                             database='autotag-crawl',
+                             database='autotag-crawl-2',
                              autocommit=True,
                              )
 
-def get_document_and_word():
+def get_data():
   # result = ""
   with connection:
       # Create table
@@ -36,19 +36,4 @@ def get_document_and_word():
           
           return resulta, resultb
 
-          
-# def get_document_and_tag():
-#   with connection:
-#       # Create table
-#       # connection is not autocommit by default. So you must commit to save
-#       # your changes.
-#       # connection.commit()
-
-#       with connection.cursor() as cursor:
-#           # Read a single record
-#           cursor.execute("SELECT page_tags.tag,page_information.title FROM `page_tags` INNER JOIN page_information ON page_tags.page_id = page_information.id_page LIMIT %s, %s", (1, 100))
-#           result = cursor.fetchall()
-#           return result
-#           # print(result)
-  
-#   # connection.close()
+        

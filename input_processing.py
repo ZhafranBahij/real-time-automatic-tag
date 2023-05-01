@@ -1,4 +1,4 @@
-import data_from_database as dfd
+import data_from_database_full as dfd
 import nltk
 import numpy
 import pandas
@@ -8,7 +8,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
 # Mengambil data dari database
-dataset_document_word, dataset_tag_document = dfd.get_document_and_word()
+dataset_document_word, dataset_tag_document = dfd.get_data()
 # dataset_tag_document = dfd.get_document_and_tag()
 
 # Tempat untuk menghitung banyaknya word dalam suatu dokumen
@@ -64,6 +64,12 @@ def document_tag_processing(dataset_tag_document):
       tag_dictionary.clear()
     
     tag_dictionary.update({data[0]: 1})
+
+  datafr = pandas.DataFrame(tag_dictionary,
+      index=[title_before]
+  )
+  dataframe_document_tag.append(datafr)
+  tag_dictionary.clear()
   
   return dataframe_document_tag
     
@@ -109,6 +115,6 @@ def matrixABtoW(A, B):
 # print(dataframe_document_word_join.to_numpy())
 # print(dataframe_document_tag_join.to_numpy())
 
-# matrix_w = matrixABtoW(dataframe_document_tag_join.to_numpy().transpose(), dataframe_document_word_join.to_numpy())
-# print(matrix_w)
+matrix_w = matrixABtoW(dataframe_document_tag_join.to_numpy().transpose(), dataframe_document_word_join.to_numpy())
+print(matrix_w)
 
