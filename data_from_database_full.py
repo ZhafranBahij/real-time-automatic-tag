@@ -4,7 +4,7 @@ import pymysql.cursors
 connection = pymysql.connect(host='localhost',
                              user='root',
                              password='',
-                             database='autotag-crawl',
+                             database='autotag-crawl-2',
                              autocommit=True,
                              )
 
@@ -19,7 +19,7 @@ def get_data():
           resulta = cursor.fetchall()
           
           # Mengambil data untuk tag dan title
-          cursor.execute("SELECT page_tags.tag, page_information.title FROM `page_tags` INNER JOIN page_information ON page_tags.page_id = page_information.id_page")
+          cursor.execute("SELECT DISTINCT page_tags.tag, page_information.title FROM `page_tags` INNER JOIN page_information ON page_tags.page_id = page_information.id_page")
           resultb = cursor.fetchall()
           
           return resulta, resultb
