@@ -1,4 +1,4 @@
-import data_from_database_full as dfd
+import data_from_database_mk2 as dfd
 import nltk
 import numpy
 import pandas

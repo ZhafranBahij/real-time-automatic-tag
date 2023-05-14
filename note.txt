@@ -1,5 +1,4 @@
 File :
-- data_from_database_full.py = Mengambil data dari database secara keseluruhan
-- data_from_database.py = Mengambil data dari database hanya sebagian
+- data_from_database_mk2.py = Mengambil data dari database secara keseluruhan
 - input_processing.py = Melakukan proses penginputan
-- jupyter_ver_test.ipynb = Melakukan proses di jupyter notebook
+- jupyter_ver_mk2.ipynb = Melakukan proses di jupyter notebook
