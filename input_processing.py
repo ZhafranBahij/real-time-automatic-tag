@@ -1,4 +1,3 @@
-import data_from_database_mk2 as dfd
 import nltk
 import numpy
 import pandas
@@ -7,27 +6,30 @@ import re
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
-# Mengambil data dari database
-dataset_document_word, dataset_tag_document = dfd.get_data()
-# dataset_tag_document = dfd.get_document_and_tag()
-
-# Tempat untuk menghitung banyaknya word dalam suatu dokumen
-dataframe_document_word = []
-
 def wordProcessing(content_article):
     """
-    Fungsi untuk menghitung 'word' dalam suatu artikel
+    Fungsi untuk menghitung banyaknya word dalam suatu artikel
+
+    Args:
+      content_article: Isi dari artikel
+      
+    Sumber code memfilter stopwords: 
+      https://medium.com/analytics-vidhya/removing-stop-words-with-nltk-library-in-python-f33f53556cc1
+      
+    Returns:
+        word_document_dictionary: berupa dictionary untuk menghitung banyaknya 
+                                  dan beragamnya word dalam suatu document
     """
     tokens = word_tokenize(re.sub('[^ 0-9a-z]+', ' ', content_article.lower())) # Menghilangkan tanda baca   
-    english_stopwords = stopwords.words('english') # Menghilangkan stop words
-    english_stopwords.extend(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'])
-    tokens_wo_stopwords = [t for t in tokens if t not in english_stopwords]
+    english_stopwords = stopwords.words('english') # Menampilkan daftar stopwords
+    english_stopwords.extend(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']) #menambahkan stopwords
+    tokens_wo_stopwords = [t for t in tokens if t not in english_stopwords] 
 
-    # Menghitung banyaknya tokens
+    # Menghitung banyaknya word
     freq = nltk.FreqDist(tokens_wo_stopwords)
     word_document_dictionary = {}
 
-    # Menampung token tersebut dalam format dictionary
+    # Menampung word tersebut dalam format dictionary
     for word, count in freq.most_common(999999):
         word_document_dictionary.update({word: count})
     
@@ -35,86 +37,77 @@ def wordProcessing(content_article):
 
 def documentWordProcessing(content_article, title_article):
     """
-    Fungsi untuk membuat dataframe antara 'document' dengan 'word'
+    Fungsi untuk membuat dataframe antara document(title) dengan word
+
+    Args:
+      content_article: Isi dari artikel
+      title_article: Judul dari artikel
+
+    Returns:
+        word_document: word_document dalam bentuk dataframe
     """
     word_document_dictionary = wordProcessing(content_article)
-    datafr = pandas.DataFrame(word_document_dictionary,
+    word_document = pandas.DataFrame(word_document_dictionary,
         index=[title_article]
     )
-    return datafr
+    return word_document
+  
+def document_processing(dataset_document):
+  """
+  Memproses dataset yang masuk, lalu mengolahnya menjadi kumpulan dataframe antara tag dgn dokumen
+  dan dokumen dgn word
 
-for data in dataset_document_word:
-    dataframe_document_word.append(documentWordProcessing(data[1], data[0]))
+  Args:
+    dataset_document: data-data yg diambil dari database dengan isi "tag, title, content_article"
     
-def document_tag_processing(dataset_tag_document):  
-  title_before = dataset_tag_document[0][1]
+  Returns:
+    matrix_tag_document: matriks antara tag dgn document
+    matrix_document_word: matriks antara document dgn word
+  """
+    
+  title_before = dataset_document[0][1]
+  document_word = []
+  document_word.append(documentWordProcessing(dataset_document[0][2], dataset_document[0][1]))
   
   tag_dictionary = {}
   # Tempat untuk menghitung banyaknya tag dalam suatu dokumen
-  dataframe_document_tag = []
+  document_tag = []
   
-  for data in dataset_tag_document:
-    # Jika judul dokumen berbeda dengan row sebelumnya
+  for data in dataset_document:
+    
+    # Jika judul data berbeda dengan title_before
     if title_before != data[1]:
+      
+      # Menampung tag-tag yg telah didapat di tag_dictionary ke document_tag
       datafr = pandas.DataFrame(tag_dictionary,
           index=[title_before]
       )
-      dataframe_document_tag.append(datafr)
-      title_before = data[1]
+      document_tag.append(datafr)
       tag_dictionary.clear()
+      
+      # Melakukan proses untuk menghitung banyaknya kata dalam suatu dokumen
+      document_word.append(documentWordProcessing(data[2], data[1]))
+      title_before = data[1]
     
+    #tag yg didapat akan dimasukkan ke tag_dictionary
     tag_dictionary.update({data[0]: 1})
 
   datafr = pandas.DataFrame(tag_dictionary,
       index=[title_before]
   )
-  dataframe_document_tag.append(datafr)
+  document_tag.append(datafr)
   tag_dictionary.clear()
   
-  return dataframe_document_tag
-    
-dataframe_document_tag_join = pandas.concat(document_tag_processing(dataset_tag_document))
-dataframe_document_tag_join = dataframe_document_tag_join.fillna(0)
-print(dataframe_document_tag_join)
+  # document_tag, document_word = document_processing(dataset_document)
 
-dataframe_document_word_join = pandas.concat(dataframe_document_word)
-dataframe_document_word_join = dataframe_document_word_join.fillna(0)
-print(dataframe_document_word_join)
+  document_tag = pandas.concat(document_tag)
+  document_tag = document_tag.fillna(0)
 
-def matrixABtoW(A, B):
-    """
-    Fungsi untuk memasukkan matriks A, A transpose, B, dan B transpose ke dalam matriks W
-    """
-    AT = A.transpose()
-    BT = B.transpose()
-
-    tag_count, document_count = A.shape
-    document_count, word_count = B.shape
-
-    all_count = tag_count + document_count + word_count
-    W = numpy.zeros((all_count, all_count))
-
-    # Menempelkan matriks A ke W
-    for i in range(tag_count):
-        W[i][tag_count:-word_count] = A[i]
-
-    # Menempelkan matriks B Transpose ke W
-    for i in range(1, word_count+1):
-        W[-i][tag_count:-word_count]= BT[-i]
-
-    # Menempelkan matriks A Transpose ke W
-    for i in range(document_count):
-        W[tag_count+i][0:tag_count] = AT[i]
-        
-    # Menempelkan matriks B ke W
-    for i in range(document_count):
-        W[tag_count+i][-word_count:] = B[i]
-    
-    return W
-
-# print(dataframe_document_word_join.to_numpy())
-# print(dataframe_document_tag_join.to_numpy())
-
-matrix_w = matrixABtoW(dataframe_document_tag_join.to_numpy().transpose(), dataframe_document_word_join.to_numpy())
-print(matrix_w)
+  document_word = pandas.concat(document_word)
+  document_word = document_word.fillna(0)
+  
+  matrix_tag_document = document_tag.to_numpy().transpose()
+  matrix_document_word = document_word.to_numpy()
+  
+  return matrix_tag_document, matrix_document_word
 

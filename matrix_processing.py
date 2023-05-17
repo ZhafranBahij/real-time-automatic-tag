@@ -1,33 +1,33 @@
 import numpy
 
-W = [
-[0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
-[0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
-[1 , 0 , 0 , 0 , 0 , 1 , 1 , 1 , 0] ,
-[1 , 0 , 0 , 0 , 0 , 0 , 1 , 1 , 0] ,
-[1 , 1 , 0 , 0 , 0 , 0 , 0 , 1 , 1] ,
-[0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 , 0] ,
-[0 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0] ,
-[0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
-[0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
-]
+# W = [
+# [0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
+# [0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
+# [1 , 0 , 0 , 0 , 0 , 1 , 1 , 1 , 0] ,
+# [1 , 0 , 0 , 0 , 0 , 0 , 1 , 1 , 0] ,
+# [1 , 1 , 0 , 0 , 0 , 0 , 0 , 1 , 1] ,
+# [0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 , 0] ,
+# [0 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0] ,
+# [0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
+# [0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
+# ]
 
-# Tag dengan doc
-# row = tag
-# col = doc
-A = [
-  [1, 1, 1],
-  [0, 0, 1]
-]
+# # Tag dengan doc
+# # row = tag
+# # col = doc
+# A = [
+#   [1, 1, 1],
+#   [0, 0, 1]
+# ]
 
-# doc dengan word
-# row = doc
-# col = word
-B = [
-  [1, 1, 1, 0],
-  [0, 1, 1, 0],
-  [0, 0, 0, 1],
-]
+# # doc dengan word
+# # row = doc
+# # col = word
+# B = [
+#   [1, 1, 1, 0],
+#   [0, 1, 1, 0],
+#   [0, 0, 0, 1],
+# ]
 
 def matrixABtoW(A, B):
     """
@@ -36,9 +36,11 @@ def matrixABtoW(A, B):
     AT = A.transpose()
     BT = B.transpose()
 
+    # Menghitung banyaknya tag, dokumen, dan word
     tag_count, document_count = A.shape
     document_count, word_count = B.shape
 
+    # Membuat matriks W dengan panjang dan lebar dari "tag + dokumen + word"
     all_count = tag_count + document_count + word_count
     W = numpy.zeros((all_count, all_count))
 
@@ -60,4 +62,4 @@ def matrixABtoW(A, B):
     
     return W
   
-print(matrixABtoW(numpy.array(A), numpy.array(B)))
+# print(matrixABtoW(numpy.array(A), numpy.array(B)))
