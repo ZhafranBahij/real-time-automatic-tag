@@ -15,6 +15,9 @@ def wordProcessing(content_article):
       
     Sumber code memfilter stopwords: 
       https://medium.com/analytics-vidhya/removing-stop-words-with-nltk-library-in-python-f33f53556cc1
+    
+    Sumber library untuk menghitung kata:
+      https://www.nltk.org/book/ch01.html
       
     Returns:
         word_document_dictionary: berupa dictionary untuk menghitung banyaknya 
@@ -32,7 +35,8 @@ def wordProcessing(content_article):
     # Menampung word tersebut dalam format dictionary
     for word, count in freq.most_common(999999):
         word_document_dictionary.update({word: count})
-    
+        
+    # print("Dictionary : ", word_document_dictionary)
     return word_document_dictionary
 
 def documentWordProcessing(content_article, title_article):
@@ -102,9 +106,11 @@ def document_processing(dataset_document):
 
   document_tag = pandas.concat(document_tag)
   document_tag = document_tag.fillna(0)
+  # print(document_tag)
 
   document_word = pandas.concat(document_word)
   document_word = document_word.fillna(0)
+  # print(document_word)
   
   matrix_tag_document = document_tag.to_numpy().transpose()
   matrix_document_word = document_word.to_numpy()

@@ -1,16 +1,16 @@
-import numpy
+import numpy as np
 
-# W = [
-# [0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
-# [0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
-# [1 , 0 , 0 , 0 , 0 , 1 , 1 , 1 , 0] ,
-# [1 , 0 , 0 , 0 , 0 , 0 , 1 , 1 , 0] ,
-# [1 , 1 , 0 , 0 , 0 , 0 , 0 , 1 , 1] ,
-# [0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 , 0] ,
-# [0 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0] ,
-# [0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
-# [0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
-# ]
+W = np.array([
+[0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
+[0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
+[1 , 0 , 0 , 0 , 0 , 1 , 1 , 1 , 0] ,
+[1 , 0 , 0 , 0 , 0 , 0 , 1 , 1 , 0] ,
+[1 , 1 , 0 , 0 , 0 , 0 , 0 , 1 , 1] ,
+[0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 , 0] ,
+[0 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0] ,
+[0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
+[0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
+])
 
 # # Tag dengan doc
 # # row = tag
@@ -31,7 +31,14 @@ import numpy
 
 def matrixABtoW(A, B):
     """
-    Fungsi untuk memasukkan matriks A, A transpose, B, dan B transpose ke dalam matriks W
+        Fungsi untuk menggabungkan matriks A dan B menjadi W
+
+        Args:
+            A: Matriks A dengan tag sebagai row dan document sebagai column
+            B: Matriks B dengan document sebagai row dan word sebagai column
+
+        Returns:
+            W: Matriks gabungan antara A dengan 
     """
     AT = A.transpose()
     BT = B.transpose()
@@ -42,7 +49,7 @@ def matrixABtoW(A, B):
 
     # Membuat matriks W dengan panjang dan lebar dari "tag + dokumen + word"
     all_count = tag_count + document_count + word_count
-    W = numpy.zeros((all_count, all_count))
+    W = np.zeros((all_count, all_count))
 
     # Menempelkan matriks A ke W
     for i in range(tag_count):
@@ -61,5 +68,8 @@ def matrixABtoW(A, B):
         W[tag_count+i][-word_count:] = B[i]
     
     return W
-  
-# print(matrixABtoW(numpy.array(A), numpy.array(B)))
+
+def getW():
+    return W
+
+# print(matrixABtoW(np.array(A), np.array(B)))
