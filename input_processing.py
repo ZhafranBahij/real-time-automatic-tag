@@ -39,20 +39,20 @@ def wordProcessing(content_article):
     # print("Dictionary : ", word_document_dictionary)
     return word_document_dictionary
 
-def documentWordProcessing(content_article, title_article):
+def documentWordProcessing(content_article, id_article):
     """
     Fungsi untuk membuat dataframe antara document(title) dengan word
 
     Args:
       content_article: Isi dari artikel
-      title_article: Judul dari artikel
+      id_article: ID dari artikel
 
     Returns:
         word_document: word_document dalam bentuk dataframe
     """
     word_document_dictionary = wordProcessing(content_article)
     word_document = pandas.DataFrame(word_document_dictionary,
-        index=[title_article]
+        index=[id_article]
     )
     return word_document
   
@@ -62,14 +62,14 @@ def document_processing(dataset_document):
   dan dokumen dgn word
 
   Args:
-    dataset_document: data-data yg diambil dari database dengan isi "tag, title, content_article"
+    dataset_document: data-data yg diambil dari database dengan isi "tag, id_article, content_article"
     
   Returns:
     matrix_tag_document: matriks antara tag dgn document
     matrix_document_word: matriks antara document dgn word
   """
     
-  title_before = dataset_document[0][1]
+  id_before = dataset_document[0][1]
   document_word = []
   document_word.append(documentWordProcessing(dataset_document[0][2], dataset_document[0][1]))
   
@@ -79,25 +79,25 @@ def document_processing(dataset_document):
   
   for data in dataset_document:
     
-    # Jika judul data berbeda dengan title_before
-    if title_before != data[1]:
+    # Jika judul data berbeda dengan id_before
+    if id_before != data[1]:
       
       # Menampung tag-tag yg telah didapat di tag_dictionary ke document_tag
       datafr = pandas.DataFrame(tag_dictionary,
-          index=[title_before]
+          index=[id_before]
       )
       document_tag.append(datafr)
       tag_dictionary.clear()
       
       # Melakukan proses untuk menghitung banyaknya kata dalam suatu dokumen
       document_word.append(documentWordProcessing(data[2], data[1]))
-      title_before = data[1]
+      id_before = data[1]
     
     #tag yg didapat akan dimasukkan ke tag_dictionary
     tag_dictionary.update({data[0]: 1})
 
   datafr = pandas.DataFrame(tag_dictionary,
-      index=[title_before]
+      index=[id_before]
   )
   document_tag.append(datafr)
   tag_dictionary.clear()

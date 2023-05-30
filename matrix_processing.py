@@ -69,7 +69,7 @@ def matrixABtoW(A, B):
     
     return W
 
-def getW():
+def get_example_W():
     return W
 
 # print(matrixABtoW(np.array(A), np.array(B)))
