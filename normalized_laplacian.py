@@ -12,13 +12,15 @@ def diagonal_matrix(W):
     """
 
     row, column = W.shape # Membuat row dan column
+    print(W.shape)
     D = np.zeros(row*column).reshape(row, column)
 
     # Memasukkan value ke matriks D
+    di = W.sum(axis=1)
     for i in range(0, row):
-      di = W.sum(axis=1) 
       D[i, i] = di[i]
     
+    print("Matriks D \n")
     print(D)
     return D
 
