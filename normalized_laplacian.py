@@ -12,7 +12,7 @@ def diagonal_matrix(W):
     """
 
     row, column = W.shape # Membuat row dan column
-    print(W.shape)
+    # print(W.shape)
     D = np.zeros(row*column).reshape(row, column)
 
     # Memasukkan value ke matriks D
@@ -20,8 +20,8 @@ def diagonal_matrix(W):
     for i in range(0, row):
       D[i, i] = di[i]
     
-    print("Matriks D \n")
-    print(D)
+    # print("Matriks D \n")
+    # print(D)
     return D
 
 def normalized_laplacian(D, W):
