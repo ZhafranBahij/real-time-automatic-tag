@@ -10,7 +10,7 @@ dataset_document = dfd.get_data()
 # print(dataset_document)
 
 # Memproses dataset menjadi matrix
-matrix_tag_document, matrix_document_word = ip.document_processing(dataset_document)
+matrix_tag_document, matrix_document_word, title_id_document = ip.document_processing(dataset_document)
 print(matrix_tag_document)
 print(matrix_document_word)
 

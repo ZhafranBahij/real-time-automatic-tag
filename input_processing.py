@@ -67,11 +67,16 @@ def document_processing(dataset_document):
   Returns:
     matrix_tag_document: matriks antara tag dgn document
     matrix_document_word: matriks antara document dgn word
+    title_id_document: relasi antara title dan id dari suatu artikel
   """
     
   id_before = dataset_document[0][1]
   document_word = []
   document_word.append(documentWordProcessing(dataset_document[0][2], dataset_document[0][1]))
+  
+  title_id_document = []
+  title_id_document.append((dataset_document[0][3].replace('| The Hill', ''), dataset_document[0][1]))
+  
   
   tag_dictionary = {}
   # Tempat untuk menghitung banyaknya tag dalam suatu dokumen
@@ -91,6 +96,7 @@ def document_processing(dataset_document):
       
       # Melakukan proses untuk menghitung banyaknya kata dalam suatu dokumen
       document_word.append(documentWordProcessing(data[2], data[1]))
+      title_id_document.append((data[3].replace('| The Hill', ''), data[1]))
       id_before = data[1]
     
     #tag yg didapat akan dimasukkan ke tag_dictionary
@@ -115,5 +121,5 @@ def document_processing(dataset_document):
   matrix_tag_document = document_tag.to_numpy().transpose()
   matrix_document_word = document_word.to_numpy()
   
-  return matrix_tag_document, matrix_document_word
+  return matrix_tag_document, matrix_document_word, title_id_document
 
