@@ -1,4 +1,19 @@
 import numpy as np
+import scipy as sp
+
+# W = [
+# [0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
+# [0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
+# [1 , 0 , 0 , 0 , 0 , 1 , 1 , 1 , 0] ,
+# [1 , 0 , 0 , 0 , 0 , 0 , 1 , 1 , 0] ,
+# [1 , 1 , 0 , 0 , 0 , 0 , 0 , 1 , 1] ,
+# [0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 , 0] ,
+# [0 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0] ,
+# [0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
+# [0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
+# ]
+
+# matrix_graph = np.array(W)
 
 def diagonal_matrix(W):
     """
@@ -35,11 +50,15 @@ def normalized_laplacian(D, W):
       Returns:
         LW: 
     """
-    D = np.linalg.inv(np.sqrt(D))
+    D = sp.linalg.fractional_matrix_power(D, 0.5)
+    D = np.linalg.inv(D)
     LW = D.dot(W).dot(D)
 
     return LW
-  
+
+# matrix_d = diagonal_matrix(matrix_graph)
+# matrix_lw = normalized_laplacian(matrix_d, matrix_graph)
+# print(matrix_lw)
 # A = np.array([
 #   [1, 2],
 #   [2, 1]

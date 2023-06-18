@@ -14,20 +14,19 @@ import numpy as np
 
 # matrix_graph = np.array(W)
 
-def lanczos_iteration(W):
+def lanczos_iteration(A):
   """
   Melakukan Lanczos iteration dengan membuat matriks Q dan T
   Kemudian, membuat kedua matriks tersebut menjadi W_hat
 
   Args:
-    W: Matriks W
+    A: Inputan dari matriks W
     
   Returns:
     Q: Hasil perkalian matriks Q 
   """
   
-  A = np.array(W)
-  row, column = W.shape
+  row, column = A.shape
   
   # Buat matriks T untuk menampung alpha dan beta
   T = np.zeros((row, column))
@@ -43,7 +42,7 @@ def lanczos_iteration(W):
   
   Q[:, 0] = q_now.transpose()
   
-  for i in range(1, row+1):
+  for i in range(1, 3):
     v = A.dot(q_now)
     alpha = q_now.transpose().dot(v)
     v = v - beta*q_before - alpha*q_now
