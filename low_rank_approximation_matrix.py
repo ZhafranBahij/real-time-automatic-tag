@@ -1,20 +1,6 @@
 import numpy as np
 
-# W = [
-# [0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
-# [0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
-# [1 , 0 , 0 , 0 , 0 , 1 , 1 , 1 , 0] ,
-# [1 , 0 , 0 , 0 , 0 , 0 , 1 , 1 , 0] ,
-# [1 , 1 , 0 , 0 , 0 , 0 , 0 , 1 , 1] ,
-# [0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 , 0] ,
-# [0 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0] ,
-# [0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
-# [0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
-# ]
-
-# matrix_graph = np.array(W)
-
-def lanczos_iteration(A):
+def lanczos_iteration(A, one_b = 1):
   """
   Melakukan Lanczos iteration dengan membuat matriks Q dan T
   Kemudian, membuat kedua matriks tersebut menjadi W_hat
@@ -36,8 +22,13 @@ def lanczos_iteration(A):
   
   beta = 0 
   q_before = 0
-  b = np.ones((row, 1)) # Bentuk matriks b secara arbitrary (bebas)
-  
+  b = "" # Bentuk matriks b secara arbitrary (bebas)
+  if (one_b != 1):
+    b = np.random.default_rng().random((row, 1))
+  else:
+    b = np.ones((row, 1)) 
+    
+
   q_now = b / np.linalg.norm(b)
   
   Q[:, 0] = q_now.transpose()
@@ -47,6 +38,7 @@ def lanczos_iteration(A):
     alpha = q_now.transpose().dot(v)
     v = v - beta*q_before - alpha*q_now
     beta = np.linalg.norm(v)
+    q_before = q_now
     q_now = v / beta
     
     # Tampung alpha dan beta ke matriks T
@@ -73,7 +65,3 @@ def low_rank_approximation_matrix(Q, T):
   """
   
   return Q.dot(T).dot(Q.transpose())
-
-# Q, T = lanczos_iteration(matrix_graph)
-# W_hat = low_rank_approximation_matrix(Q, T)
-# print(np.around(W_hat, 2))

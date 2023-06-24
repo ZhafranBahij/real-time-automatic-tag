@@ -2,6 +2,7 @@ import nltk
 import numpy
 import pandas
 import re
+import datetime
 
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
@@ -33,7 +34,7 @@ def wordProcessing(content_article):
     word_document_dictionary = {}
 
     # Menampung word tersebut dalam format dictionary
-    for word, count in freq.most_common(999999):
+    for word, count in freq.most_common(1000):
         word_document_dictionary.update({word: count})
         
     # print("Dictionary : ", word_document_dictionary)
@@ -69,7 +70,8 @@ def document_processing(dataset_document):
     matrix_document_word: matriks antara document dgn word
     title_id_document: relasi antara title dan id dari suatu artikel
   """
-    
+  now = datetime.datetime.now()
+  print('Start Document Processing :', now)
   id_before = dataset_document[0][1]
   document_word = []
   document_word.append(documentWordProcessing(dataset_document[0][2], dataset_document[0][1]))
@@ -82,6 +84,8 @@ def document_processing(dataset_document):
   # Tempat untuk menghitung banyaknya tag dalam suatu dokumen
   document_tag = []
   
+  now = datetime.datetime.now()
+  print('Start Looping :', now)
   for data in dataset_document:
     
     # Jika judul data berbeda dengan id_before
@@ -107,19 +111,31 @@ def document_processing(dataset_document):
   )
   document_tag.append(datafr)
   tag_dictionary.clear()
+  now = datetime.datetime.now()
+  print('End Looping :', now)
   
   # document_tag, document_word = document_processing(dataset_document)
 
+  now = datetime.datetime.now()
+  print('Start Concat Doctag :', now)
   document_tag = pandas.concat(document_tag)
   document_tag = document_tag.fillna(0)
   # print(document_tag)
 
+  now = datetime.datetime.now()
+  print('Start Concat Docword :', now)
   document_word = pandas.concat(document_word)
+  now = datetime.datetime.now()
+  print('Start fillna Docword :', now)
   document_word = document_word.fillna(0)
-  # print(document_word)
+  # print(document_word)  
   
+  now = datetime.datetime.now()
+  print('Start Create matrix :', now)
   matrix_tag_document = document_tag.to_numpy().transpose()
   matrix_document_word = document_word.to_numpy()
   
+  now = datetime.datetime.now()
+  print('End Document Processing :', now)
   return matrix_tag_document, matrix_document_word, title_id_document
 
