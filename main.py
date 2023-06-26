@@ -6,27 +6,24 @@ import normalized_laplacian as nl
 import low_rank_approximation_matrix as lram
 
 # Source library lain
-import datetime
+import the_moment as tm
+import numpy as np
 
-now = datetime.datetime.now()
-print("Inisialisasi :",now)
+tm.this_moment("Menjalankan Algoritma :")
 
 # Mengambil data dari database
 dataset_document = dfd.get_data()
-now = datetime.datetime.now()
-print("Mengambil dataset :",now)
+tm.this_moment("Mengambil dataset :")
 # print(dataset_document)
 
 # Memproses dataset menjadi matrix
 matrix_tag_document, matrix_document_word, title_id_document = ip.document_processing(dataset_document)
-now = datetime.datetime.now()
-print("Dataset ke Matrix :",now)
+tm.this_moment("dataset ke matrix :")
 # print(matrix_tag_document)
 # print(matrix_document_word)
 
 matrix_w = mp.matrixABtoW(matrix_tag_document, matrix_document_word)
-now = datetime.datetime.now()
-print("Matrix A & B menjadi W :",now)
+tm.this_moment("matrix A & B menjadi W :")
 # print(matrix_w)
 
 # matrix_d = nl.diagonal_matrix(matrix_w)
@@ -37,15 +34,13 @@ print("Matrix A & B menjadi W :",now)
 
 matrix_Q, matrix_T = lram.lanczos_iteration(matrix_w, 1)
 matrix_W_hat = lram.low_rank_approximation_matrix(matrix_Q, matrix_T)
-now = datetime.datetime.now()
-print("Low Rank Approximation :",now)
+tm.this_moment("Low Rank Approximation :")
 # print(matrix_W_hat)
 
 matrix_Q_2, matrix_T_2 = lram.lanczos_iteration(matrix_w, 0)
 matrix_W_hat_2 = lram.low_rank_approximation_matrix(matrix_Q_2, matrix_T_2)
-now = datetime.datetime.now()
-print("Low Rank Approximation :",now)
+tm.this_moment("Low Rank Approximation :")
 # print(matrix_W_hat_2)
 
-matrix_W_hat_diff = matrix_W_hat - matrix_W_hat_2
+matrix_W_hat_diff = np.absolute(matrix_W_hat - matrix_W_hat_2)
 print(matrix_W_hat_diff)
