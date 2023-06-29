@@ -1,23 +1,9 @@
 import numpy as np
 
-W = [
-[0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
-[0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
-[1 , 0 , 0 , 0 , 0 , 1 , 1 , 1 , 0] ,
-[1 , 0 , 0 , 0 , 0 , 0 , 1 , 1 , 0] ,
-[1 , 1 , 0 , 0 , 0 , 0 , 0 , 1 , 1] ,
-[0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 , 0] ,
-[0 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0] ,
-[0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
-[0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
-]
-
-matrix_graph = np.array(W)
-
-# def normalization_vector(vector):
-#   vector_power = [np.power(x, 2) for x in vector]
-#   vector_normalize = vector / np.sqrt(np.sum(vector_power))
-#   return vector_normalize
+def normalization_vector(vector):
+  vector_power = [np.power(x, 2) for x in vector]
+  vector_normalize = np.sqrt(np.sum(vector_power))
+  return vector_normalize
 
 def lanczos_iteration(A, one_b = 1):
   """
@@ -48,8 +34,8 @@ def lanczos_iteration(A, one_b = 1):
     b = np.ones((row, 1)) 
     
   # Matriks q_now adalah matriks yg telah normalisasi
-  # panjang q_now = 1
-  q_now = b / np.linalg.norm(b)
+  # panjang q_now = 1, cek panjang q_now dengan np.sqrt(np.sum([x*x for x in q_now]))
+  q_now = b / normalization_vector(b)
   
   Q[:, 0] = q_now.transpose()
   
@@ -58,7 +44,7 @@ def lanczos_iteration(A, one_b = 1):
     alpha = q_now.transpose().dot(v)
     alpha = alpha[0][0] # Membuat alpha agar menjadi skalar
     v = v - beta*q_before - alpha*q_now
-    beta = np.linalg.norm(v)
+    beta = normalization_vector(v)
     q_before = q_now
     q_now = v / beta
     
@@ -86,7 +72,3 @@ def low_rank_approximation_matrix(Q, T):
   """
   
   return Q.dot(T).dot(Q.transpose())
-
-# Q, T = lanczos_iteration(matrix_graph)
-# w_hat = low_rank_approximation_matrix(Q, T)
-# print(w_hat)
