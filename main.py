@@ -4,10 +4,8 @@ import matrix_processing as mp
 import input_processing as ip
 import normalized_laplacian as nl
 import low_rank_approximation_matrix as lram
-
-# Source library lain
+import spectral_recursive_embedding as sre
 import the_moment as tm
-import numpy as np
 
 tm.this_moment("Menjalankan Algoritma :")
 
@@ -45,6 +43,10 @@ matrix_Q, matrix_T = lram.lanczos_iteration(matrix_w, 1)
 matrix_W_hat = lram.low_rank_approximation_matrix(matrix_Q, matrix_T)
 tm.this_moment("Low Rank Approximation :")
 # print(matrix_W_hat)
+
+matrix_W_hat_1, matrix_W_hat_2 = sre.spectral_recursive_embedding(matrix_W_hat)
+tm.this_moment("Spectral Recursive Embedding :")
+print("X")
 
 # matrix_Q_2, matrix_T_2 = lram.lanczos_iteration(matrix_w, 0)
 # matrix_W_hat_2 = lram.low_rank_approximation_matrix(matrix_Q_2, matrix_T_2)
