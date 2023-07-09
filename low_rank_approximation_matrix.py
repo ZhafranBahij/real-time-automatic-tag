@@ -17,13 +17,15 @@ def lanczos_iteration(A, one_b = 1):
     Q: Hasil perkalian matriks Q 
   """
   
+  k = 50
+  
   row, column = A.shape
   
   # Buat matriks T untuk menampung alpha dan beta
-  T = np.zeros((row, column))
+  T = np.zeros((k, k))
   
   # buat matriks Q untuk menampung q_now di setiap looping
-  Q = np.zeros((row, column))
+  Q = np.zeros((row, k))
   
   beta = 0 
   q_before = 0
@@ -39,7 +41,7 @@ def lanczos_iteration(A, one_b = 1):
   
   Q[:, 0] = q_now.transpose()
   
-  for i in range(1, 3):
+  for i in range(1, k):
     v = A.dot(q_now)
     alpha = q_now.transpose().dot(v)
     alpha = alpha[0][0] # Membuat alpha agar menjadi skalar
