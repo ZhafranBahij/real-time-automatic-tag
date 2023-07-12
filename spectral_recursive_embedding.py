@@ -2,21 +2,35 @@ import numpy as np
 import scipy as sp
 
 import normalized_laplacian as nl
+import matrix_processing as mp
+import the_moment as tm
 
-W = [
-[0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
-[0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
-[1 , 0 , 0 , 0 , 0 , 1 , 1 , 1 , 0] ,
-[1 , 0 , 0 , 0 , 0 , 0 , 1 , 1 , 0] ,
-[1 , 1 , 0 , 0 , 0 , 0 , 0 , 1 , 1] ,
-[0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 , 0] ,
-[0 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0] ,
-[0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
-[0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
-]
+# tagdoc = np.array([
+#   [1, 1, 1, 0, 0],
+#   [1, 0, 1, 0, 0],
+#   [0, 1, 1, 0, 0],
+#   [0, 0, 1, 1, 1]
+# ])
 
-
-A = np.array(W)
+# docword = np.array([
+#   [0, 1, 1, 0, 0, 0],
+#   [1, 1, 0, 1, 1, 1],
+#   [1, 0, 1, 1, 0, 0],
+#   [1, 0, 0, 0, 1, 1],
+#   [0, 0, 0, 0, 1, 1]
+# ])
+# W = np.array([
+#   [0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
+#   [0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
+#   [1 , 0 , 0 , 0 , 0 , 1 , 1 , 1 , 0] ,
+#   [1 , 0 , 0 , 0 , 0 , 0 , 1 , 1 , 0] ,
+#   [1 , 1 , 0 , 0 , 0 , 0 , 0 , 1 , 1] ,
+#   [0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 , 0] ,
+#   [0 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0] ,
+#   [0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
+#   [0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
+# ])
+# W = mp.matrixABtoW(tagdoc, docword)
 
 def singular_vector(A):
   """
@@ -47,7 +61,7 @@ def singular_vector(A):
   v_list = []
   u_list = []
 
-  while np.round(beta, 8) != 0:
+  while k <= 10:
     v = p / beta
     k += 1
     r = A.dot(v) - beta*u
@@ -56,7 +70,10 @@ def singular_vector(A):
     p = A.transpose().dot(u) - alpha*v
     beta = np.linalg.norm(p)
     
-  return u, v
+    u_list.append(u)
+    v_list.append(v)
+    
+  return u_list[-2], v_list[-2]
 
 def partition(svl, svr, W): 
   """
@@ -77,12 +94,12 @@ def partition(svl, svr, W):
       u: Singular vector kiri terbesar kedua
       v: Singular vector kanan terbesar kedua
   """
-  cx = 0
+  cx = 0  
   cy = 0
 
   D = nl.diagonal_matrix(W)
-  D_05 = sp.linalg.fractional_matrix_power(D, 0.5)
-  D_inverse_05 = np.linalg.inv(D_05)
+  D_inverse_05 = sp.linalg.fractional_matrix_power(D, -0.5)
+  # D_inverse_05 = np.linalg.inv(D_05)
   
   # W_hat = D_inverse_05.dot(W).dot(D_inverse_05)
 
@@ -124,8 +141,8 @@ def create_matrix_from_two_vertex(X, Y, W):
 
     Returns:
       matrix: Matrix dari bipartite graph yg terbaru
+      XY: Tanda untuk pada vertex keberapa ia di klaster ini
   """
-  
   
   XY = list(set(X).union(set(Y)))
   len_xy = len(XY)
@@ -137,24 +154,26 @@ def create_matrix_from_two_vertex(X, Y, W):
       xy_j = XY[j]
       matrix[i][j] = W[xy_i][xy_j]
   
-  return matrix
+  return matrix, XY
 
-def spectral_recursive_embedding(W):
-  u, v = singular_vector(W)
+def spectral_recursive_embedding(W_hat, W):
+  """
+    Proses keseluruhan dari Spectral Recursive Embedding
+
+    Args:
+      W_hat: Matrix W_hat
+      W: Matrix W
+      
+    Returns:
+    G_AB, G_AcBc = Hasil matrix dari SRE
+    C1, C2 = Klaster
+  """
+  tm.this_moment("Start :")
+  u, v = singular_vector(W_hat)
+  tm.this_moment("Find Second Largest Singular Vector :")
   A_partition, Ac_partition, B_partition, Bc_partition = partition(u, v, W)
-  G_AB = create_matrix_from_two_vertex(A_partition, B_partition, W)
-  G_AcBc = create_matrix_from_two_vertex(Ac_partition, Bc_partition, W)
-  aaa = 0
-  
-  return G_AB, G_AcBc
-
-spectral_recursive_embedding(A)
-
-"""
-Rangkuman: 
-G(A, B) akan dibentuk melalui A_partition, B_partition.
-Nanti, setiap A_partition akan disambung ke B_partition.
-Endingnya akan membentuk matrix simetris. Cara nyambungnya dengan mencocokan nilai a dan b di matrix W
-G(Ac, Bc) akan dibentuk melalui Ac_partition, Bc_partition
-matrix W yg berasal dari bipartite graph tuh simetris
-"""
+  tm.this_moment("Partition The Vertex of Matrix :")
+  G_AB, C1 = create_matrix_from_two_vertex(A_partition, B_partition, W)
+  G_AcBc, C2 = create_matrix_from_two_vertex(Ac_partition, Bc_partition, W)
+  tm.this_moment("Fusion The Vertex :")
+  return (G_AB, C1), (G_AcBc, C2) 

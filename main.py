@@ -41,10 +41,10 @@ tm.this_moment("matrix A & B menjadi W :")
 
 matrix_Q, matrix_T = lram.lanczos_iteration(matrix_w, 1)
 matrix_W_hat = lram.low_rank_approximation_matrix(matrix_Q, matrix_T)
-tm.this_moment("Low Rank Approximation :")
+tm.this_moment("Low Rank Approximation :") 
 print(matrix_W_hat)
 
-matrix_W_hat_1, matrix_W_hat_2 = sre.spectral_recursive_embedding(matrix_W_hat)
+(matrix_W_hat_1, cluster_1_list), (matrix_W_hat_2, cluster_2_list) = sre.spectral_recursive_embedding(matrix_W_hat, matrix_w)
 tm.this_moment("Spectral Recursive Embedding :")
 print("X")
 
