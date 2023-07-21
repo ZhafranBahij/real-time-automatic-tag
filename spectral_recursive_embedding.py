@@ -1,111 +1,60 @@
 import numpy as np
 import scipy as sp
-
 import normalized_laplacian as nl
 import matrix_processing as mp
+import low_rank_approximation_matrix as lram
+
 import the_moment as tm
 
-# tagdoc = np.array([
-#   [1, 1, 1, 0, 0],
-#   [1, 0, 1, 0, 0],
-#   [0, 1, 1, 0, 0],
-#   [0, 0, 1, 1, 1]
-# ])
-
-# docword = np.array([
-#   [0, 1, 1, 0, 0, 0],
-#   [1, 1, 0, 1, 1, 1],
-#   [1, 0, 1, 1, 0, 0],
-#   [1, 0, 0, 0, 1, 1],
-#   [0, 0, 0, 0, 1, 1]
-# ])
-# W = np.array([
-#   [0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
-#   [0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
-#   [1 , 0 , 0 , 0 , 0 , 1 , 1 , 1 , 0] ,
-#   [1 , 0 , 0 , 0 , 0 , 0 , 1 , 1 , 0] ,
-#   [1 , 1 , 0 , 0 , 0 , 0 , 0 , 1 , 1] ,
-#   [0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 , 0] ,
-#   [0 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0] ,
-#   [0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
-#   [0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
-# ])
-# W = mp.matrixABtoW(tagdoc, docword)
-
-def singular_vector(A):
+def second_largest_singular_vector(W_hat):
   """
-      Membuat dua vektor singular menggunakan Lanczos Bidiagonalization berdasarkan sumber
-      G. H. Golub and C. F. Van Loan, Matrix computations, 3nd ed., Johns Hopkins University Press, Baltimore, Maryland, 1996.
-      pada chapter 9.3.3
-      
-      Penjelasan Singular Vector Kiri dan Kanan
-      https://www.sciencedirect.com/topics/mathematics/right-singular-vector
-
-      Args:
-        A: Matriks
-
-      Returns:
-        u: Singular vector kiri terbesar kedua
-        v: Singular vector kanan terbesar kedua
-  """
-
-  row, column = A.shape
-
-  vector_all_one = np.ones(row)
-  v = vector_all_one / np.linalg.norm(vector_all_one)
-  p = v
-  beta = 1
-  k = 0
-  u = 0
-  
-  v_list = []
-  u_list = []
-
-  while k <= 10:
-    v = p / beta
-    k += 1
-    r = A.dot(v) - beta*u
-    alpha = np.linalg.norm(r)
-    u = r / alpha
-    p = A.transpose().dot(u) - alpha*v
-    beta = np.linalg.norm(p)
-    
-    u_list.append(u)
-    v_list.append(v)
-    
-  return u_list[-2], v_list[-2]
-
-def partition(svl, svr, W): 
-  """
-    Membuat dua vektor singular menggunakan Lanczos Bidiagonalization berdasarkan sumber
-    G. H. Golub and C. F. Van Loan, Matrix computations, 3nd ed., Johns Hopkins University Press, Baltimore, Maryland, 1996.
-    pada chapter 9.3.3
-    
-    Penjelasan Singular Vector Kiri dan Kanan
-    https://www.sciencedirect.com/topics/mathematics/right-singular-vector
+    Menghitung singular vector menggunakan W_hat dari library
+    https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.svd.html
 
     Args:
-      svl: singular vektor kiri terluas kedua
-      svr: singular vektor kanan terluas kedua
-      W: Matrix W sebelum proses W_hat
-
+      W_hat: Matrix W_hat
 
     Returns:
-      u: Singular vector kiri terbesar kedua
-      v: Singular vector kanan terbesar kedua
+      second_largest_left: Mengambil vektor U
+      second_largest_right: Mengambil vektor Vh
   """
-  cx = 0  
-  cy = 0
-
-  D = nl.diagonal_matrix(W)
-  D_inverse_05 = sp.linalg.fractional_matrix_power(D, -0.5)
-  # D_inverse_05 = np.linalg.inv(D_05)
   
-  # W_hat = D_inverse_05.dot(W).dot(D_inverse_05)
+  U, s, Vh = sp.sparse.linalg.svds(W_hat, solver='arpack')
+  second_largest_left = U[:, 1] # Mengambil left singular vector kedua
+  second_largest_right = Vh[1, :] # Mengambil right singular vector kedua
+  
+  return second_largest_left, second_largest_right
 
-  x = D_inverse_05.dot(svl)
-  y = D_inverse_05.dot(svr)
+def find_cut_point():
+  """
+    Mencari cut point
 
+    Returns:
+      cx: cx
+      cy: cy
+  """
+  
+  cx = 0
+  cy = 0
+  return cx, cy
+
+def form_partition(cx, cy, x, y):
+  """
+    Melakukan form partition
+    
+    Args:
+      cx: cut point untuk x
+      cy: cut point untuk y
+      x: Hasil dari second_largest_left
+      y: Hasil dari second_largest_right
+      
+    Returns:
+      A_partition
+      Ac_partition
+      B_partition
+      Bc_partition
+  """
+  
   A_partition = []
   Ac_partition = []
   B_partition = []
@@ -128,6 +77,7 @@ def partition(svl, svr, W):
     j+=1
   
   return A_partition, Ac_partition, B_partition, Bc_partition
+
 
 def create_matrix_from_two_vertex(X, Y, W):
   """
@@ -158,22 +108,33 @@ def create_matrix_from_two_vertex(X, Y, W):
 
 def spectral_recursive_embedding(W_hat, W):
   """
-    Proses keseluruhan dari Spectral Recursive Embedding
+    Melakukan bipartite graph partition dengan menggunakna
+    spectral recursive embedidng
 
     Args:
       W_hat: Matrix W_hat
-      W: Matrix W
-      
+      Y: Vertex y
+      W: Matrix W awal
+
     Returns:
-    G_AB, G_AcBc = Hasil matrix dari SRE
-    C1, C2 = Klaster
+      all_matrix: List Matrix w hasil klasterisasi
+      all_cluster: Klaster
   """
-  tm.this_moment("Start :")
-  u, v = singular_vector(W_hat)
-  tm.this_moment("Find Second Largest Singular Vector :")
-  A_partition, Ac_partition, B_partition, Bc_partition = partition(u, v, W)
-  tm.this_moment("Partition The Vertex of Matrix :")
-  G_AB, C1 = create_matrix_from_two_vertex(A_partition, B_partition, W)
-  G_AcBc, C2 = create_matrix_from_two_vertex(Ac_partition, Bc_partition, W)
-  tm.this_moment("Fusion The Vertex :")
-  return (G_AB, C1), (G_AcBc, C2) 
+  all_matrix = []
+  all_cluster = []
+  # tm.this_moment("Start :")
+  x, y = second_largest_singular_vector(W_hat)
+  # tm.this_moment("Second Largest Singular Vector :")
+  cx, cy = find_cut_point()
+  # tm.this_moment("Cut Point :")
+  A, Ac, B, Bc = form_partition(cx, cy, x, y)
+  # tm.this_moment("Form Partition :")
+  matrix, cluster = create_matrix_from_two_vertex(A, B, W)
+  all_matrix.append(matrix)
+  all_cluster.append(cluster)
+  matrix, cluster = create_matrix_from_two_vertex(Ac, Bc, W)
+  all_matrix.append(matrix)
+  all_cluster.append(cluster)
+  # tm.this_moment("Fusion the matrix :")
+  
+  return all_matrix, all_cluster

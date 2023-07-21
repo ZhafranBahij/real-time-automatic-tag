@@ -6,6 +6,7 @@ import normalized_laplacian as nl
 import low_rank_approximation_matrix as lram
 import spectral_recursive_embedding as sre
 import the_moment as tm
+import assign_label as al
 
 tm.this_moment("Menjalankan Algoritma :")
 
@@ -15,7 +16,7 @@ tm.this_moment("Mengambil dataset :")
 # print(dataset_document)
 
 # Memproses dataset menjadi matrix
-matrix_tag_document, matrix_document_word, title_id_document = ip.document_processing(dataset_document)
+matrix_tag_document, matrix_document_word, title_id_document, all_tag_list, all_word_list = ip.document_processing(dataset_document)
 tm.this_moment("dataset ke matrix :")
 # print(matrix_tag_document)
 # print(matrix_document_word)
@@ -42,10 +43,14 @@ tm.this_moment("matrix A & B menjadi W :")
 matrix_Q, matrix_T = lram.lanczos_iteration(matrix_w, 1)
 matrix_W_hat = lram.low_rank_approximation_matrix(matrix_Q, matrix_T)
 tm.this_moment("Low Rank Approximation :") 
-print(matrix_W_hat)
+# print(matrix_W_hat)
 
-(matrix_W_hat_1, cluster_1_list), (matrix_W_hat_2, cluster_2_list) = sre.spectral_recursive_embedding(matrix_W_hat, matrix_w)
+all_matrix_partition, all_cluster = sre.spectral_recursive_embedding(matrix_W_hat, matrix_w)
 tm.this_moment("Spectral Recursive Embedding :")
+print("X")
+
+all_tag_list_with_cluster, all_title_id_document_with_cluster, all_word_list_with_cluster = al.assign_label_cluster(title_id_document, all_tag_list, all_word_list, all_cluster)
+tm.this_moment("Assign Label :")
 print("X")
 
 # matrix_Q_2, matrix_T_2 = lram.lanczos_iteration(matrix_w, 0)
