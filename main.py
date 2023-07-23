@@ -47,7 +47,7 @@ tm.this_moment("Low Rank Approximation :")
 
 all_matrix_partition, all_cluster = sre.spectral_recursive_embedding(matrix_W_hat, matrix_w)
 tm.this_moment("Spectral Recursive Embedding :")
-print("X")
+# print("X")
 
 all_tag_list_with_cluster, all_title_id_document_with_cluster, all_word_list_with_cluster = al.assign_label_cluster(title_id_document, all_tag_list, all_word_list, all_cluster)
 tm.this_moment("Assign Label :")
