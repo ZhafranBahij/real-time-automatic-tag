@@ -7,6 +7,7 @@ import low_rank_approximation_matrix as lram
 import spectral_recursive_embedding as sre
 import the_moment as tm
 import assign_label as al
+import node_rank_t as nrt
 
 tm.this_moment("Menjalankan Algoritma :")
 
@@ -51,6 +52,9 @@ tm.this_moment("Spectral Recursive Embedding :")
 
 all_tag_list_with_cluster, all_title_id_document_with_cluster, all_word_list_with_cluster = al.assign_label_cluster(title_id_document, all_tag_list, all_word_list, all_cluster)
 tm.this_moment("Assign Label :")
+
+all_tag_list_with_rank = nrt.node_rankt(all_tag_list_with_cluster, matrix_w, all_matrix_partition)
+tm.this_moment("Node Rank T :")
 print("X")
 
 # matrix_Q_2, matrix_T_2 = lram.lanczos_iteration(matrix_w, 0)
