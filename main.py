@@ -50,6 +50,13 @@ all_matrix_partition, all_cluster = sre.spectral_recursive_embedding(matrix_W_ha
 tm.this_moment("Spectral Recursive Embedding :")
 # print("X")
 
+all_matrix_w_hat_partition = []
+for w_hat in all_matrix_partition:
+  Q, T = lram.lanczos_iteration(matrix_w, 1)
+  matrix_W_hat_partition = lram.low_rank_approximation_matrix(Q, T)
+  all_matrix_w_hat_partition.append(matrix_W_hat_partition)
+tm.this_moment("Create W hat partition :")
+
 all_tag_list_with_cluster, all_title_id_document_with_cluster, all_word_list_with_cluster = al.assign_label_cluster(title_id_document, all_tag_list, all_word_list, all_cluster)
 tm.this_moment("Assign Label :")
 

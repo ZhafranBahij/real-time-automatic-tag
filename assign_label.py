@@ -1,7 +1,4 @@
-def assign_label_cluster (title_id_document, all_tag_list, all_word_list, all_cluster): 
-  
-  # Memasukkan label klaster ke dalam tag
-  index = 0 # Index row matrix awal
+def assign_label_for_tag(all_tag_list, all_cluster, index):
   all_tag_list_with_cluster = []
   
   # Looping seluruh isi all_tag_list
@@ -20,7 +17,10 @@ def assign_label_cluster (title_id_document, all_tag_list, all_word_list, all_cl
       
     index += 1
     all_tag_list_with_cluster.append([tag, tag_cluster, tag_index_in_matrix])
-
+  
+  return index, all_tag_list_with_cluster
+  
+def assign_label_for_document(title_id_document, all_cluster, index):
   # Memasukkan label klaster ke dalam document
   all_title_id_document_with_cluster = []
   
@@ -42,6 +42,9 @@ def assign_label_cluster (title_id_document, all_tag_list, all_word_list, all_cl
     index += 1
     all_title_id_document_with_cluster.append([[title, id], document_cluster, document_index_in_matrix])
 
+  return index, all_title_id_document_with_cluster
+
+def assign_label_for_word(all_word_list, all_cluster, index):
   # Memasukkan label klaster ke dalam word
   all_word_list_with_cluster = []
   
@@ -62,4 +65,14 @@ def assign_label_cluster (title_id_document, all_tag_list, all_word_list, all_cl
     index += 1
     all_word_list_with_cluster.append([word, word_cluster, word_index_in_matrix])
   
+  return index, all_word_list_with_cluster
+
+def assign_label_cluster(title_id_document, all_tag_list, all_word_list, all_cluster): 
+  
+  # Memasukkan label klaster ke dalam tag
+  index = 0 # Index row matrix awal
+  index, all_tag_list_with_cluster = assign_label_for_tag(all_tag_list, all_cluster, index)
+  index, all_title_id_document_with_cluster = assign_label_for_document(title_id_document, all_cluster, index)
+  index, all_word_list_with_cluster = assign_label_for_word(all_word_list, all_cluster, index)
+
   return all_tag_list_with_cluster, all_title_id_document_with_cluster, all_word_list_with_cluster
