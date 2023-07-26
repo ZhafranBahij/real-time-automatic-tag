@@ -73,6 +73,70 @@ def rank(npi, nri):
   
   return ranki
 
+# Untuk mendapatkan np top di setiap tag
+def get_all_np_top_list(tag_list, all_matrix_partition):
+  np_top_list = []
+  k_list = []
+  
+  for tag, cluster, nodes in tag_list:
+    # nodes = [index_matrix_origin, index_matrix_partition_cluster_1, ...., index_matrix_partition_cluster_n]
+    index_cluster = 0
+    for k in cluster:
+      if not k in k_list:
+        start_range = 0
+        if len(k_list) > 0:
+          start_range = k_list[-1]
+        for ik in range(start_range+1, k+1):
+          k_list.append(ik)
+          np_top_list.append([])
+      
+      npi_top = sum(all_matrix_partition[k-1][nodes[index_cluster + 1]])
+      np_top_list[k-1].append(npi_top)
+      index_cluster += 1
+  
+  return np_top_list
+
+# mendapatkan nilai N Precission di setiap tag
+def get_all_np_list(tag_list, np_top_list):
+  np_list = []
+  k_list = []
+  sum_np_top = []
+  
+  for tag, cluster, nodes in tag_list:
+    index_cluster = 0
+      
+    # Jika klaster k belum ada di k_list
+    for k in cluster:
+      if not k in k_list:
+        start_range = 0
+        if len(k_list) > 0:
+          start_range = k_list[-1]
+        for ik in range(start_range+ 1, k+1):
+          k_list.append(ik)
+          np_list.append([])
+          sum_np_top.append(sum(np_top_list[ik-1]))
+    
+      # Mengammbil np_top
+      np_top_i = np_top_list[k-1][nodes[index_cluster+1]]
+      # Menghitung np_bottom
+      np_bottom = sum_np_top[k-1]
+      
+      # alternate menghitung np
+      # np_buttom = sum_np_top[k-1] - np_top_i
+      # npi = 1
+      # if np_bottom != 0:
+      #   npi = np_top_i / np_bottom
+
+      
+      # Menghitung np pada suatu tag
+      npi = np_top_i / np_bottom
+      
+      # Menampung nilai np
+      np_list[k-1].append(npi)
+      index_cluster += 1
+    
+  return np_list
+
 
 def node_rankt(tag_list, matrix_w_original, all_matrix_partition):
   """
@@ -87,18 +151,20 @@ def node_rankt(tag_list, matrix_w_original, all_matrix_partition):
       all_tag_list_with_rank: Tag list yg telah ada nilai Rank T
   """
   all_tag_list_with_rank = []
+  all_np_top_list = get_all_np_top_list(tag_list, all_matrix_partition)
+  all_np_list = get_all_np_list(tag_list, all_np_top_list)
   
   # Looping seluruh data di tag list
   for tag, cluster, nodes in tag_list:
     
     # nr = n_recall(matrix_w_original, cluster, nodes[0])
-    
     # Menghitung np & ranki
     index_cluster = 0
     rank_i_list = []
     np_i_list = []
     for k in cluster:
-      np = n_precision(all_matrix_partition[k-1], nodes[index_cluster + 1])
+      np = all_np_list[k-1][nodes[index_cluster + 1]]
+      # np = n_precision(all_matrix_partition[k-1], nodes[index_cluster + 1])
       nr = n_recall(matrix_w_original, all_matrix_partition[k-1], nodes[0])
       ranki = rank(np, nr)
       index_cluster += 1

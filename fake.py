@@ -51,12 +51,15 @@ all_fake_matrix_partition = [fake_matrix_w1, fake_matrix_w2]
 
 # [nama_tag, klaster, [index_row_matrix_awal, index_row_matrix_klaster]]
 fake_tag_list = [
+  ['tag04', [2], [3, 0]],
   ['tag01', [1], [0, 0]],
   ['tag02', [1], [1, 1]],
   ['tag03', [1], [2, 2]],
-  ['tag04', [2], [3, 0]],
 ]
 
 # Contoh menghitung rank T pada tag01
 all_tag_list_with_rank = nrt.node_rankt(fake_tag_list, fake_matrix_w, all_fake_matrix_partition)
+all_np_top_list = nrt.get_all_np_top_list(fake_tag_list, all_fake_matrix_partition)
+all_np_list = nrt.get_all_np_list(fake_tag_list, all_np_top_list)
+
 print("END")
