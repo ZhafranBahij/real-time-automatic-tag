@@ -9,8 +9,8 @@ import the_moment as tm
 def second_largest_singular_vector(W_hat):
   """
     Menghitung singular vector menggunakan W_hat dari library
-    https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.svd.html
-
+    https://docs.scipy.org/doc/scipy/reference/sparse.linalg.svds-arpack.html
+    
     Args:
       W_hat: Matrix W_hat
 
@@ -19,13 +19,14 @@ def second_largest_singular_vector(W_hat):
       second_largest_right: Mengambil vektor Vh
   """
   
-  U, s, Vh = sp.sparse.linalg.svds(W_hat, solver='arpack')
+  U, s, Vh = sp.sparse.linalg.svds(W_hat, solver='lobpcg')
+  # U, s, Vh = sp.linalg.svd(W_hat)
   second_largest_left = U[:, 1] # Mengambil left singular vector kedua
   second_largest_right = Vh[1, :] # Mengambil right singular vector kedua
   
   return second_largest_left, second_largest_right
 
-def find_cut_point():
+def find_cut_point(singular_vector_left, singular_vector_right ):
   """
     Mencari cut point
 
@@ -34,8 +35,8 @@ def find_cut_point():
       cy: cy
   """
   
-  cx = 0
-  cy = 0
+  cx = np.median(singular_vector_left)  
+  cy = np.median(singular_vector_right) 
   return cx, cy
 
 def form_partition(cx, cy, x, y):
@@ -98,6 +99,7 @@ def create_matrix_from_two_vertex(X, Y, W):
   len_xy = len(XY)
   matrix = np.zeros((len_xy , len_xy))
   
+  # Looping untuk membuat matrix_w hasil partisi
   for i in range(0, len_xy):
     xy_i = XY[i]
     for j in range(0, len_xy):
@@ -125,7 +127,7 @@ def spectral_recursive_embedding(W_hat, W):
   # tm.this_moment("Start :")
   x, y = second_largest_singular_vector(W_hat)
   # tm.this_moment("Second Largest Singular Vector :")
-  cx, cy = find_cut_point()
+  cx, cy = find_cut_point(x, y)
   # tm.this_moment("Cut Point :")
   A, Ac, B, Bc = form_partition(cx, cy, x, y)
   # tm.this_moment("Form Partition :")

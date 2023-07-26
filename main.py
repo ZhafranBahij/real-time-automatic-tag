@@ -9,31 +9,20 @@ import the_moment as tm
 import assign_label as al
 import node_rank_t as nrt
 
+import numpy as np
+
 tm.this_moment("Menjalankan Algoritma :")
 
 # Mengambil data dari database
 dataset_document = dfd.get_data()
 tm.this_moment("Mengambil dataset :")
-# print(dataset_document)
 
 # Memproses dataset menjadi matrix
 matrix_tag_document, matrix_document_word, title_id_document, all_tag_list, all_word_list = ip.document_processing(dataset_document)
 tm.this_moment("dataset ke matrix :")
-# print(matrix_tag_document)
-# print(matrix_document_word)
-
-# Memproses dataset menjadi matrix
-# matrix_tag_document_2, matrix_document_word_2, title_id_document_2 = ip.document_processing_2(dataset_document)
-# tm.this_moment("dataset ke matrix 2 :")
 
 matrix_w = mp.matrixABtoW(matrix_tag_document, matrix_document_word)
 tm.this_moment("matrix A & B menjadi W :")
-
-# matrix_w_2 = mp.matrixABtoW(matrix_tag_document_2, matrix_document_word_2)
-# tm.this_moment("matrix A & B menjadi W 2 :")
-
-# matrix_w_diff = np.absolute(matrix_w - matrix_w_2)
-# print(matrix_w_diff)
 
 # matrix_d = nl.diagonal_matrix(matrix_w)
 # matrix_lw = nl.normalized_laplacian(matrix_d, matrix_w)
