@@ -2,22 +2,22 @@ import numpy as np
 
 import matrix_processing as mp
 
-def n_precision(matrix_w_partition, node_i_partition):
-  """
-    Menghitung N Precision dari suatu tag
+# def n_precision(matrix_w_partition, node_i_partition):
+#   """
+#     Menghitung N Precision dari suatu tag
 
-    Args:
-      matrix_w_partition: matrix yg sudah di-partition
-      node_i_partition: node index dari tag di dalam matrix partition
+#     Args:
+#       matrix_w_partition: matrix yg sudah di-partition
+#       node_i_partition: node index dari tag di dalam matrix partition
 
-    Returns:
-      npi: N Precision dari suatu tag
-  """
+#     Returns:
+#       npi: N Precision dari suatu tag
+#   """
 
-  npi_top = sum(matrix_w_partition[node_i_partition])
-  npi_bottom = sum(sum(matrix_w_partition))/2
-  npi = npi_top / npi_bottom
-  return npi
+#   npi_top = sum(matrix_w_partition[node_i_partition])
+#   npi_bottom = sum(sum(matrix_w_partition))/2
+#   npi = npi_top / npi_bottom
+#   return npi
 
 # def n_recall(matrix_w_origin, tag_cluster, node_i_origin):
 #   """
@@ -151,6 +151,8 @@ def node_rankt(tag_list, matrix_w_original, all_matrix_partition):
       all_tag_list_with_rank: Tag list yg telah ada nilai Rank T
   """
   all_tag_list_with_rank = []
+  
+  # Menghitung N Precision dengan menggunakan tag & document
   all_np_top_list = get_all_np_top_list(tag_list, all_matrix_partition)
   all_np_list = get_all_np_list(tag_list, all_np_top_list)
   
