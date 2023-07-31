@@ -40,7 +40,7 @@ tm.this_moment("Spectral Recursive Embedding :")
 # print("X")
 
 all_matrix_w_hat_partition = []
-for w_hat in all_matrix_partition:
+for matrix_w in all_matrix_partition:
   Q, T = lram.lanczos_iteration(matrix_w, 1)
   matrix_W_hat_partition = lram.low_rank_approximation_matrix(Q, T)
   all_matrix_w_hat_partition.append(matrix_W_hat_partition)
