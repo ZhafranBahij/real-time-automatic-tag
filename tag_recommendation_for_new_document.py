@@ -17,7 +17,7 @@ def tag_recommendation(all_tag_list_with_rank, all_cluster, all_cluster_word):
     index_cluster = 0
     
     for k in cluster:
-      probability = p_dt_ck * p_cluster / p_document[index_cluster] # Hitung P(C=k|D=dt)
+      probability = p_dt_ck * p_cluster / p_document[k-1] # Hitung P(C=k|D=dt)
       rti = rank[index_cluster] * probability # Hitung R(Ti, dt)
       R_Ti_dt.append(rti)
       all_tag_name.append(tag)

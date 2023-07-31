@@ -12,6 +12,7 @@ import the_moment as tm
 import assign_label as al
 import node_rank_t as nrt
 import tag_recommendation_for_new_document as trfnd
+import word_count_in_matrix as wcim
 
 # Membuat fake matrix w
 fake_matrix_a = np.array([
@@ -65,13 +66,22 @@ fake_tag_list = [
   ['tag03', [1], [2, 2]],
 ]
 
+fake_title_id_list = [
+  [['doc1', 0], [1], [4, 3]],
+  [['doc2', 1], [1], [5, 4]],
+  [['doc3', 2], [1], [6, 5]],
+  [['doc4', 3], [2], [7, 1]],
+  [['doc5', 4], [2], [8, 2]],
+]
+
+all_fake_cluster_word_index = [[4, 5, 6], [7, 8]]
+
 # Contoh menghitung rank T menggunakan fake tag list dan fake matrix
 all_tag_list_with_rank = nrt.node_rankt(fake_tag_list, fake_matrix_w, all_fake_matrix_partition)
 
-all_fake_cluster_word_index = [[4, 5, 6], [7, 8]]
 tag_rank_list = trfnd.tag_recommendation(all_tag_list_with_rank, all_fake_cluster, all_fake_cluster_word_index)
 # print("END RANKT")
-
+all_word_list = wcim.word_count_in_matrix(fake_title_id_list, all_fake_matrix_partition)
 
 
 
