@@ -78,10 +78,12 @@ def first_prior_probability(total_word, total_word_in_cluster):
         
     return pi_m
 
+# Untuk menghitung lambda_m_j
 def lambda_m_j_list(word_list, total_doc_in_cluster):
     
-    new_word_list = []
+    new_word_list = [] # word list baru
     
+    # Looping word list untuk mencari lambda_m_j
     for word, cluster, indexes, word_count in word_list:
         lambda_m_j = []
         for k in cluster:
@@ -91,7 +93,38 @@ def lambda_m_j_list(word_list, total_doc_in_cluster):
     
     return new_word_list
 
+def probability_mass_function(d_ij, lambda_mij):
+    teta = np.exp(-lambda_mij) * np.power(lambda_mij, d_ij) / np.prod(np.arange(1, d_ij+1))
+    return teta
 
+def p_im_list(doc_list, pi_m, word_list, dataframe_document_word):
+    """
+        Memproses p_im
+
+        Args:
+            doc_list: daftar dokumen
+            pi_m: prior probability dari komponen m
+            
+        Returns:
+    """
+    
+    new_doc_list = []
+    for title_id, cluster, indexes, word_count in doc_list:
+        p_im = [] # Nilai p_im yg akan distore di doc list baru
+        
+        # Menghitung teta di setiap kata di dalam 1 dokumen
+        teta_list = []
+        i = 0
+        for word_value in dataframe_document_word.loc[str(title_id[1])]:
+            teta_list.append(probability_mass_function(word_value, word_list[i][4][0]))
+        
+        # Menghitung p_im
+        for k in cluster:
+            p_im.append(pi_m[k-1]*np.prod(teta_list))
+            
+        new_doc_list.append([title_id, cluster, indexes, word_count, p_im])
+        
+    return new_doc_list
 
 # def probability_mass_function(lambda_lm, d_kl):
 #     value_top = np.exp(-lambda_lm) * np.power(lambda_lm, d_kl)

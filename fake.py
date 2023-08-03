@@ -16,6 +16,12 @@ import word_count_in_matrix as wcim
 import pmm_try as pt
 import word_count_in_list as wcil
 
+# x = np.array([1, 2, 3, 4, 5])
+# dotx = np.prod(x)
+
+# factorial_val = np.prod(np.arange(1, 5+1))
+# print(x)
+
 # Membuat fake matrix w
 fake_matrix_a = np.array([
   [1, 1, 1, 0, 0],
@@ -30,7 +36,19 @@ fake_matrix_b = np.array([
   [1, 0, 0, 0, 1, 1],
   [0, 0, 0, 0, 1, 1]
 ])
+fake_dataframe_b = pd.DataFrame({
+  '0': [0, 1, 1, 0, 0, 0],
+  '1': [1, 1, 0, 1, 0, 0],
+  '2': [1, 0, 1, 1, 0, 0],
+  '3': [1, 0, 0, 0, 1, 1],
+  '4': [0, 0, 0, 0, 1, 1]
+}, index=['word1', 'word2', 'word3', 'word4', 'word5', 'word6']).transpose()
 fake_matrix_w = mp.matrixABtoW(fake_matrix_a, fake_matrix_b)
+
+# a = fake_dataframe_b.loc['1']
+
+# for aa in a:
+#   xxx = aa
 
 # Membuat fake matrix w partition
 fake_matrix_a1 = np.array([
@@ -102,5 +120,5 @@ all_word_list_with_count, fake_total_word, fake_total_word_in_cluster = wcil.wor
 
 all_prior_probability_m = pt.first_prior_probability(fake_total_word, fake_total_word_in_cluster)
 all_word_list_with_lambdamj = pt.lambda_m_j_list(all_word_list_with_count, fake_total_doc_in_cluster)
-
+fake_doc_list_with_p_im = pt.p_im_list(all_doc_list_with_word_count, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b)
 print("END")
