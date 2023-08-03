@@ -13,6 +13,8 @@ import assign_label as al
 import node_rank_t as nrt
 import tag_recommendation_for_new_document as trfnd
 import word_count_in_matrix as wcim
+import pmm_try as pt
+import word_count_in_list as wcil
 
 # Membuat fake matrix w
 fake_matrix_a = np.array([
@@ -74,6 +76,16 @@ fake_title_id_list = [
   [['doc5', 4], [2], [8, 2]],
 ]
 
+fake_word_list = [
+  ['word1', [1], [9, 6]],
+  ['word2', [1], [10, 7]],
+  ['word3', [1], [11, 8]],
+  ['word4', [1], [12, 9]],
+  ['word5', [2], [13, 3]],
+  ['word6', [2], [14, 4]],
+]
+
+
 all_fake_cluster_word_index = [[4, 5, 6], [7, 8]]
 
 # Contoh menghitung rank T menggunakan fake tag list dan fake matrix
@@ -81,8 +93,13 @@ all_tag_list_with_rank = nrt.node_rankt(fake_tag_list, fake_matrix_w, all_fake_m
 
 tag_rank_list = trfnd.tag_recommendation(all_tag_list_with_rank, all_fake_cluster, all_fake_cluster_word_index)
 # print("END RANKT")
-all_word_list = wcim.word_count_in_matrix(fake_title_id_list, all_fake_matrix_partition)
+all_doc_list_with_word_count = wcim.word_count_in_matrix(fake_title_id_list, all_fake_matrix_partition)
 
+# fake_total_word dan fake_total_word_in_cluster mungkin bisa berbeda karena ada yg terpotong akibat bipartite graph partition
+all_word_list_with_count, fake_total_word, fake_total_word_in_cluster = wcil.word_count_in_list(fake_word_list, fake_matrix_w, all_fake_matrix_partition)
 
+# all_prior_probability_m = pt.first_prior_probability(all_doc_list_with_word_count, 2)
+
+all_prior_probability_m = pt.first_prior_probability(fake_total_word, fake_total_word_in_cluster)
 
 print("END")

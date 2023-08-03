@@ -18,4 +18,4 @@ def word_count_in_matrix(document_list, all_matrix_partition):
     new_document_list.append([title_and_id, cluster, nodes, word_count_list])
     
   return new_document_list
-  
+

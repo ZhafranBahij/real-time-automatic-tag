@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 # def poisson_pdf(x, lambd):
 #     return np.exp(-lambd) * np.power(lambd, x) / np.math.factorial(x)
@@ -48,6 +49,34 @@ import numpy as np
 #     print("Estimated Lambdas:", lambdas)
 #     print("Log Likelihood:", log_likelihood(data, weights, lambdas))
 
+# def first_prior_probability(document_list, M):
+#     pi_m = np.zeros(M)
+#     total_document_in_m = np.zeros(M)
+    
+#     # Untuk sementara, anggap m = k
+#     for title_and_id, cluster, nodes, word_count in document_list:
+#         for k in cluster:
+#             total_document_in_m[k-1] += 1
+    
+#     # Hitung prior probability
+#     index = 0
+#     sum_total_document_in_m = sum(total_document_in_m)
+#     for tdim in total_document_in_m:
+#         pi_m[index] = tdim / sum_total_document_in_m
+#         index += 1
+        
+#     return pi_m
+
+def first_prior_probability(total_word, total_word_in_cluster):
+    pi_m = np.zeros(len(total_word_in_cluster))
+    
+    index = 0
+    for twic in total_word_in_cluster:
+        pi_m[index] = twic/total_word
+        index += 1
+        
+    return pi_m
+
 def probability_mass_function(lambda_lm, d_kl):
     value_top = np.exp(-lambda_lm) * np.power(lambda_lm, d_kl)
     value_bottom = np.math.factorial(d_kl)
@@ -75,5 +104,5 @@ def lambda_m(m_value, p_im, count_word_in_doc):
     
     return lambda_m
 
-temp = probability_mass_function(100, 100)
-print(temp)
+# temp = probability_mass_function(100, 100)
+# print(temp)
