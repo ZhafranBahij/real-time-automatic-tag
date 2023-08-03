@@ -68,8 +68,9 @@ import pandas as pd
 #     return pi_m
 
 def first_prior_probability(total_word, total_word_in_cluster):
-    pi_m = np.zeros(len(total_word_in_cluster))
+    pi_m = np.zeros(len(total_word_in_cluster)) # Buat nilai pi_m
     
+    # Hitung nilai pi_m di setiap M
     index = 0
     for twic in total_word_in_cluster:
         pi_m[index] = twic/total_word
@@ -77,32 +78,47 @@ def first_prior_probability(total_word, total_word_in_cluster):
         
     return pi_m
 
-def probability_mass_function(lambda_lm, d_kl):
-    value_top = np.exp(-lambda_lm) * np.power(lambda_lm, d_kl)
-    value_bottom = np.math.factorial(d_kl)
-    value = value_top / value_bottom
-    return value
-
-
-def pi(m_value, p_im):
-    pi_top = sum(p_im[m_value-1]) #sum seluruh p_im sesuai M ke berapa
-    pi_bottom = sum(sum(p_im)) #sum seluruh p_im yg ada
-    pi = pi_top / pi_bottom
-    return pi
-
-def lambda_m(m_value, p_im, count_word_in_doc):
-    # sum bagian atas dari persamaan 15
-    lambda_top = 0
-    for i in p_im[m_value-1]:
-        lambda_top += i * count_word_in_doc
-
-    # sum bagian bawah dari persamaan 15
-    lambda_bottom = sum(count_word_in_doc) * sum(p_im[m_value-1])
+def lambda_m_j_list(word_list, total_doc_in_cluster):
     
-    #
-    lambda_m = lambda_top / lambda_bottom
+    new_word_list = []
     
-    return lambda_m
+    for word, cluster, indexes, word_count in word_list:
+        lambda_m_j = []
+        for k in cluster:
+            lambda_m_j.append(word_count[0] / total_doc_in_cluster[k-1]) 
+        
+        new_word_list.append([word, cluster, indexes, word_count, lambda_m_j])
+    
+    return new_word_list
+
+
+
+# def probability_mass_function(lambda_lm, d_kl):
+#     value_top = np.exp(-lambda_lm) * np.power(lambda_lm, d_kl)
+#     value_bottom = np.math.factorial(d_kl)
+#     value = value_top / value_bottom
+#     return value
+
+
+# def pi(m_value, p_im):
+#     pi_top = sum(p_im[m_value-1]) #sum seluruh p_im sesuai M ke berapa
+#     pi_bottom = sum(sum(p_im)) #sum seluruh p_im yg ada
+#     pi = pi_top / pi_bottom
+#     return pi
+
+# def lambda_m(m_value, p_im, count_word_in_doc):
+#     # sum bagian atas dari persamaan 15
+#     lambda_top = 0
+#     for i in p_im[m_value-1]:
+#         lambda_top += i * count_word_in_doc
+
+#     # sum bagian bawah dari persamaan 15
+#     lambda_bottom = sum(count_word_in_doc) * sum(p_im[m_value-1])
+    
+#     #
+#     lambda_m = lambda_top / lambda_bottom
+    
+#     return lambda_m
 
 # temp = probability_mass_function(100, 100)
 # print(temp)

@@ -19,7 +19,7 @@ dataset_document = dfd.get_data()
 tm.this_moment("Mengambil dataset :")
 
 # Memproses dataset menjadi matrix
-matrix_tag_document, matrix_document_word, title_id_document, all_tag_list, all_word_list = ip.document_processing(dataset_document)
+matrix_tag_document, matrix_document_word, title_id_document, all_tag_list, all_word_list, dataframe_document_tag, dataframe_document_word = ip.document_processing(dataset_document)
 tm.this_moment("dataset ke matrix :")
 
 matrix_w = mp.matrixABtoW(matrix_tag_document, matrix_document_word)
