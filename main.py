@@ -8,6 +8,7 @@ import spectral_recursive_embedding as sre
 import the_moment as tm
 import assign_label as al
 import node_rank_t as nrt
+import word_count_in_matrix as wcim
 
 import numpy as np
 
@@ -18,7 +19,7 @@ dataset_document = dfd.get_data()
 tm.this_moment("Mengambil dataset :")
 
 # Memproses dataset menjadi matrix
-matrix_tag_document, matrix_document_word, title_id_document, all_tag_list, all_word_list = ip.document_processing(dataset_document)
+matrix_tag_document, matrix_document_word, title_id_document, all_tag_list, all_word_list, dataframe_document_tag, dataframe_document_word = ip.document_processing(dataset_document)
 tm.this_moment("dataset ke matrix :")
 
 matrix_w = mp.matrixABtoW(matrix_tag_document, matrix_document_word)
@@ -51,6 +52,10 @@ tm.this_moment("Assign Label :")
 
 all_tag_list_with_rank = nrt.node_rankt(all_tag_list_with_cluster, matrix_w, all_matrix_partition)
 tm.this_moment("Node Rank T :")
+
+# Menghitung banyaknya document dari 
+all_title_id_document_with_word_count = wcim.word_count_in_matrix(all_title_id_document_with_cluster, all_matrix_partition)
+tm.this_moment("Word Count setiap Document dari Matrix partisi :")
 print("X")
 
 # matrix_Q_2, matrix_T_2 = lram.lanczos_iteration(matrix_w, 0)

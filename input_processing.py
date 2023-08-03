@@ -152,7 +152,7 @@ def document_processing(dataset_document):
   # tm.this_moment('Mulai membuat matrix :')
   matrix_tag_document = document_tag.to_numpy().transpose()
   matrix_document_word = document_word.to_numpy()
-  return matrix_tag_document, matrix_document_word, title_id_document, document_tag.columns, document_word.columns
+  return matrix_tag_document, matrix_document_word, title_id_document, document_tag.columns, document_word.columns, document_tag, document_word
 
   # index = 0
   
