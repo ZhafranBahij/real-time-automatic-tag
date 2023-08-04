@@ -121,4 +121,10 @@ all_word_list_with_count, fake_total_word, fake_total_word_in_cluster = wcil.wor
 all_prior_probability_m = pt.first_prior_probability(fake_total_word, fake_total_word_in_cluster)
 all_word_list_with_lambdamj = pt.lambda_m_j_list(all_word_list_with_count, fake_total_doc_in_cluster)
 fake_doc_list_with_p_im = pt.p_im_list(all_doc_list_with_word_count, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b)
+
+for i in range(1, 5):
+  all_prior_probability_m, sum_p_im_list = pt.pi_m_with_t(fake_doc_list_with_p_im, 2)
+  all_word_list_with_lambdamj = pt.lambda_mt(all_word_list_with_lambdamj, sum_p_im_list,fake_doc_list_with_p_im)
+  fake_doc_list_with_p_im = pt.p_im_list_t_more_than_1(fake_doc_list_with_p_im, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b)
+
 print("END")

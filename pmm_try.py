@@ -127,6 +127,76 @@ def p_im_list(doc_list, pi_m, word_list, dataframe_document_word):
         
     return new_doc_list
 
+def p_im_list_t_more_than_1(doc_list, pi_m, word_list, dataframe_document_word):
+    """
+        Memproses p_im
+
+        Args:
+            doc_list: daftar dokumen
+            pi_m: prior probability dari komponen m
+            
+        Returns:
+    """
+    
+    new_doc_list = []
+    for title_id, cluster, indexes, word_count, p_im in doc_list:
+        p_im = [] # Nilai p_im yg akan distore di doc list baru
+        
+        # Menghitung teta di setiap kata di dalam 1 dokumen
+        teta_list = []
+        i = 0
+        for word_value in dataframe_document_word.loc[title_id[1]]:
+            teta_list.append(probability_mass_function(word_value, word_list[i][4][0]))
+        
+        # Menghitung p_im
+        for k in cluster:
+            prod_teta_list = np.prod(teta_list)
+            p_im.append(pi_m[k-1] * prod_teta_list)
+            
+        new_doc_list.append([title_id, cluster, indexes, word_count, p_im])
+        
+    return new_doc_list
+
+
+def pi_m_with_t(doc_list, m):
+    pi_m_list = np.zeros(m)
+    sum_p_im_list = np.zeros(m)
+
+    # Mencari nilai sum(p_im)
+    for title_id, cluster, indexes, word_count, p_im in doc_list:
+        for k in cluster:
+            sum_p_im_list[k-1] += p_im
+    
+    # Mencari nilai pi_m
+    index = 0
+    for value in sum_p_im_list:
+        pi_m_list[index] = value/sum(sum_p_im_list)
+        index += 1
+    
+    return pi_m_list, sum_p_im_list
+
+def lambda_mt(word_list, sum_p_im_list, doc_list):
+    new_word_list = [] # word list baru
+    top_lambda_mt_list = np.zeros(2) # Angka 2 tergantung m-nya
+    
+    for title_id, cluster, indexes, word_count, p_im in doc_list:
+        for k in cluster:
+            top_lambda_mt_list[k-1] += p_im[0] * word_count[0]
+    
+    # Looping word list untuk mencari lambda_m_j
+    for word, cluster, indexes, word_count, lambda_m_j in word_list:
+        
+        lambda_m_j = []
+        index_cluster = 0
+        for k in cluster:
+            lambda_m_j.append(top_lambda_mt_list[k-1] / word_count[index_cluster + 1] * sum_p_im_list[k-1])
+            index_cluster += 1
+        
+        new_word_list.append([word, cluster, indexes, word_count, lambda_m_j])
+    
+    return new_word_list
+
+
 # def probability_mass_function(lambda_lm, d_kl):
 #     value_top = np.exp(-lambda_lm) * np.power(lambda_lm, d_kl)
 #     value_bottom = np.math.factorial(d_kl)
