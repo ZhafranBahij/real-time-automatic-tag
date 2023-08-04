@@ -115,12 +115,13 @@ def p_im_list(doc_list, pi_m, word_list, dataframe_document_word):
         # Menghitung teta di setiap kata di dalam 1 dokumen
         teta_list = []
         i = 0
-        for word_value in dataframe_document_word.loc[str(title_id[1])]:
+        for word_value in dataframe_document_word.loc[title_id[1]]:
             teta_list.append(probability_mass_function(word_value, word_list[i][4][0]))
         
         # Menghitung p_im
         for k in cluster:
-            p_im.append(pi_m[k-1]*np.prod(teta_list))
+            prod_teta_list = np.prod(teta_list)
+            p_im.append(pi_m[k-1] * prod_teta_list)
             
         new_doc_list.append([title_id, cluster, indexes, word_count, p_im])
         

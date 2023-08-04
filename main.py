@@ -9,6 +9,8 @@ import the_moment as tm
 import assign_label as al
 import node_rank_t as nrt
 import word_count_in_matrix as wcim
+import pmm_try as pt
+import word_count_in_list as wcil
 
 import numpy as np
 
@@ -41,8 +43,8 @@ tm.this_moment("Spectral Recursive Embedding :")
 # print("X")
 
 all_matrix_w_hat_partition = []
-for matrix_w in all_matrix_partition:
-  Q, T = lram.lanczos_iteration(matrix_w, 1)
+for matrix_partition in all_matrix_partition:
+  Q, T = lram.lanczos_iteration(matrix_partition, 1)
   matrix_W_hat_partition = lram.low_rank_approximation_matrix(Q, T)
   all_matrix_w_hat_partition.append(matrix_W_hat_partition)
 tm.this_moment("Create W hat partition :")
@@ -54,14 +56,22 @@ all_tag_list_with_rank = nrt.node_rankt(all_tag_list_with_cluster, matrix_w, all
 tm.this_moment("Node Rank T :")
 
 # Menghitung banyaknya document dari 
-all_title_id_document_with_word_count = wcim.word_count_in_matrix(all_title_id_document_with_cluster, all_matrix_partition)
+all_title_id_document_with_word_count, total_doc, total_doc_in_cluster = wcim.word_count_in_matrix(all_title_id_document_with_cluster, all_matrix_partition)
 tm.this_moment("Word Count setiap Document dari Matrix partisi :")
+# print("X")
+
+# Menghitung banyaknya word serta banyaknya word di masing-masing klaster
+all_word_list_with_count, total_word, total_word_in_cluster = wcil.word_count_in_list(all_word_list_with_cluster, matrix_w, all_matrix_partition)
+tm.this_moment("Word Count setiap word :")
+
+# Two Way Poisson Mixture Model
+# Menghitung prior probability
+all_prior_probability_m = pt.first_prior_probability(total_word, total_word_in_cluster)
+tm.this_moment("prior probability :")
+# Menghitung nilai lambda
+all_word_list_with_lambdamj = pt.lambda_m_j_list(all_word_list_with_count, total_doc_in_cluster)
+tm.this_moment("lambda(m,j) :")
+# Menghitung nilai p(i,m)
+all_title_id_document_with_p_im = pt.p_im_list(all_title_id_document_with_word_count, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word)
+tm.this_moment("p(i,m) :")
 print("X")
-
-# matrix_Q_2, matrix_T_2 = lram.lanczos_iteration(matrix_w, 0)
-# matrix_W_hat_2 = lram.low_rank_approximation_matrix(matrix_Q_2, matrix_T_2)
-# tm.this_moment("Low Rank Approximation :")
-# print(matrix_W_hat_2)
-
-# matrix_W_hat_diff = np.absolute(matrix_W_hat - matrix_W_hat_2)
-# print(matrix_W_hat_diff)

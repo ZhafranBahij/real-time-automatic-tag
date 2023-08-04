@@ -37,11 +37,11 @@ fake_matrix_b = np.array([
   [0, 0, 0, 0, 1, 1]
 ])
 fake_dataframe_b = pd.DataFrame({
-  '0': [0, 1, 1, 0, 0, 0],
-  '1': [1, 1, 0, 1, 0, 0],
-  '2': [1, 0, 1, 1, 0, 0],
-  '3': [1, 0, 0, 0, 1, 1],
-  '4': [0, 0, 0, 0, 1, 1]
+  0: [0, 1, 1, 0, 0, 0],
+  1: [1, 1, 0, 1, 0, 0],
+  2: [1, 0, 1, 1, 0, 0],
+  3: [1, 0, 0, 0, 1, 1],
+  4: [0, 0, 0, 0, 1, 1]
 }, index=['word1', 'word2', 'word3', 'word4', 'word5', 'word6']).transpose()
 fake_matrix_w = mp.matrixABtoW(fake_matrix_a, fake_matrix_b)
 
