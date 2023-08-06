@@ -9,7 +9,7 @@ import the_moment as tm
 import assign_label as al
 import node_rank_t as nrt
 import word_count_in_matrix as wcim
-import pmm_try as pt
+import two_way_poisson_mixture_model as twpmm
 import word_count_in_list as wcil
 
 import numpy as np
@@ -66,12 +66,12 @@ tm.this_moment("Word Count setiap word :")
 
 # Two Way Poisson Mixture Model
 # Menghitung prior probability
-all_prior_probability_m = pt.first_prior_probability(total_word, total_word_in_cluster)
+all_prior_probability_m = twpmm.first_prior_probability(total_word, total_word_in_cluster)
 tm.this_moment("prior probability :")
 # Menghitung nilai lambda
-all_word_list_with_lambdamj = pt.lambda_m_j_list(all_word_list_with_count, total_doc_in_cluster)
+all_word_list_with_lambdamj = twpmm.lambda_m_j_list(all_word_list_with_count, total_doc_in_cluster)
 tm.this_moment("lambda(m,j) :")
 # Menghitung nilai p(i,m)
-all_title_id_document_with_p_im = pt.p_im_list(all_title_id_document_with_word_count, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word)
+all_title_id_document_with_p_im = twpmm.p_im_list(all_title_id_document_with_word_count, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word)
 tm.this_moment("p(i,m) :")
 print("X")

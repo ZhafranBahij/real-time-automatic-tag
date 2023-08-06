@@ -2,18 +2,33 @@ import numpy as np
 import pandas as pd
 
 def first_prior_probability(total_word, total_word_in_cluster):
-    pi_m = np.zeros(len(total_word_in_cluster)) # Buat nilai pi_m
+    """
+    Menghitung pi_m dengan cara mencari prior probability setiap m
+    Dengan asumsi banyaknya M adalah banyaknya K
+
+    Args:
+      total_word: Keseluruhan kata dari dataset yang diberikan
+      total_word_in_cluster: Keselurhan kata dalam satu klaster
+
+    Returns:
+        pi_m: prior probability
+    """
     
     # Hitung nilai pi_m di setiap M
-    index = 0
-    for twic in total_word_in_cluster:
-        pi_m[index] = twic/total_word
-        index += 1
-        
+    pi_m = total_word_in_cluster / total_word
     return pi_m
 
-# Untuk menghitung lambda_m_j
 def lambda_m_j_list(word_list, total_doc_in_cluster):
+    """
+    Menghitung nilai lambda untuk setiap kata
+
+    Args:
+      word_list: list seluruh word yg ada di dataset
+      total_doc_in_cluster: total dokumen dalam 1 klaster
+
+    Returns:
+        pi_m: prior probability
+    """
     
     new_word_list = [] # word list baru
     
@@ -28,6 +43,17 @@ def lambda_m_j_list(word_list, total_doc_in_cluster):
     return new_word_list
 
 def probability_mass_function(d_ij, lambda_mij):
+    """
+    Menghitung probability mass function pada suatu word
+
+    Args:
+        d_ij: banyaknya word j dalam dokumen i
+        total_doc_in_cluster: lambda dari word j
+
+    Returns:
+        teta: probability mass function
+    """
+    
     teta = np.exp(-lambda_mij) * np.power(lambda_mij, d_ij) / np.prod(np.arange(1, d_ij+1))
     return teta
 
@@ -37,12 +63,19 @@ def p_im_list(doc_list, pi_m, word_list, dataframe_document_word):
 
         Args:
             doc_list: daftar dokumen
-            pi_m: prior probability dari komponen m
+            pi_m: prior probability dari komponen m dgn asumsi banyaknya K = banyaknya M
+            word_list: list dari word
+            dataframe_document_word: dataframe dengan document sebagai row dan word sebagai column
             
         Returns:
     """
     
     new_doc_list = []
+    
+    # Looping doc_list dgn:
+    # title_id: judul dan id dari doc
+    # cluster: klaster dari dokumen
+    # indexes: posisi row index pada matrix w dan matrix w partition
     for title_id, cluster, indexes, word_count in doc_list:
         p_im = [] # Nilai p_im yg akan distore di doc list baru
         

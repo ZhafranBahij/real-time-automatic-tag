@@ -13,7 +13,7 @@ import assign_label as al
 import node_rank_t as nrt
 import tag_recommendation_for_new_document as trfnd
 import word_count_in_matrix as wcim
-import pmm_try as pt
+import two_way_poisson_mixture_model as twpmm
 import word_count_in_list as wcil
 
 # x = np.array([1, 2, 3, 4, 5])
@@ -116,20 +116,20 @@ all_doc_list_with_word_count, fake_total_doc, fake_total_doc_in_cluster = wcim.w
 # fake_total_word dan fake_total_word_in_cluster mungkin bisa berbeda karena ada yg terpotong akibat bipartite graph partition
 all_word_list_with_count, fake_total_word, fake_total_word_in_cluster = wcil.word_count_in_list(fake_word_list, fake_matrix_w, all_fake_matrix_partition)
 
-# all_prior_probability_m = pt.first_prior_probability(all_doc_list_with_word_count, 2)
+# all_prior_probability_m = twpmm.first_prior_probability(all_doc_list_with_word_count, 2)
 
-all_prior_probability_m = pt.first_prior_probability(fake_total_word, fake_total_word_in_cluster)
-all_word_list_with_lambdamj = pt.lambda_m_j_list(all_word_list_with_count, fake_total_doc_in_cluster)
-fake_doc_list_with_p_im = pt.p_im_list(all_doc_list_with_word_count, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b)
+all_prior_probability_m = twpmm.first_prior_probability(fake_total_word, fake_total_word_in_cluster)
+all_word_list_with_lambdamj = twpmm.lambda_m_j_list(all_word_list_with_count, fake_total_doc_in_cluster)
+fake_doc_list_with_p_im = twpmm.p_im_list(all_doc_list_with_word_count, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b)
 
 L = []
-L.append(pt.get_L(fake_doc_list_with_p_im))
+L.append(twpmm.get_L(fake_doc_list_with_p_im))
 
 for i in range(1, 5):
-  all_prior_probability_m, sum_p_im_list = pt.pi_m_with_t(fake_doc_list_with_p_im, 2)
-  all_word_list_with_lambdamj = pt.lambda_mt(all_word_list_with_lambdamj, sum_p_im_list,fake_doc_list_with_p_im)
-  fake_doc_list_with_p_im = pt.p_im_list_t_more_than_1(fake_doc_list_with_p_im, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b)
-  L.append(pt.get_L(fake_doc_list_with_p_im))
+  all_prior_probability_m, sum_p_im_list = twpmm.pi_m_with_t(fake_doc_list_with_p_im, 2)
+  all_word_list_with_lambdamj = twpmm.lambda_mt(all_word_list_with_lambdamj, sum_p_im_list,fake_doc_list_with_p_im)
+  fake_doc_list_with_p_im = twpmm.p_im_list_t_more_than_1(fake_doc_list_with_p_im, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b)
+  L.append(twpmm.get_L(fake_doc_list_with_p_im))
 
 
 
