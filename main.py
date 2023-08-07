@@ -74,4 +74,7 @@ tm.this_moment("lambda(m,j) :")
 # Menghitung nilai p(i,m)
 all_title_id_document_with_p_im = twpmm.p_im_list(all_title_id_document_with_word_count, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word)
 tm.this_moment("p(i,m) :")
+# Menghitung nilai likelihood
+L = twpmm.get_L(all_title_id_document_with_p_im)
+tm.this_moment("Menghitung nilai Log Likelihood :")
 print("X")

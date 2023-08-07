@@ -109,7 +109,7 @@ all_fake_cluster_word_index = [[4, 5, 6], [7, 8]]
 # Contoh menghitung rank T menggunakan fake tag list dan fake matrix
 all_tag_list_with_rank = nrt.node_rankt(fake_tag_list, fake_matrix_w, all_fake_matrix_partition)
 
-tag_rank_list = trfnd.tag_recommendation(all_tag_list_with_rank, all_fake_cluster, all_fake_cluster_word_index)
+# tag_rank_list = trfnd.tag_recommendation(all_tag_list_with_rank, all_fake_cluster, all_fake_cluster_word_index)
 # print("END RANKT")
 all_doc_list_with_word_count, fake_total_doc, fake_total_doc_in_cluster = wcim.word_count_in_matrix(fake_title_id_list, all_fake_matrix_partition)
 
@@ -122,15 +122,15 @@ all_prior_probability_m = twpmm.first_prior_probability(fake_total_word, fake_to
 all_word_list_with_lambdamj = twpmm.lambda_m_j_list(all_word_list_with_count, fake_total_doc_in_cluster)
 fake_doc_list_with_p_im = twpmm.p_im_list(all_doc_list_with_word_count, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b)
 
-L = []
-L.append(twpmm.get_L(fake_doc_list_with_p_im))
+# L = []
+# L.append(twpmm.get_L(fake_doc_list_with_p_im))
 
-for i in range(1, 5):
-  all_prior_probability_m, sum_p_im_list = twpmm.pi_m_with_t(fake_doc_list_with_p_im, 2)
-  all_word_list_with_lambdamj = twpmm.lambda_mt(all_word_list_with_lambdamj, sum_p_im_list,fake_doc_list_with_p_im)
-  fake_doc_list_with_p_im = twpmm.p_im_list_t_more_than_1(fake_doc_list_with_p_im, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b)
-  L.append(twpmm.get_L(fake_doc_list_with_p_im))
+# for i in range(1, 5):
+#   all_prior_probability_m, sum_p_im_list = twpmm.pi_m_with_t(fake_doc_list_with_p_im, 2)
+#   all_word_list_with_lambdamj = twpmm.lambda_mt(all_word_list_with_lambdamj, sum_p_im_list,fake_doc_list_with_p_im)
+#   fake_doc_list_with_p_im = twpmm.p_im_list_t_more_than_1(fake_doc_list_with_p_im, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b)
+#   L.append(twpmm.get_L(fake_doc_list_with_p_im))
 
-
+# fake_10_tag = trfnd.tag_recommendation(all_tag_list_with_rank, all_fake_cluster, all_fake_cluster_word_index, fake_doc_list_with_p_im[1][4][0])
 
 print("END")

@@ -76,6 +76,7 @@ def p_im_list(doc_list, pi_m, word_list, dataframe_document_word):
     # title_id: judul dan id dari doc
     # cluster: klaster dari dokumen
     # indexes: posisi row index pada matrix w dan matrix w partition
+    # word_count: banyaknya jumlah word dalam dokumen
     for title_id, cluster, indexes, word_count in doc_list:
         p_im = [] # Nilai p_im yg akan distore di doc list baru
         
@@ -84,6 +85,7 @@ def p_im_list(doc_list, pi_m, word_list, dataframe_document_word):
         i = 0
         for word_value in dataframe_document_word.loc[title_id[1]]:
             teta_list.append(probability_mass_function(word_value, word_list[i][4][0]))
+            i+=1
         
         # Menghitung p_im
         for k in cluster:
@@ -96,16 +98,24 @@ def p_im_list(doc_list, pi_m, word_list, dataframe_document_word):
 
 def p_im_list_t_more_than_1(doc_list, pi_m, word_list, dataframe_document_word):
     """
-        Memproses p_im
+        Mencari nilai p_im jika pencarian p_im lebih dari 1 turn
 
         Args:
             doc_list: daftar dokumen
             pi_m: prior probability dari komponen m
-            
+            word_list: list dari word
+            dataframe_document_word: dataframe dengan document sebagai row dan word sebagai column
         Returns:
     """
     
     new_doc_list = []
+    
+    # Looping doc_list dgn:
+    # title_id: judul dan id dari doc
+    # cluster: klaster dari dokumen
+    # indexes: posisi row index pada matrix w dan matrix w partition
+    # word_count: banyaknya jumlah word dalam dokumen
+    # p_im: Nilai dari p_im
     for title_id, cluster, indexes, word_count, p_im in doc_list:
         p_im = [] # Nilai p_im yg akan distore di doc list baru
         
@@ -125,7 +135,18 @@ def p_im_list_t_more_than_1(doc_list, pi_m, word_list, dataframe_document_word):
     return new_doc_list
 
 
-def pi_m_with_t(doc_list, m):
+def pi_m_with_t(doc_list, m = 2):
+    """
+        Mencari nilai p_im jika pencarian p_im lebih dari 1 turn
+
+        Args:
+            doc_list: daftar dokumen
+            m: banyaknya komponen
+        Returns:
+            pi_m_list: Daftar pi_m terbaru
+            sum_p_im_list: sum dari p_im pada turn saat ini di setiap komponen
+    """
+    
     pi_m_list = np.zeros(m)
     sum_p_im_list = np.zeros(m)
 
@@ -143,9 +164,20 @@ def pi_m_with_t(doc_list, m):
     return pi_m_list, sum_p_im_list
 
 def lambda_mt(word_list, sum_p_im_list, doc_list):
+    """
+        Mencari nilai lambda jika pencarian lambda lebih dari 1 turn
+
+        Args:
+            word_list: daftar word
+            sum_p_im_list: sum dari p_im pada turn saat ini di setiap komponen
+        Returns:
+            new_word_list: daftar word terbaru
+    """
+    
     new_word_list = [] # word list baru
     top_lambda_mt_list = np.zeros(2) # Angka 2 tergantung m-nya
     
+    # Looping setiap dokumen
     for title_id, cluster, indexes, word_count, p_im in doc_list:
         for k in cluster:
             top_lambda_mt_list[k-1] += p_im[0] * word_count[0]
@@ -155,6 +187,8 @@ def lambda_mt(word_list, sum_p_im_list, doc_list):
         
         lambda_m_j = []
         index_cluster = 0
+        
+        # Kalkulasi nilai lambda berdasarkan word dan klasternya
         for k in cluster:
             lambda_m_j.append(top_lambda_mt_list[k-1] / word_count[index_cluster + 1] * sum_p_im_list[k-1])
             index_cluster += 1
