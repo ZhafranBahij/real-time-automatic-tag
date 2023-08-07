@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def word_count_in_matrix(document_list, all_matrix_partition):
+def word_count_in_matrix(document_list, all_matrix_partition, dataframe_document_word):
   """
     Melakukan perhitungan berapa banyak kata dalam per dokumen
 
@@ -20,21 +20,20 @@ def word_count_in_matrix(document_list, all_matrix_partition):
 
   # Looping sesuai banyaknya dokumen
   for title_and_id, cluster, nodes in document_list:
-    index_cluster = 0
-    word_count_list = []
+    # index_cluster = 0
     total_doc += 1
     
+    # Mengambil row dari matriks partisi yang menandakan dokumen tersebut
+    # row_doc = matrix_origin[nodes[0]]
+    
+    # Menghitung banyaknya kata
+    word_count = sum(dataframe_document_word.loc[title_and_id[1]])
+
     # Looping klaster
     for k in cluster:
-      # Mengambil row dari matriks partisi yang menandakan dokumen tersebut
-      row_doc = all_matrix_partition[k-1][nodes[index_cluster + 1]]
-      
-      # Menghitung banyaknya kata
-      word_count = sum(row_doc[int(len(row_doc)/2):])
-      word_count_list.append(word_count)
       total_doc_per_cluster[k-1] += 1
     
-    new_document_list.append([title_and_id, cluster, nodes, word_count_list])
+    new_document_list.append([title_and_id, cluster, nodes, word_count])
     
   return new_document_list, total_doc, total_doc_per_cluster.tolist()
 

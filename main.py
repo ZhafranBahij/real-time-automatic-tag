@@ -56,7 +56,7 @@ all_tag_list_with_rank = nrt.node_rankt(all_tag_list_with_cluster, matrix_w, all
 tm.this_moment("Node Rank T :")
 
 # Menghitung banyaknya document dari 
-all_title_id_document_with_word_count, total_doc, total_doc_in_cluster = wcim.word_count_in_matrix(all_title_id_document_with_cluster, all_matrix_partition)
+all_title_id_document_with_word_count, total_doc, total_doc_in_cluster = wcim.word_count_in_matrix(all_title_id_document_with_cluster, all_matrix_partition, dataframe_document_word)
 tm.this_moment("Word Count setiap Document dari Matrix partisi :")
 # print("X")
 
@@ -66,15 +66,18 @@ tm.this_moment("Word Count setiap word :")
 
 # Two Way Poisson Mixture Model
 # Menghitung prior probability
-all_prior_probability_m = twpmm.first_prior_probability(total_word, total_word_in_cluster)
+all_prior_probability_m = twpmm.first_prior_probability(total_doc, total_doc_in_cluster)
 tm.this_moment("prior probability :")
 # Menghitung nilai lambda
 all_word_list_with_lambdamj = twpmm.lambda_m_j_list(all_word_list_with_count, total_doc_in_cluster)
 tm.this_moment("lambda(m,j) :")
+# Menghitung probabilitas
+all_title_id_document_with_probability = twpmm.probability(all_title_id_document_with_word_count, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word)
+tm.this_moment("P(D = d|C = k) :")
 # Menghitung nilai p(i,m)
-all_title_id_document_with_p_im = twpmm.p_im_list(all_title_id_document_with_word_count, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word)
-tm.this_moment("p(i,m) :")
+# all_title_id_document_with_p_im = twpmm.p_im_list(all_title_id_document_with_word_count, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word)
+# tm.this_moment("p(i,m) :")
 # Menghitung nilai likelihood
-L = twpmm.get_L(all_title_id_document_with_p_im)
-tm.this_moment("Menghitung nilai Log Likelihood :")
+# L = twpmm.get_L(all_title_id_document_with_p_im)
+# tm.this_moment("Menghitung nilai Log Likelihood :")
 print("X")

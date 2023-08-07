@@ -111,14 +111,14 @@ all_tag_list_with_rank = nrt.node_rankt(fake_tag_list, fake_matrix_w, all_fake_m
 
 # tag_rank_list = trfnd.tag_recommendation(all_tag_list_with_rank, all_fake_cluster, all_fake_cluster_word_index)
 # print("END RANKT")
-all_doc_list_with_word_count, fake_total_doc, fake_total_doc_in_cluster = wcim.word_count_in_matrix(fake_title_id_list, all_fake_matrix_partition)
+all_doc_list_with_word_count, fake_total_doc, fake_total_doc_in_cluster = wcim.word_count_in_matrix(fake_title_id_list, all_fake_matrix_partition, fake_dataframe_b)
 
 # fake_total_word dan fake_total_word_in_cluster mungkin bisa berbeda karena ada yg terpotong akibat bipartite graph partition
 all_word_list_with_count, fake_total_word, fake_total_word_in_cluster = wcil.word_count_in_list(fake_word_list, fake_matrix_w, all_fake_matrix_partition)
 
 # all_prior_probability_m = twpmm.first_prior_probability(all_doc_list_with_word_count, 2)
 
-all_prior_probability_m = twpmm.first_prior_probability(fake_total_word, fake_total_word_in_cluster)
+all_prior_probability_m = twpmm.first_prior_probability(fake_total_doc, fake_total_doc_in_cluster)
 all_word_list_with_lambdamj = twpmm.lambda_m_j_list(all_word_list_with_count, fake_total_doc_in_cluster)
 fake_doc_list_with_p_im = twpmm.p_im_list(all_doc_list_with_word_count, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b)
 

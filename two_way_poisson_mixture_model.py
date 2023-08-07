@@ -1,21 +1,44 @@
 import numpy as np
 import pandas as pd
 
-def first_prior_probability(total_word, total_word_in_cluster):
+def probability(doc_list, pi_m, word_list, dataframe_document_word):
+    
+    new_doc_list = []
+    
+    for title_id, cluster, indexes, word_count in doc_list:
+        probability = [] # Nilai probability yg akan distore di doc list baru
+        
+        # Menghitung teta di setiap kata di dalam 1 dokumen
+        teta_list = []
+        i = 0
+        for word_value in dataframe_document_word.loc[title_id[1]]:
+            teta_list.append(probability_mass_function(word_value, word_list[i][4][0]))
+            i+=1
+        
+        # Menghitung probability
+        for k in cluster:
+            prod_teta_list = np.prod(teta_list)
+            probability.append(pi_m[k-1] * prod_teta_list)
+            
+        new_doc_list.append([title_id, cluster, indexes, word_count, sum(probability)])
+        
+    return new_doc_list
+
+def first_prior_probability(total_doc, total_doc_in_cluster):
     """
     Menghitung pi_m dengan cara mencari prior probability setiap m
     Dengan asumsi banyaknya M adalah banyaknya K
 
     Args:
-      total_word: Keseluruhan kata dari dataset yang diberikan
-      total_word_in_cluster: Keselurhan kata dalam satu klaster
+      total_doc: Keseluruhan dokumen dari dataset yang diberikan
+      total_doc_in_cluster: Keselurhan dokumen dalam satu klaster
 
     Returns:
         pi_m: prior probability
     """
     
     # Hitung nilai pi_m di setiap M
-    pi_m = total_word_in_cluster / total_word
+    pi_m = np.array(total_doc_in_cluster) / total_doc
     return pi_m
 
 def lambda_m_j_list(word_list, total_doc_in_cluster):
