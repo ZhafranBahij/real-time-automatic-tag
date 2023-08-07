@@ -120,8 +120,8 @@ all_word_list_with_count, fake_total_word, fake_total_word_in_cluster = wcil.wor
 
 all_prior_probability_m = twpmm.first_prior_probability(fake_total_doc, fake_total_doc_in_cluster)
 all_word_list_with_lambdamj = twpmm.lambda_m_j_list(all_word_list_with_count, fake_total_doc_in_cluster)
+fake_doc_list_with_probabililty = twpmm.probability(all_doc_list_with_word_count, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b)
 fake_doc_list_with_p_im = twpmm.p_im_list(all_doc_list_with_word_count, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b)
-
 # L = []
 # L.append(twpmm.get_L(fake_doc_list_with_p_im))
 

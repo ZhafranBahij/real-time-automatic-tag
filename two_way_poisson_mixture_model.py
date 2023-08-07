@@ -12,6 +12,9 @@ def probability(doc_list, pi_m, word_list, dataframe_document_word):
         teta_list = []
         i = 0
         for word_value in dataframe_document_word.loc[title_id[1]]:
+            if(word_value < 1):
+                i += 1
+                continue
             teta_list.append(probability_mass_function(word_value, word_list[i][4][0]))
             i+=1
         
@@ -60,6 +63,7 @@ def lambda_m_j_list(word_list, total_doc_in_cluster):
         lambda_m_j = []
         for k in cluster:
             lambda_m_j.append(word_count[0] / total_doc_in_cluster[k-1]) 
+            # lambda_m_j.append(1)
         
         new_word_list.append([word, cluster, indexes, word_count, lambda_m_j])
     
