@@ -1,13 +1,13 @@
 import pandas
 
-def tag_recommendation(all_tag_list_with_rank, all_cluster, all_cluster_word, p_dt_ck):
+def tag_recommendation(all_tag_list_with_rank, all_cluster, total_doc_in_cluster, p_dt_ck):
 
   """
   Melakukan rekomendasi tag terhadap dokumen baru
   """
   
   p_cluster = 1/len(all_cluster) # P(C=k)
-  p_document = [1/(len(k)+1) for k in all_cluster_word] # list P(D = dt) || Setiap klaster berbeda valuenya
+  p_document = [1/tdic for tdic in total_doc_in_cluster] # list P(D = dt) || Setiap klaster berbeda valuenya
   # p_dt_ck = 0.25
   
   R_Ti_dt = [] # Tampungan untuk nilai rank akhir
@@ -31,3 +31,16 @@ def tag_recommendation(all_tag_list_with_rank, all_cluster, all_cluster_word, p_
   big_10_rank = [tag for tag in dffT.head(10)["Tag"]]
   
   return big_10_rank
+
+def tag_recommendation_mass(doc_list, all_tag_list_with_rank, all_cluster, total_doc_in_cluster):
+  
+  new_doc_list= []
+  
+  index = 0
+  for doc in doc_list:
+    tag_recommend = tag_recommendation(all_tag_list_with_rank, all_cluster, total_doc_in_cluster, doc[-1])
+    doc_list[index].append(tag_recommend)
+    index += 1
+  
+  return doc_list
+  
