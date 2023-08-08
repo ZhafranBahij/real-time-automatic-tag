@@ -24,6 +24,32 @@ def set_m_component_to_document(doc_list, M, K):
     
     return new_doc_list, total_doc_in_component
 
+def set_word_count_in_every_m(doc_list, word_list, M, K, matrix_document_word):
+    
+    new_word_list = []
+    row, col = matrix_document_word.shape
+    total_every_word_in_component = np.zeros((M, col))
+    
+    index = 0
+    for title_id, cluster, indexes, word_count, m_component in doc_list:
+
+        # index_m = 0
+        for m in m_component:
+            total_every_word_in_component[m-1] += matrix_document_word[index]
+            # index_m += 1
+
+        index += 1
+    
+    index = 0
+    for word, cluster, indexes, word_count in word_list:
+        word_count = total_every_word_in_component[..., index]
+        index += 1
+        
+        new_word_list.append([word, cluster, indexes, word_count.tolist()])
+
+    return new_word_list
+
+
 def probability(doc_list, pi_m, word_list, dataframe_document_word):
     
     new_doc_list = []
@@ -84,9 +110,11 @@ def lambda_m_j_list(word_list, total_doc_in_component):
     # Looping word list untuk mencari lambda_m_j
     for word, cluster, indexes, word_count in word_list:
         lambda_m_j = []
+        index_m = 0
         for tdic in total_doc_in_component:
-            # lambda_m_j.append(word_count[0] / tdic) 
-            lambda_m_j.append(1)
+            lambda_m_j.append(word_count[index_m] / tdic)
+            index_m += 1 
+            # lambda_m_j.append(1)
         
         new_word_list.append([word, cluster, indexes, word_count, lambda_m_j])
     

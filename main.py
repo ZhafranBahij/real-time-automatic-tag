@@ -74,6 +74,10 @@ tm.this_moment("Word Count setiap word :")
 # Memilih m component
 all_title_id_document_with_m_component, total_doc_in_component = twpmm.set_m_component_to_document(all_title_id_document_with_word_count, M ,K)
 tm.this_moment("Menentukan m component pada suatu klaster :")
+
+# Menghitung banyaknya word serta banyaknya word di masing-masing komponen
+all_word_list_with_count = twpmm.set_word_count_in_every_m(all_title_id_document_with_m_component, all_word_list_with_count, M, K, matrix_document_word)
+tm.this_moment("Word Count setiap word :")
 # Menghitung prior probability
 all_prior_probability_m = twpmm.first_prior_probability(total_doc, total_doc_in_component)
 tm.this_moment("prior probability :")
