@@ -11,6 +11,7 @@ import node_rank_t as nrt
 import word_count_in_matrix as wcim
 import two_way_poisson_mixture_model as twpmm
 import word_count_in_list as wcil
+# import tag_recommendation_for_new_document as trfnd
 
 import numpy as np
 
@@ -71,7 +72,7 @@ tm.this_moment("Word Count setiap word :")
 
 # Two Way Poisson Mixture Model
 # Memilih m component
-all_title_id_document_with_m_commponent, total_doc_in_component = twpmm.set_m_component_to_document(all_title_id_document_with_word_count, M ,K)
+all_title_id_document_with_m_component, total_doc_in_component = twpmm.set_m_component_to_document(all_title_id_document_with_word_count, M ,K)
 tm.this_moment("Menentukan m component pada suatu klaster :")
 # Menghitung prior probability
 all_prior_probability_m = twpmm.first_prior_probability(total_doc, total_doc_in_component)
@@ -80,12 +81,14 @@ tm.this_moment("prior probability :")
 all_word_list_with_lambdamj = twpmm.lambda_m_j_list(all_word_list_with_count, total_doc_in_cluster)
 tm.this_moment("lambda(m,j) :")
 # Menghitung probabilitas
-all_title_id_document_with_probability = twpmm.probability(all_title_id_document_with_m_commponent, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word)
+all_title_id_document_with_probability = twpmm.probability(all_title_id_document_with_m_component, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word)
 tm.this_moment("P(D = d|C = k) :")
 # Menghitung nilai p(i,m)
-# all_title_id_document_with_p_im = twpmm.p_im_list(all_title_id_document_with_word_count, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word)
-# tm.this_moment("p(i,m) :")
+all_title_id_document_with_p_im = twpmm.p_im_list(all_title_id_document_with_m_component, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word)
+tm.this_moment("p(i,m) :")
 # Menghitung nilai likelihood
 # L = twpmm.get_L(all_title_id_document_with_p_im)
 # tm.this_moment("Menghitung nilai Log Likelihood :")
+# fake_doc_list_with_tag_recommend = trfnd.tag_recommendation_mass(all_title_id_document_with_probability, all_tag_list_with_rank, all_cluster, total_doc_in_cluster)
+# tm.this_moment('Tag Recommendation: ')
 print("X")
