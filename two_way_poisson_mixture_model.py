@@ -85,8 +85,8 @@ def lambda_m_j_list(word_list, total_doc_in_component):
     for word, cluster, indexes, word_count in word_list:
         lambda_m_j = []
         for tdic in total_doc_in_component:
-            lambda_m_j.append(word_count[0] / tdic) 
-            # lambda_m_j.append(1)
+            # lambda_m_j.append(word_count[0] / tdic) 
+            lambda_m_j.append(1)
         
         new_word_list.append([word, cluster, indexes, word_count, lambda_m_j])
     
@@ -127,7 +127,7 @@ def p_im_list(doc_list, pi_m, word_list, dataframe_document_word):
     # cluster: klaster dari dokumen
     # indexes: posisi row index pada matrix w dan matrix w partition
     # word_count: banyaknya jumlah word dalam dokumen
-    for title_id, cluster, indexes, word_count in doc_list:
+    for title_id, cluster, indexes, word_count, m_component in doc_list:
         p_im = [] # Nilai p_im yg akan distore di doc list baru
         
         # Menghitung teta di setiap kata di dalam 1 dokumen
@@ -138,11 +138,11 @@ def p_im_list(doc_list, pi_m, word_list, dataframe_document_word):
             i+=1
         
         # Menghitung p_im
-        for k in cluster:
+        for m in m_component:
             prod_teta_list = np.prod(teta_list)
-            p_im.append(pi_m[k-1] * prod_teta_list)
+            p_im.append(pi_m[m-1] * prod_teta_list)
             
-        new_doc_list.append([title_id, cluster, indexes, word_count, p_im])
+        new_doc_list.append([title_id, cluster, indexes, word_count, m_component, p_im])
         
     return new_doc_list
 
@@ -201,9 +201,9 @@ def pi_m_with_t(doc_list, m = 2):
     sum_p_im_list = np.zeros(m)
 
     # Mencari nilai sum(p_im)
-    for title_id, cluster, indexes, word_count, p_im in doc_list:
-        for k in cluster:
-            sum_p_im_list[k-1] += p_im
+    for title_id, cluster, indexes, word_count, m_component, p_im in doc_list:
+        for m in m_component:
+            sum_p_im_list[m-1] += p_im
     
     # Mencari nilai pi_m
     index = 0
@@ -213,7 +213,7 @@ def pi_m_with_t(doc_list, m = 2):
     
     return pi_m_list, sum_p_im_list
 
-def lambda_mt(word_list, sum_p_im_list, doc_list):
+def lambda_mt(word_list, sum_p_im_list, doc_list, M):
     """
         Mencari nilai lambda jika pencarian lambda lebih dari 1 turn
 
@@ -225,25 +225,28 @@ def lambda_mt(word_list, sum_p_im_list, doc_list):
     """
     
     new_word_list = [] # word list baru
-    top_lambda_mt_list = np.zeros(2) # Angka 2 tergantung m-nya
+    top_lambda_mt_list = np.zeros(M) # Angka 2 tergantung m-nya
     
     # Looping setiap dokumen
-    for title_id, cluster, indexes, word_count, p_im in doc_list:
-        for k in cluster:
-            top_lambda_mt_list[k-1] += p_im[0] * word_count[0]
+    for title_id, cluster, indexes, word_count, m_component, p_im in doc_list:
+        
+        index_m = 0
+        for m in m_component:
+            top_lambda_mt_list[m-1] += p_im[index_m] * word_count
+            index_m += 1
     
     # Looping word list untuk mencari lambda_m_j
     for word, cluster, indexes, word_count, lambda_m_j in word_list:
         
-        lambda_m_j = []
+        lambda_m_j_temp = []
         index_cluster = 0
         
         # Kalkulasi nilai lambda berdasarkan word dan klasternya
-        for k in cluster:
-            lambda_m_j.append(top_lambda_mt_list[k-1] / word_count[index_cluster + 1] * sum_p_im_list[k-1])
+        for m in m_component:
+            lambda_m_j_temp.append(top_lambda_mt_list[m-1] / word_count[index_cluster + 1] * sum_p_im_list[m-1])
             index_cluster += 1
         
-        new_word_list.append([word, cluster, indexes, word_count, lambda_m_j])
+        new_word_list.append([word, cluster, indexes, word_count, lambda_m_j_temp])
     
     return new_word_list
 
