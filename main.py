@@ -20,6 +20,11 @@ tm.this_moment("Menjalankan Algoritma :")
 dataset_document = dfd.get_data()
 tm.this_moment("Mengambil dataset :")
 
+# Mensetting K, M, dan L
+K = 2
+M = 4
+L = 2
+
 # Memproses dataset menjadi matrix
 matrix_tag_document, matrix_document_word, title_id_document, all_tag_list, all_word_list, dataframe_document_tag, dataframe_document_word = ip.document_processing(dataset_document)
 tm.this_moment("dataset ke matrix :")
@@ -65,14 +70,17 @@ all_word_list_with_count, total_word, total_word_in_cluster = wcil.word_count_in
 tm.this_moment("Word Count setiap word :")
 
 # Two Way Poisson Mixture Model
+# Memilih m component
+all_title_id_document_with_m_commponent, total_doc_in_component = twpmm.set_m_component_to_document(all_title_id_document_with_word_count, M ,K)
+tm.this_moment("Menentukan m component pada suatu klaster :")
 # Menghitung prior probability
-all_prior_probability_m = twpmm.first_prior_probability(total_doc, total_doc_in_cluster)
+all_prior_probability_m = twpmm.first_prior_probability(total_doc, total_doc_in_component)
 tm.this_moment("prior probability :")
 # Menghitung nilai lambda
 all_word_list_with_lambdamj = twpmm.lambda_m_j_list(all_word_list_with_count, total_doc_in_cluster)
 tm.this_moment("lambda(m,j) :")
 # Menghitung probabilitas
-all_title_id_document_with_probability = twpmm.probability(all_title_id_document_with_word_count, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word)
+all_title_id_document_with_probability = twpmm.probability(all_title_id_document_with_m_commponent, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word)
 tm.this_moment("P(D = d|C = k) :")
 # Menghitung nilai p(i,m)
 # all_title_id_document_with_p_im = twpmm.p_im_list(all_title_id_document_with_word_count, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word)
