@@ -82,13 +82,13 @@ tm.this_moment("Word Count setiap word :")
 all_prior_probability_m = twpmm.first_prior_probability(total_doc, total_doc_in_component)
 tm.this_moment("prior probability :")
 # Menghitung nilai lambda
-all_word_list_with_lambdamj = twpmm.lambda_m_j_list(all_word_list_with_count, total_doc_in_cluster)
+all_word_list_with_lambdamj = twpmm.lambda_m_j_list(all_word_list_with_count, total_doc_in_component)
 tm.this_moment("lambda(m,j) :")
 # Menghitung probabilitas
-all_title_id_document_with_probability = twpmm.probability(all_title_id_document_with_m_component, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word)
+all_title_id_document_with_probability = twpmm.probability(all_title_id_document_with_m_component, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word, M)
 tm.this_moment("P(D = d|C = k) :")
 # Menghitung nilai p(i,m)
-all_title_id_document_with_p_im = twpmm.p_im_list(all_title_id_document_with_m_component, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word)
+all_title_id_document_with_p_im = twpmm.p_im_list(all_title_id_document_with_probability, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word, M)
 tm.this_moment("p(i,m) :")
 # Menghitung nilai likelihood
 # L = twpmm.get_L(all_title_id_document_with_p_im)

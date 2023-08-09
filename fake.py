@@ -124,14 +124,14 @@ all_word_list_with_count, fake_total_word, fake_total_word_in_cluster = wcil.wor
 all_doc_list_with_m_component, fake_total_doc_in_component = twpmm.set_m_component_to_document(all_doc_list_with_word_count, M ,K)
 all_word_list_with_count = twpmm.set_word_count_in_every_m(all_doc_list_with_m_component, all_word_list_with_count, M, K, fake_matrix_b)
 all_prior_probability_m = twpmm.first_prior_probability(fake_total_doc, fake_total_doc_in_component)
-all_word_list_with_lambdamj = twpmm.lambda_m_j_list(all_word_list_with_count, fake_total_doc_in_cluster)
-fake_doc_list_with_probabililty = twpmm.probability(all_doc_list_with_m_component, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b)
-# fake_doc_list_with_p_im = twpmm.p_im_list(all_doc_list_with_m_component, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b)
+all_word_list_with_lambdamj = twpmm.lambda_m_j_list(all_word_list_with_count, fake_total_doc_in_component)
+fake_doc_list_with_probabililty = twpmm.probability(all_doc_list_with_m_component, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b, M)
+fake_doc_list_with_p_im = twpmm.p_im_list(fake_doc_list_with_probabililty, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b, M)
 # L = []
 # L.append(twpmm.get_L(fake_doc_list_with_p_im))
 
 # for i in range(1, 5):
-# all_prior_probability_m, sum_p_im_list = twpmm.pi_m_with_t(fake_doc_list_with_p_im, M)
+all_prior_probability_m, sum_p_im_list = twpmm.pi_m_with_t(fake_doc_list_with_p_im, M)
 # all_word_list_with_lambdamj = twpmm.lambda_mt(all_word_list_with_lambdamj, sum_p_im_list,fake_doc_list_with_p_im, M)
 # fake_doc_list_with_p_im = twpmm.p_im_list_t_more_than_1(fake_doc_list_with_p_im, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b)
 #   L.append(twpmm.get_L(fake_doc_list_with_p_im))
