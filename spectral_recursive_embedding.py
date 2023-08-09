@@ -9,7 +9,7 @@ import the_moment as tm
 def second_largest_singular_vector(W_hat):
   """
     Menghitung singular vector menggunakan W_hat dari library
-    https://docs.scipy.org/doc/scipy/reference/sparse.linalg.svds-arpack.html
+    https://docs.scipy.org/doc/scipy/reference/sparse.linalg.svds-lobpcg.html    
     
     Args:
       W_hat: Matrix W_hat

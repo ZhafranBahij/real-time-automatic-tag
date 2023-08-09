@@ -2,7 +2,18 @@ import numpy as np
 import pandas as pd
 
 def set_m_component_to_document(doc_list, M, K):
-    
+    """
+    Melabelkan dokumen dengan m komponen
+
+    Args:
+        doc_list: daftar dari dokumen
+        M: banyaknya m komponen
+        K: banyaknya klaster
+
+    Returns:
+        new_doc_list: prior probability
+        total_doc_in_component: Banyaknya dokumen dalam suatu komponen
+    """
     new_doc_list = []
     total_doc_in_component = np.zeros(M)
     index_component = np.zeros(K)
@@ -19,62 +30,48 @@ def set_m_component_to_document(doc_list, M, K):
             m_list.append(m_component) 
             total_doc_in_component[m_component - 1] += 1
             index_component[k-1] += 1
-    
+
+        # Membuat list dokumen terbaru
         new_doc_list.append([title_id, cluster, indexes, word_count, m_list])
     
     return new_doc_list, total_doc_in_component
 
 def set_word_count_in_every_m(doc_list, word_list, M, K, matrix_document_word):
-    
+    """
+    Menghitung banyaknya masing-masing word di setiap komponen
+
+    Args:
+        doc_list: daftar dari dokumen
+        word_list: daftar word
+        M: banyaknya m komponen
+        K: banyaknya klaster
+        matrix_document_word: matrix relasi antara dokumen sbg row dgn word sbg column
+
+    Returns:
+        new_doc_list: prior probability
+        total_doc_in_component: Banyaknya dokumen dalam suatu komponen
+    """
     new_word_list = []
     row, col = matrix_document_word.shape
-    total_every_word_in_component = np.zeros((M, col))
+    total_every_word_in_component = np.zeros((M, col)) # Inisiasi word dalam component
     
     index = 0
+    # Proses menghitung banyaknya word di dalam suatu komponen doc
     for title_id, cluster, indexes, word_count, m_component in doc_list:
-
-        # index_m = 0
         for m in m_component:
             total_every_word_in_component[m-1] += matrix_document_word[index]
-            # index_m += 1
-
         index += 1
     
+
     index = 0
     for word, cluster, indexes, word_count in word_list:
+        # Memindahkan total_every_word_in_component ke dalam word_count sesuai word-nya
         word_count = total_every_word_in_component[..., index]
         index += 1
         
         new_word_list.append([word, cluster, indexes, word_count.tolist()])
 
     return new_word_list
-
-
-def probability(doc_list, pi_m, word_list, dataframe_document_word):
-    
-    new_doc_list = []
-    
-    for title_id, cluster, indexes, word_count, m_component in doc_list:
-        probability = [] # Nilai probability yg akan distore di doc list baru
-        
-        # Menghitung teta di setiap kata di dalam 1 dokumen
-        teta_list = []
-        i = 0
-        for word_value in dataframe_document_word.loc[title_id[1]]:
-            if(word_value < 1):
-                i += 1
-                continue
-            teta_list.append(probability_mass_function(word_value, word_list[i][4][0]))
-            i+=1
-        
-        # Menghitung probability
-        for m in m_component:
-            prod_teta_list = np.prod(teta_list)
-            probability.append(pi_m[m-1] * prod_teta_list)
-            
-        new_doc_list.append([title_id, cluster, indexes, word_count, m_component, sum(probability)])
-        
-    return new_doc_list
 
 def first_prior_probability(total_doc, total_doc_in_component):
     """
@@ -135,6 +132,43 @@ def probability_mass_function(d_ij, lambda_mij):
     teta = np.exp(-lambda_mij) * np.power(lambda_mij, d_ij) / np.prod(np.arange(1, d_ij+1))
     return teta
 
+def probability(doc_list, pi_m, word_list, dataframe_document_word):
+    """
+    Menghitung P(D = d|C = k) untuk setiap dokumen
+    
+    Args:
+        doc_list: list dari suatu dokumen
+        pi_m: nilai π_m (prior probability) setiap komponen
+        word_list: list dari suatu word
+        dataframe_document_word: Dataframe relasi antara doc dgn word
+
+    Returns:
+        new_doc_list: list doc dgn tambahan probability
+    """
+    new_doc_list = []
+    
+    for title_id, cluster, indexes, word_count, m_component in doc_list:
+        probability = [] # Nilai probability yg akan distore di doc list baru
+        
+        # Menghitung teta di setiap kata di dalam 1 dokumen
+        teta_list = []
+        i = 0
+        for word_value in dataframe_document_word.loc[title_id[1]]:
+            if(word_value < 1):
+                i += 1
+                continue
+            teta_list.append(probability_mass_function(word_value, word_list[i][4][0]))
+            i+=1
+        
+        # Menghitung probability
+        for m in m_component:
+            prod_teta_list = np.prod(teta_list)
+            probability.append(pi_m[m-1] * prod_teta_list)
+            
+        new_doc_list.append([title_id, cluster, indexes, word_count, m_component, sum(probability)])
+        
+    return new_doc_list
+
 def p_im_list(doc_list, pi_m, word_list, dataframe_document_word):
     """
         Memproses p_im
@@ -146,6 +180,7 @@ def p_im_list(doc_list, pi_m, word_list, dataframe_document_word):
             dataframe_document_word: dataframe dengan document sebagai row dan word sebagai column
             
         Returns:
+            new_doc_list: list doc terbaru 
     """
     
     new_doc_list = []
@@ -162,6 +197,9 @@ def p_im_list(doc_list, pi_m, word_list, dataframe_document_word):
         teta_list = []
         i = 0
         for word_value in dataframe_document_word.loc[title_id[1]]:
+            if(word_value < 1):
+                i += 1
+                continue
             teta_list.append(probability_mass_function(word_value, word_list[i][4][0]))
             i+=1
         
