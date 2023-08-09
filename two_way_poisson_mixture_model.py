@@ -263,7 +263,7 @@ def lambda_mt(word_list, sum_p_im_list, doc_list, M):
     """
     
     new_word_list = [] # word list baru
-    top_lambda_mt_list = np.zeros(M) # Angka 2 tergantung m-nya
+    top_lambda_mt_list = np.zeros(M) # Untuk perhitungan pada persamaan lambda_mt bagian atas 
     
     # Looping setiap dokumen
     for title_id, cluster, indexes, word_count, m_component, p_im, probability in doc_list:
@@ -277,12 +277,17 @@ def lambda_mt(word_list, sum_p_im_list, doc_list, M):
     for word, cluster, indexes, word_count, lambda_m_j in word_list:
         
         lambda_m_j_temp = []
-        index_cluster = 0
         
         # Kalkulasi nilai lambda berdasarkan word dan klasternya
         for m in range(1, M+1):
-            lambda_m_j_temp.append(top_lambda_mt_list[m-1] / word_count[m-1] * sum_p_im_list[m-1])
-            index_cluster += 1
+            bottom_lambda_mt = word_count[m-1] * sum_p_im_list[m-1]
+            
+            # Jika nilai bottom_lambda_mt terbaru bernilai 0 dan mencegah lambda_m_j_temp bernilai inf
+            if bottom_lambda_mt == 0:
+                lambda_m_j_temp.append(0)
+            else:
+                lambda_m_j_temp.append(top_lambda_mt_list[m-1] / word_count[m-1] * sum_p_im_list[m-1])
+            
         
         new_word_list.append([word, cluster, indexes, word_count, lambda_m_j_temp, probability])
     
