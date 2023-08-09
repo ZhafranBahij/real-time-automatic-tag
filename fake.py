@@ -132,7 +132,7 @@ fake_doc_list_with_p_im = twpmm.p_im_list(fake_doc_list_with_probabililty, all_p
 
 # for i in range(1, 5):
 all_prior_probability_m, sum_p_im_list = twpmm.pi_m_with_t(fake_doc_list_with_p_im, M)
-# all_word_list_with_lambdamj = twpmm.lambda_mt(all_word_list_with_lambdamj, sum_p_im_list,fake_doc_list_with_p_im, M)
+all_word_list_with_lambdamj = twpmm.lambda_mt(all_word_list_with_lambdamj, sum_p_im_list,fake_doc_list_with_p_im, M)
 # fake_doc_list_with_p_im = twpmm.p_im_list_t_more_than_1(fake_doc_list_with_p_im, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b)
 #   L.append(twpmm.get_L(fake_doc_list_with_p_im))
 
