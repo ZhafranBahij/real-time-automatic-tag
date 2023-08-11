@@ -11,7 +11,7 @@ import node_rank_t as nrt
 import word_count_in_matrix as wcim
 import two_way_poisson_mixture_model as twpmm
 import word_count_in_list as wcil
-# import tag_recommendation_for_new_document as trfnd
+import tag_recommendation_for_new_document as trfnd
 
 import numpy as np
 
@@ -99,6 +99,6 @@ tm.this_moment("p(i,m) :")
 # Menghitung nilai likelihood
 # L = twpmm.get_L(all_title_id_document_with_p_im)
 # tm.this_moment("Menghitung nilai Log Likelihood :")
-# fake_doc_list_with_tag_recommend = trfnd.tag_recommendation_mass(all_title_id_document_with_probability, all_tag_list_with_rank, all_cluster, total_doc_in_cluster)
+all_title_id_document_with_tag_recommendation = trfnd.tag_recommendation_mass(all_title_id_document_with_probability, all_tag_list_with_rank, all_cluster, total_doc_in_cluster)
 # tm.this_moment('Tag Recommendation: ')
 print("X")
