@@ -289,7 +289,7 @@ def lambda_mt(word_list, sum_p_im_list, doc_list, M):
                 lambda_m_j_temp.append(top_lambda_mt_list[m-1] / word_count[m-1] * sum_p_im_list[m-1])
             
         
-        new_word_list.append([word, cluster, indexes, word_count, lambda_m_j_temp, probability])
+        new_word_list.append([word, cluster, indexes, word_count, lambda_m_j_temp])
     
     return new_word_list
 
@@ -313,7 +313,7 @@ def p_im_list_t_more_than_1(doc_list, pi_m, word_list, dataframe_document_word):
     # indexes: posisi row index pada matrix w dan matrix w partition
     # word_count: banyaknya jumlah word dalam dokumen
     # p_im: Nilai dari p_im
-    for title_id, cluster, indexes, word_count, p_im in doc_list:
+    for title_id, cluster, indexes, word_count, m_component, p_im, probability in doc_list:
         p_im = [] # Nilai p_im yg akan distore di doc list baru
         
         # Menghitung teta di setiap kata di dalam 1 dokumen
@@ -323,18 +323,23 @@ def p_im_list_t_more_than_1(doc_list, pi_m, word_list, dataframe_document_word):
             teta_list.append(probability_mass_function(word_value, word_list[i][4][0]))
         
         # Menghitung p_im
-        for k in cluster:
+        for m in m_component:
             prod_teta_list = np.prod(teta_list)
-            p_im.append(pi_m[k-1] * prod_teta_list)
+            p_im.append(pi_m[m-1] * prod_teta_list)
             
-        new_doc_list.append([title_id, cluster, indexes, word_count, p_im])
+        new_doc_list.append([title_id, cluster, indexes, word_count, m_component, p_im, probability])
         
     return new_doc_list
 
-def get_L(doc_list):
+def get_L(doc_list, new_doc_list):
     L = 0
-    for title_id, cluster, indexes, word_count, p_im in doc_list:
-        log_p_im = np.log(p_im)
-        L += p_im * log_p_im
+        
+    # Looping dokumen
+    for i in range(0, len(doc_list)):
+        
+        # Looping sebanyak label m yg ada di dokumen
+        for m in range(0, len(doc_list[4])):  
+            log_p_im = np.log(new_doc_list[i][5])
+            L += doc_list[i][5] * log_p_im
         
     return L
