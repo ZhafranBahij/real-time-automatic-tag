@@ -1,34 +1,5 @@
 import numpy as np
 
-W = np.array([
-[0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
-[0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
-[1 , 0 , 0 , 0 , 0 , 1 , 1 , 1 , 0] ,
-[1 , 0 , 0 , 0 , 0 , 0 , 1 , 1 , 0] ,
-[1 , 1 , 0 , 0 , 0 , 0 , 0 , 1 , 1] ,
-[0 , 0 , 1 , 0 , 0 , 0 , 0 , 0 , 0] ,
-[0 , 0 , 1 , 1 , 0 , 0 , 0 , 0 , 0] ,
-[0 , 0 , 1 , 1 , 1 , 0 , 0 , 0 , 0] ,
-[0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 , 0] ,
-])
-
-# # Tag dengan doc
-# # row = tag
-# # col = doc
-# A = [
-#   [1, 1, 1],
-#   [0, 0, 1]
-# ]
-
-# # doc dengan word
-# # row = doc
-# # col = word
-# B = [
-#   [1, 1, 1, 0],
-#   [0, 1, 1, 0],
-#   [0, 0, 0, 1],
-# ]
-
 def matrixABtoW(A, B):
     """
         Fungsi untuk menggabungkan matriks A dan B menjadi W
@@ -68,8 +39,3 @@ def matrixABtoW(A, B):
         W[tag_count+i][-word_count:] = B[i]
     
     return W
-
-def get_example_W():
-    return W
-
-# print(matrixABtoW(np.array(A), np.array(B)))

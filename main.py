@@ -33,12 +33,6 @@ tm.this_moment("dataset ke matrix :")
 matrix_w = mp.matrixABtoW(matrix_tag_document, matrix_document_word)
 tm.this_moment("matrix A & B menjadi W :")
 
-# matrix_d = nl.diagonal_matrix(matrix_w)
-# matrix_lw = nl.normalized_laplacian(matrix_d, matrix_w)
-# now = datetime.datetime.now()
-# print("Normalized Laplacian :",now)
-# print(matrix_lw)
-
 matrix_Q, matrix_T = lram.lanczos_iteration(matrix_w, 1)
 matrix_W_hat = lram.low_rank_approximation_matrix(matrix_Q, matrix_T)
 tm.this_moment("Low Rank Approximation :") 
