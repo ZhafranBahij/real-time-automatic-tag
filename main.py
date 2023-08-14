@@ -92,29 +92,21 @@ all_title_id_document_with_p_im = twpmm.p_im_list(all_title_id_document_with_pro
 tm.this_moment("p(i,m) :")
 
 # Looping Expectation Maximization
-# L = []
-# for i in range(1, 5):
-#   # Menghitung Prior probability (pi_m) t+1
-#   all_prior_probability_m, sum_p_im_list = twpmm.pi_m_with_t(all_title_id_document_with_p_im, M)
-#   tm.this_moment("pi(m) (t+1) :")
-#   # Menghitung lambda t+1
-#   all_word_list_with_lambdamj = twpmm.lambda_mt(all_word_list_with_lambdamj, sum_p_im_list, all_title_id_document_with_p_im, M)
-#   # tm.this_moment("lambda(m) (t+1) :")
-#   # Menghitung nilai likelihood
-#   new_all_title_id_document_with_p_im = twpmm.p_im_list_t_more_than_1(all_title_id_document_with_p_im, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word)
-#   L.append(twpmm.get_L(all_title_id_document_with_p_im, new_all_title_id_document_with_p_im))
-#   all_title_id_document_with_p_im = new_all_title_id_document_with_p_im
-#   tm.this_moment("Menghitung nilai Log Likelihood :")
-# Menghitung Prior probability (pi_m) t+1
-# all_prior_probability_m, sum_p_im_list = twpmm.pi_m_with_t(all_title_id_document_with_p_im, M)
-# tm.this_moment("pi(m) (t+1) :")
-# Menghitung lambda t+1
-# all_word_list_with_lambdamj = twpmm.lambda_mt(all_word_list_with_lambdamj, sum_p_im_list, all_title_id_document_with_p_im, M)
-# tm.this_moment("lambda(m) (t+1) :")
-# Menghitung nilai likelihood
-# Buat versi new title id document with probability
-# L = twpmm.get_L(all_title_id_document_with_p_im)
-# tm.this_moment("Menghitung nilai Log Likelihood :")
+log_likelihood = []
+for i in range(1, 2):
+  # Menghitung Prior probability (pi_m) t+1
+  all_prior_probability_m, sum_p_im_list = twpmm.pi_m_with_t(all_title_id_document_with_p_im, M)
+  tm.this_moment("pi(m) (t+1) :")
+  # Menghitung lambda t+1
+  all_word_list_with_lambdamj = twpmm.lambda_mt(all_word_list_with_lambdamj, sum_p_im_list, all_title_id_document_with_p_im, M)
+  tm.this_moment("lambda(m) (t+1) :")
+  # Menghitung nilai likelihood
+  new_all_title_id_document_with_p_im = twpmm.p_im_list_t_more_than_1(all_title_id_document_with_p_im, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word)
+  tm.this_moment("p(i,m) (t+1) :")
+  log_likelihood.append(twpmm.get_log_likelihood(all_title_id_document_with_p_im, new_all_title_id_document_with_p_im))
+  all_title_id_document_with_p_im = new_all_title_id_document_with_p_im
+  tm.this_moment("Menghitung nilai Log Likelihood :")
+
 all_title_id_document_with_tag_recommendation = trfnd.tag_recommendation_mass(all_title_id_document_with_probability, all_tag_list_with_rank, all_cluster, total_doc_in_cluster)
 tm.this_moment('Tag Recommendation: ')
 print("X")

@@ -331,15 +331,15 @@ def p_im_list_t_more_than_1(doc_list, pi_m, word_list, dataframe_document_word):
         
     return new_doc_list
 
-def get_L(doc_list, new_doc_list):
-    L = 0
+def get_log_likelihood(doc_list, new_doc_list):
+    log_likelihood = 0
         
     # Looping dokumen
     for i in range(0, len(doc_list)):
         
         # Looping sebanyak label m yg ada di dokumen
-        for m in range(0, len(doc_list[4])):  
-            log_p_im = np.log(new_doc_list[i][5])
-            L += doc_list[i][5] * log_p_im
+        for m in range(0, len(doc_list[i][4])):  
+            log_p_im = np.log(new_doc_list[i][5][m])
+            log_likelihood += doc_list[i][5][m] * log_p_im
         
-    return L
+    return log_likelihood
