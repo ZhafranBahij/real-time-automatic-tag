@@ -2,40 +2,6 @@ import numpy as np
 
 import matrix_processing as mp
 
-# def n_precision(matrix_w_partition, node_i_partition):
-#   """
-#     Menghitung N Precision dari suatu tag
-
-#     Args:
-#       matrix_w_partition: matrix yg sudah di-partition
-#       node_i_partition: node index dari tag di dalam matrix partition
-
-#     Returns:
-#       npi: N Precision dari suatu tag
-#   """
-
-#   npi_top = sum(matrix_w_partition[node_i_partition])
-#   npi_bottom = sum(sum(matrix_w_partition))/2
-#   npi = npi_top / npi_bottom
-#   return npi
-
-# def n_recall(matrix_w_origin, tag_cluster, node_i_origin):
-#   """
-#     Menghitung N Precision dari suatu tag
-
-#     Args:
-#       matrix_w_origin: matrix w yg dari awal dibuat
-#       tag_cluster: 
-#       node_i_origin: node di matrix w yg dari awal dibuat
-
-#     Returns:
-#       nri: N Recall dari suatu tag
-#   """
-#   nri_top = sum(matrix_w_origin[node_i_origin]) 
-#   nri_bottom = len(tag_cluster)
-#   nri = nri_top / nri_bottom
-#   return nri
-
 def n_recall(matrix_w_origin, matrix_w_partition, node_i_origin):
   """
     Menghitung N Precision dari suatu tag
@@ -120,13 +86,6 @@ def get_all_np_list(tag_list, np_top_list):
       np_top_i = np_top_list[k-1][nodes[index_cluster+1]]
       # Menghitung np_bottom
       np_bottom = sum_np_top[k-1]
-      
-      # alternate menghitung np
-      # np_buttom = sum_np_top[k-1] - np_top_i
-      # npi = 1
-      # if np_bottom != 0:
-      #   npi = np_top_i / np_bottom
-
       
       # Menghitung np pada suatu tag
       npi = np_top_i / np_bottom

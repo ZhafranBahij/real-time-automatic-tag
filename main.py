@@ -23,7 +23,7 @@ tm.this_moment("Mengambil dataset :")
 
 # Mensetting K, M, dan L
 K = 2
-M = 4
+M = 2
 L = 2
 
 # Memproses dataset menjadi matrix
@@ -87,7 +87,7 @@ tm.this_moment("p(i,m) :")
 
 # Looping Expectation Maximization
 log_likelihood = []
-for i in range(1, 2):
+for i in range(1, 20):
   # Menghitung Prior probability (pi_m) t+1
   all_prior_probability_m, sum_p_im_list = twpmm.pi_m_with_t(all_title_id_document_with_p_im, M)
   tm.this_moment("pi(m) (t+1) :")
