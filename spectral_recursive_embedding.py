@@ -76,6 +76,10 @@ def form_partition(cx, cy, x, y):
     else:
       Bc_partition.append(j)
     j+=1
+    
+  if A_partition != B_partition:
+    B_partition, Bc_partition = Bc_partition, B_partition
+    # print("X")
   
   return A_partition, Ac_partition, B_partition, Bc_partition
 
