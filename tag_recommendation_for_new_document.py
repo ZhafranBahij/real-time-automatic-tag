@@ -27,10 +27,10 @@ def tag_recommendation(all_tag_list_with_rank, all_cluster, total_doc_in_cluster
   dff = pandas.DataFrame([all_tag_name, R_Ti_dt], ["Tag", "Value"])
   dffT = dff.T.sort_values(by=['Value'], ascending=False)
 
-  # Ambil 10 tag dgn rank akhir terbesar
-  big_10_rank = [tag for tag in dffT.head(10)["Tag"]]
+  # Ambil 6 tag dgn rank akhir terbesar
+  big_rank = [tag for tag in dffT.head(6)["Tag"]]
   
-  return big_10_rank
+  return big_rank
 
 def tag_recommendation_mass(doc_list, all_tag_list_with_rank, all_cluster, total_doc_in_cluster):
   

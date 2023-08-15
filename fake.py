@@ -15,6 +15,7 @@ import tag_recommendation_for_new_document as trfnd
 import word_count_in_matrix as wcim
 import two_way_poisson_mixture_model as twpmm
 import word_count_in_list as wcil
+import top_k_accuracy as tka
 
 # x = np.array([1, 2, 3, 4, 5])
 # dotx = np.prod(x)
@@ -33,6 +34,13 @@ fake_matrix_a = np.array([
   [0, 1, 1, 0, 0],
   [0, 0, 1, 1, 1]
 ])
+fake_dataframe_a = pd.DataFrame({
+  0: [1, 1, 0, 0],
+  1: [1, 0, 1, 0],
+  2: [1, 1, 1, 1],
+  3: [0, 0, 0, 1],
+  4: [0, 0, 0, 1],
+}, index=['tag1', 'tag2', 'tag3', 'tag4']).transpose()
 fake_matrix_b = np.array([
   [0, 1, 1, 0, 0, 0],
   [1, 1, 0, 1, 0, 0],
@@ -84,10 +92,10 @@ Melakukan rank T dengan fake tag list
 """
 # [nama_tag, klaster, [index_row_matrix_awal, index_row_matrix_klaster]]
 fake_tag_list = [
-  ['tag04', [2], [3, 0]],
-  ['tag01', [1], [0, 0]],
-  ['tag02', [1], [1, 1]],
-  ['tag03', [1], [2, 2]],
+  ['tag4', [2], [3, 0]],
+  ['tag1', [1], [0, 0]],
+  ['tag2', [1], [1, 1]],
+  ['tag3', [1], [2, 2]],
 ]
 
 fake_title_id_list = [
@@ -127,15 +135,16 @@ all_prior_probability_m = twpmm.first_prior_probability(fake_total_doc, fake_tot
 all_word_list_with_lambdamj = twpmm.lambda_m_j_list(all_word_list_with_count, fake_total_doc_in_component)
 fake_doc_list_with_probabililty = twpmm.probability(all_doc_list_with_m_component, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b, M)
 fake_doc_list_with_p_im = twpmm.p_im_list(fake_doc_list_with_probabililty, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b, M)
-log_likelihood = []
+# log_likelihood = []
 
-for i in range(1, 5):
-  all_prior_probability_m, sum_p_im_list = twpmm.pi_m_with_t(fake_doc_list_with_p_im, M)
-  all_word_list_with_lambdamj = twpmm.lambda_mt(all_word_list_with_lambdamj, sum_p_im_list,fake_doc_list_with_p_im, M)
-  new_fake_doc_list_with_p_im = twpmm.p_im_list_t_more_than_1(fake_doc_list_with_p_im, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b)
-  log_likelihood.append(twpmm.get_log_likelihood(fake_doc_list_with_p_im, new_fake_doc_list_with_p_im))
-  fake_doc_list_with_p_im = new_fake_doc_list_with_p_im
+# for i in range(1, 5):
+#   all_prior_probability_m, sum_p_im_list = twpmm.pi_m_with_t(fake_doc_list_with_p_im, M)
+#   all_word_list_with_lambdamj = twpmm.lambda_mt(all_word_list_with_lambdamj, sum_p_im_list,fake_doc_list_with_p_im, M)
+#   new_fake_doc_list_with_p_im = twpmm.p_im_list_t_more_than_1(fake_doc_list_with_p_im, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b)
+#   log_likelihood.append(twpmm.get_log_likelihood(fake_doc_list_with_p_im, new_fake_doc_list_with_p_im))
+#   fake_doc_list_with_p_im = new_fake_doc_list_with_p_im
 
 # fake_10_tag = trfnd.tag_recommendation(all_tag_list_with_rank, all_fake_cluster, all_fake_cluster_word_index, fake_doc_list_with_p_im[1][4][0])
 fake_doc_list_with_tag_recommend = trfnd.tag_recommendation_mass(fake_doc_list_with_probabililty, all_tag_list_with_rank, all_fake_cluster, fake_total_doc_in_cluster)
+fake_result = tka.top_k_accuracy(fake_doc_list_with_tag_recommend, fake_dataframe_a)
 print("END")
