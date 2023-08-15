@@ -1,6 +1,18 @@
 import numpy as np
 import pandas as pd
 
+def set_new_probability_t(doc_list):
+  
+  new_doc_list = []
+  
+  for title_id, cluster, indexes, word_count, m_component, p_im, probability in doc_list:
+    probability = sum(p_im)
+    
+    new_doc_list.append([title_id, cluster, indexes, word_count, m_component, p_im, probability])
+  
+  return new_doc_list
+  
+
 def set_m_component_to_document(doc_list, M, K):
   """
   Melabelkan dokumen dengan m komponen
