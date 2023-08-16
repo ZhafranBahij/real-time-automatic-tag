@@ -23,6 +23,12 @@ import top_k_accuracy as tka
 # factorial_val = np.prod(np.arange(1, 5+1))
 # print(x)
 
+a = [1,2,3]
+b = [1,2,3]
+c = [1,2,4]
+if(a == b):
+  print('test')
+
 K = 2
 M = 4
 L = 2
