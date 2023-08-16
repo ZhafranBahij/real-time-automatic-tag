@@ -4,6 +4,14 @@ def tag_recommendation(all_tag_list_with_rank, all_cluster, total_doc_in_cluster
 
   """
   Melakukan rekomendasi tag terhadap dokumen baru
+  Args:
+    all_tag_list_with_rank: Daftar tag dgn rank
+    all_cluster: Daftar klaster
+    total_doc_in_cluster: total banyaknya dokumen dalam 1 klaster
+    p_dt_ck: peluangnya
+    
+  Returns:
+    big_rank: Mengurutkan rank
   """
   
   p_cluster = 1/len(all_cluster) # P(C=k)
@@ -34,6 +42,17 @@ def tag_recommendation(all_tag_list_with_rank, all_cluster, total_doc_in_cluster
 
 def tag_recommendation_mass(doc_list, all_tag_list_with_rank, all_cluster, total_doc_in_cluster):
   
+  """
+  Melakukan rekomendasi tag terhadap dokumen baru secara massal
+  Args:
+    all_tag_list_with_rank: Daftar tag dgn rank
+    all_cluster: Daftar klaster
+    total_doc_in_cluster: total banyaknya dokumen dalam 1 klaster
+    doc_list: daftar dokumen
+    
+  Returns:
+    doc_list: daftar dokumen baru
+  """
   new_doc_list= []
   
   index = 0

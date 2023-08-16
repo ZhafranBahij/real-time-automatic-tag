@@ -1,6 +1,16 @@
 import numpy as np
 
 def top_k_accuracy(doc_list, dataframe_document_tag):
+  """
+    Mengkonversi data testing
+
+  Args:
+    doc_list: Daftar list dokumen
+    dataframe_document_tag: Dataframe untuk dokumen dan tag
+    
+  Returns:
+    success_list: list berapa tebakan yang benar
+  """
   success_list = []
   for doc in doc_list:
     
