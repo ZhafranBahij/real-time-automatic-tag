@@ -28,15 +28,8 @@ K = 2
 M = 2
 L = 2
 
-number_partition_dataset_document = int(len(dataset_document) * 80 / 100)
-dataset_train = dataset_document[0:number_partition_dataset_document]
-tm.this_moment("Mengambil dataset latih :")
-
-dataset_test = dataset_document[number_partition_dataset_document:]
-tm.this_moment("Mengambil dataset uji :")
-
 # Memproses dataset menjadi matrix
-matrix_tag_document, matrix_document_word, title_id_document, all_tag_list, all_word_list, dataframe_document_tag, dataframe_document_word = ip.document_processing(dataset_train)
+matrix_tag_document, matrix_document_word, title_id_document, all_tag_list, all_word_list, dataframe_document_tag, dataframe_document_word = ip.document_processing(dataset_document)
 tm.this_moment("dataset ke matrix :")
 
 matrix_w = mp.matrixABtoW(matrix_tag_document, matrix_document_word)
@@ -108,19 +101,12 @@ for i in range(1, 20):
   tm.this_moment("p(i,m) (t+1) :")
   log_likelihood.append(twpmm.get_log_likelihood(all_title_id_document_with_p_im, new_all_title_id_document_with_p_im))
   all_title_id_document_with_p_im = new_all_title_id_document_with_p_im
-  all_title_id_document_with_p_im = twpmm.set_new_probability_t(all_title_id_document_with_p_im)
+  all_title_id_document_with_probability = twpmm.set_new_probability_t(all_title_id_document_with_p_im)
   tm.this_moment("Menghitung nilai Log Likelihood :")
 
-# Testing
-matrix_tag_document_test, matrix_document_word_test, title_id_document_test, all_tag_list_test, all_word_list_test, dataframe_document_tag_test, dataframe_document_word_test = ip.document_processing(dataset_test)
-test_title_id_document = dtc.data_testing(title_id_document_test, dataframe_document_word_test)
-test_title_id_document_with_probability = twpmm.probability(test_title_id_document, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word_test, M)
-test_title_id_document_with_tag_recommendation =  trfnd.tag_recommendation_mass(test_title_id_document_with_probability, all_tag_list_with_rank, all_cluster, total_doc_in_cluster)
-tm.this_moment('Testing: ')
+all_title_id_document_with_tag_recommendation = trfnd.tag_recommendation_mass(all_title_id_document_with_probability, all_tag_list_with_rank, all_cluster, total_doc_in_cluster)
+tm.this_moment('Tag Recommendation: ')
 
-# all_title_id_document_with_tag_recommendation = trfnd.tag_recommendation_mass(all_title_id_document_with_probability, all_tag_list_with_rank, all_cluster, total_doc_in_cluster)
-# tm.this_moment('Tag Recommendation: ')
-
-top_k_accuracy_value = tka.top_k_accuracy(test_title_id_document_with_tag_recommendation, dataframe_document_tag_test)
+top_k_accuracy_value = tka.top_k_accuracy(all_title_id_document_with_tag_recommendation, dataframe_document_tag)
 tm.this_moment('Top 6 Accuracy: ')
 print("X")

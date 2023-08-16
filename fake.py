@@ -30,7 +30,7 @@ if(a == b):
   print('test')
 
 K = 2
-M = 4
+M = 2
 L = 2
 
 # Membuat fake matrix w
@@ -141,14 +141,16 @@ all_prior_probability_m = twpmm.first_prior_probability(fake_total_doc, fake_tot
 all_word_list_with_lambdamj = twpmm.lambda_m_j_list(all_word_list_with_count, fake_total_doc_in_component)
 fake_doc_list_with_probabililty = twpmm.probability(all_doc_list_with_m_component, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b, M)
 fake_doc_list_with_p_im = twpmm.p_im_list(fake_doc_list_with_probabililty, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b, M)
-# log_likelihood = []
+log_likelihood = []
 
-# for i in range(1, 5):
-#   all_prior_probability_m, sum_p_im_list = twpmm.pi_m_with_t(fake_doc_list_with_p_im, M)
-#   all_word_list_with_lambdamj = twpmm.lambda_mt(all_word_list_with_lambdamj, sum_p_im_list,fake_doc_list_with_p_im, M)
-#   new_fake_doc_list_with_p_im = twpmm.p_im_list_t_more_than_1(fake_doc_list_with_p_im, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b)
-#   log_likelihood.append(twpmm.get_log_likelihood(fake_doc_list_with_p_im, new_fake_doc_list_with_p_im))
-#   fake_doc_list_with_p_im = new_fake_doc_list_with_p_im
+for i in range(1, 5):
+  all_prior_probability_m, sum_p_im_list = twpmm.pi_m_with_t(fake_doc_list_with_p_im, M)
+  all_word_list_with_lambdamj = twpmm.lambda_mt(all_word_list_with_lambdamj, sum_p_im_list,fake_doc_list_with_p_im, M)
+  new_fake_doc_list_with_p_im = twpmm.p_im_list_t_more_than_1(fake_doc_list_with_p_im, all_prior_probability_m, all_word_list_with_lambdamj, fake_dataframe_b)
+  log_likelihood.append(twpmm.get_log_likelihood(fake_doc_list_with_p_im, new_fake_doc_list_with_p_im))
+  fake_doc_list_with_p_im = new_fake_doc_list_with_p_im
+  fake_doc_list_with_probability = twpmm.set_new_probability_t(fake_doc_list_with_p_im)
+
 
 # fake_10_tag = trfnd.tag_recommendation(all_tag_list_with_rank, all_fake_cluster, all_fake_cluster_word_index, fake_doc_list_with_p_im[1][4][0])
 fake_doc_list_with_tag_recommend = trfnd.tag_recommendation_mass(fake_doc_list_with_probabililty, all_tag_list_with_rank, all_fake_cluster, fake_total_doc_in_cluster)
