@@ -89,7 +89,8 @@ tm.this_moment("p(i,m) :")
 
 # Looping Expectation Maximization
 log_likelihood = []
-for i in range(1, 20):
+top_k_accuracy_list = []
+for i in range(1, 3):
   # Menghitung Prior probability (pi_m) t+1
   all_prior_probability_m, sum_p_im_list = twpmm.pi_m_with_t(all_title_id_document_with_p_im, M)
   tm.this_moment("pi(m) (t+1) :")
@@ -104,9 +105,18 @@ for i in range(1, 20):
   all_title_id_document_with_probability = twpmm.set_new_probability_t(all_title_id_document_with_p_im)
   tm.this_moment("Menghitung nilai Log Likelihood :")
 
-all_title_id_document_with_tag_recommendation = trfnd.tag_recommendation_mass(all_title_id_document_with_probability, all_tag_list_with_rank, all_cluster, total_doc_in_cluster)
-tm.this_moment('Tag Recommendation: ')
+  all_title_id_document_with_tag_recommendation = trfnd.tag_recommendation_mass(all_title_id_document_with_probability, all_tag_list_with_rank, all_cluster, total_doc_in_cluster)
+  tm.this_moment('Tag Recommendation: ')
 
-top_k_accuracy_value = tka.top_k_accuracy(all_title_id_document_with_tag_recommendation, dataframe_document_tag)
-tm.this_moment('Top 6 Accuracy: ')
+  top_k_accuracy_value = tka.top_k_accuracy(all_title_id_document_with_tag_recommendation, dataframe_document_tag)
+  tm.this_moment('Top 6 Tag: ')
+  
+  top_k_accuracy_list.append(top_k_accuracy_value)
+
+accuracy = []
+for tkal in top_k_accuracy_list:
+  accuracy.append(tkal.count(1) / len(tkal))
+
+tm.this_moment('Menghitung akurasi: ')
+
 print("X")

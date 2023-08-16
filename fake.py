@@ -153,6 +153,6 @@ for i in range(1, 5):
 
 
 # fake_10_tag = trfnd.tag_recommendation(all_tag_list_with_rank, all_fake_cluster, all_fake_cluster_word_index, fake_doc_list_with_p_im[1][4][0])
-fake_doc_list_with_tag_recommend = trfnd.tag_recommendation_mass(fake_doc_list_with_probabililty, all_tag_list_with_rank, all_fake_cluster, fake_total_doc_in_cluster)
-fake_result = tka.top_k_accuracy(fake_doc_list_with_tag_recommend, fake_dataframe_a)
+  fake_doc_list_with_tag_recommend = trfnd.tag_recommendation_mass(fake_doc_list_with_probabililty, all_tag_list_with_rank, all_fake_cluster, fake_total_doc_in_cluster)
+  fake_result = tka.top_k_accuracy(fake_doc_list_with_tag_recommend, fake_dataframe_a)
 print("END")
