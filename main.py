@@ -90,7 +90,7 @@ tm.this_moment("p(i,m) :")
 # Looping Expectation Maximization
 log_likelihood = []
 top_k_accuracy_list = []
-for i in range(1, 3):
+for i in range(1, 6):
   # Menghitung Prior probability (pi_m) t+1
   all_prior_probability_m, sum_p_im_list = twpmm.pi_m_with_t(all_title_id_document_with_p_im, M)
   tm.this_moment("pi(m) (t+1) :")

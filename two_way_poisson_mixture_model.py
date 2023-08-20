@@ -111,7 +111,7 @@ def lambda_m_j_list(word_list, total_doc_in_component):
     total_doc_in_component: total dokumen dalam 1 komponen
 
   Returns:
-    pi_m: prior probability
+    new_word_list: word list terbaru
   """
   
   new_word_list = [] # word list baru
