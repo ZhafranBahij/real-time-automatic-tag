@@ -1,0 +1,37 @@
+%!TEX root = ./template-skripsi.tex
+%-------------------------------------------------------------------------------
+%                            	BAB IV
+%               		KESIMPULAN DAN SARAN
+%-------------------------------------------------------------------------------
+
+\chapter{KESIMPULAN DAN SARAN}
+
+\section{Kesimpulan}
+Berdasarkan hasil dari implementasi dan pengujian \textit{Automatic Tagging} dengan 
+menggunakan algoritma \textit{Bipartite Graph Partition} dan \textit{Two Way Poisson Mixture Model}
+, maka diperoleh kesimpulan sebagai berikut. Program yang telah dibuat dapat menghasilkan beberapa rekomendasi \textit{tag}.
+Akan tetapi, akurasi yang dihasilkan masih sangat rendah yaitu 37\%. Hal ini dikarenakan banyaknya $K$ yang digunakan dalam program ini
+untuk melakukan \textit{Bipartite Graph Partition} hanyalah dua. Selain itu, nilai  $\theta \left(d(i, j) \mid \tilde{\lambda}_{m, i, j}^{(t)}\right)$
+yang dihasilkan mempengaruhi nilai $p_{i,m}$.
+
+\section{Saran}
+Adapun saran untuk penelitian selanjutnya adalah:
+\begin{enumerate} 
+	\item Menggunakan jumlah $K$ yang lebih optimal.
+	\item Menggunakan dataset yang lebih besar karena tingkat akurasinya 
+	akan lebih meningkat dibandingkan dengan dataset yang lebih kecil.
+	\item Dapat menggunakan bahasa Indonesia dalam pemilihan artikel atau situs 
+	yang digunakan untuk penelitian. 
+	\item Mengintegrasikan algoritma ini ke dalam aplikasi \textit{website} agar 
+	pengguna mampu menggunakannya lebih mudah.
+	\item Melakukan sinkronisasi dari algoritma \textit{Automatic Tagging} ke dalam 
+	sistem mesin pencari \textit{Telusuri}.
+\end{enumerate}
+
+
+% Baris ini digunakan untuk membantu dalam melakukan sitasi
+% Karena diapit dengan comment, maka baris ini akan diabaikan
+% oleh compiler LaTeX.
+\begin{comment}
+\bibliography{daftar-pustaka}
+\end{comment}

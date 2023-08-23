@@ -1,0 +1,71 @@
+This is BibTeX, Version 0.99d (TeX Live 2023)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: template-skripsi.aux
+A level-1 auxiliary file: pengesahan.aux
+A level-1 auxiliary file: persetujuan.aux
+A level-1 auxiliary file: orisinalitas.aux
+A level-1 auxiliary file: bab1.aux
+A level-1 auxiliary file: bab2.aux
+A level-1 auxiliary file: bab3.aux
+A level-1 auxiliary file: bab4.aux
+A level-1 auxiliary file: bab5.aux
+The style file: apalike.bst
+A level-1 auxiliary file: lampiran.aux
+Database file #1: daftar-pustaka.bib
+Warning--entry type for "reliablesoft2022" isn't style-file defined
+--line 76 of file daftar-pustaka.bib
+Warning--empty journal in brin1998anatomy
+Warning--empty journal in farooq_social_bookmarking
+Warning--empty journal in khatulistiwa_2022_searchengine
+Warning--empty journal in jia_2004_two_way_poisson_model
+Warning--empty journal in parra2018videotag
+Warning--empty journal in pratama2022igst
+Warning--empty journal in reynolds_gaussian_mixture_model
+Warning--empty journal in shi2016mashuptag
+Warning--empty journal in song2011autotag
+Warning--empty journal in song2008autotag
+Warning--empty journal in sood2007tagassist
+Warning--empty journal in won2020musictag
+Warning--empty journal in zha2001bgp
+You've used 17 entries,
+            1935 wiz_defined-function locations,
+            551 strings with 6012 characters,
+and the built_in function-call counts, 5638 in all, are:
+= -- 508
+> -- 275
+< -- 9
++ -- 98
+- -- 92
+* -- 461
+:= -- 1053
+add.period$ -- 38
+call.type$ -- 17
+change.case$ -- 130
+chr.to.int$ -- 17
+cite$ -- 30
+duplicate$ -- 221
+empty$ -- 356
+format.name$ -- 115
+if$ -- 1038
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 17
+newline$ -- 74
+num.names$ -- 51
+pop$ -- 144
+preamble$ -- 1
+purify$ -- 131
+quote$ -- 0
+skip$ -- 177
+stack$ -- 0
+substring$ -- 250
+swap$ -- 3
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 100
+warning$ -- 13
+while$ -- 37
+width$ -- 0
+write$ -- 181
+(There were 14 warnings)

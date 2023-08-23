@@ -1,0 +1,1782 @@
+\addcontentsline{toc}{chapter}{LAMPIRAN}
+\appendix 
+% \setlength{\parindent}{0.5in}
+% \fontsize{6}
+
+\lstset{
+  basicstyle=\fontsize{9}{12}\selectfont, % Set your desired font size
+	% Specify the programming language
+  % ... other listing options ...
+}
+
+\chapter{main.py}
+\begin{lstlisting}[breaklines=true]
+# Source dari file
+import data_from_database as dfd 
+import matrix_processing as mp
+import input_processing as ip
+import normalized_laplacian as nl
+import low_rank_approximation_matrix as lram
+import spectral_recursive_embedding as sre
+import the_moment as tm
+import assign_label as al
+import node_rank_t as nrt
+import word_count_in_matrix as wcim
+import two_way_poisson_mixture_model as twpmm
+import word_count_in_list as wcil
+import tag_recommendation_for_new_document as trfnd
+import top_k_accuracy as tka
+import data_testing_converter as dtc
+
+import numpy as np
+
+tm.this_moment("Menjalankan Algoritma :")
+
+# Mengambil data dari database
+dataset_document = dfd.get_data()
+tm.this_moment("Mengambil dataset :")
+
+# Mensetting K, M, dan L
+K = 2
+M = 2
+L = 2
+
+# Memproses dataset menjadi matrix
+matrix_tag_document, matrix_document_word, title_id_document, all_tag_list, all_word_list, dataframe_document_tag, dataframe_document_word = ip.document_processing(dataset_document)
+tm.this_moment("dataset ke matrix :")
+
+matrix_w = mp.matrixABtoW(matrix_tag_document, matrix_document_word)
+tm.this_moment("matrix A & B menjadi W :")
+
+matrix_Q, matrix_T = lram.lanczos_iteration(matrix_w, 1)
+matrix_W_hat = lram.low_rank_approximation_matrix(matrix_Q, matrix_T)
+tm.this_moment("Low Rank Approximation :") 
+# print(matrix_W_hat)
+
+all_matrix_partition, all_cluster = sre.spectral_recursive_embedding(matrix_W_hat, matrix_w)
+tm.this_moment("Spectral Recursive Embedding :")
+# print("X")
+
+all_matrix_w_hat_partition = []
+for matrix_partition in all_matrix_partition:
+	Q, T = lram.lanczos_iteration(matrix_partition, 1)
+	matrix_W_hat_partition = lram.low_rank_approximation_matrix(Q, T)
+	all_matrix_w_hat_partition.append(matrix_W_hat_partition)
+tm.this_moment("Create W hat partition :")
+
+all_tag_list_with_cluster, all_title_id_document_with_cluster, all_word_list_with_cluster = al.assign_label_cluster(title_id_document, all_tag_list, all_word_list, all_cluster)
+tm.this_moment("Assign Label :")
+
+all_tag_list_with_rank = nrt.node_rankt(all_tag_list_with_cluster, matrix_w, all_matrix_partition)
+tm.this_moment("Node Rank T :")
+
+# Menghitung banyaknya document dari 
+all_title_id_document_with_word_count, total_doc, total_doc_in_cluster = wcim.word_count_in_matrix(all_title_id_document_with_cluster, all_matrix_partition, dataframe_document_word)
+tm.this_moment("Word Count setiap Document dari Matrix partisi :")
+# print("X")
+
+# Menghitung banyaknya word serta banyaknya word di masing-masing klaster
+all_word_list_with_count, total_word, total_word_in_cluster = wcil.word_count_in_list(all_word_list_with_cluster, matrix_w, all_matrix_partition)
+tm.this_moment("Word Count setiap word :")
+
+# Two Way Poisson Mixture Model
+# Memilih m component
+all_title_id_document_with_m_component, total_doc_in_component = twpmm.set_m_component_to_document(all_title_id_document_with_word_count, M ,K)
+tm.this_moment("Menentukan m component pada suatu klaster :")
+
+# Menghitung banyaknya word serta banyaknya word di masing-masing komponen
+all_word_list_with_count = twpmm.set_word_count_in_every_m(all_title_id_document_with_m_component, all_word_list_with_count, M, K, matrix_document_word)
+tm.this_moment("Word Count setiap word :")
+# Menghitung prior probability
+all_prior_probability_m = twpmm.first_prior_probability(total_doc, total_doc_in_component)
+tm.this_moment("prior probability :")
+# Menghitung nilai lambda
+all_word_list_with_lambdamj = twpmm.lambda_m_j_list(all_word_list_with_count, total_doc_in_component)
+tm.this_moment("lambda(m,j) :")
+# Menghitung probabilitas
+all_title_id_document_with_probability = twpmm.probability(all_title_id_document_with_m_component, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word, M)
+tm.this_moment("P(D = d|C = k) :")
+# Menghitung nilai p(i,m)
+all_title_id_document_with_p_im = twpmm.p_im_list(all_title_id_document_with_probability, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word, M)
+tm.this_moment("p(i,m) :")
+
+# Looping Expectation Maximization
+log_likelihood = []
+top_k_accuracy_list = []
+for i in range(1, 6):
+	# Menghitung Prior probability (pi_m) t+1
+	all_prior_probability_m, sum_p_im_list = twpmm.pi_m_with_t(all_title_id_document_with_p_im, M)
+	tm.this_moment("pi(m) (t+1) :")
+	# Menghitung lambda t+1
+	all_word_list_with_lambdamj = twpmm.lambda_mt(all_word_list_with_lambdamj, sum_p_im_list, all_title_id_document_with_p_im, M)
+	tm.this_moment("lambda(m) (t+1) :")
+	# Menghitung nilai likelihood
+	new_all_title_id_document_with_p_im = twpmm.p_im_list_t_more_than_1(all_title_id_document_with_p_im, all_prior_probability_m, all_word_list_with_lambdamj, dataframe_document_word)
+	tm.this_moment("p(i,m) (t+1) :")
+	log_likelihood.append(twpmm.get_log_likelihood(all_title_id_document_with_p_im, new_all_title_id_document_with_p_im))
+	all_title_id_document_with_p_im = new_all_title_id_document_with_p_im
+	all_title_id_document_with_probability = twpmm.set_new_probability_t(all_title_id_document_with_p_im)
+	tm.this_moment("Menghitung nilai Log Likelihood :")
+
+	all_title_id_document_with_tag_recommendation = trfnd.tag_recommendation_mass(all_title_id_document_with_probability, all_tag_list_with_rank, all_cluster, total_doc_in_cluster)
+	tm.this_moment('Tag Recommendation: ')
+
+	top_k_accuracy_value = tka.top_k_accuracy(all_title_id_document_with_tag_recommendation, dataframe_document_tag)
+	tm.this_moment('Top 6 Tag: ')
+	
+	top_k_accuracy_list.append(top_k_accuracy_value)
+
+accuracy = []
+for tkal in top_k_accuracy_list:
+	accuracy.append(tkal.count(1) / len(tkal))
+
+tm.this_moment('Menghitung akurasi: ')
+
+print("X")
+	
+	
+\end{lstlisting}
+
+\chapter{data\textunderscore from\textunderscore database.py}
+\begin{lstlisting}[breaklines=true]
+import pymysql.cursors
+
+connection = pymysql.connect(host='localhost', user='root', password='', database='autotag-crawl', autocommit=True,)
+
+# Mengambil data dari database
+def get_data():
+	with connection:
+		with connection.cursor() as cursor:
+				
+			# Mengambil data tag, title, dan isi artikel
+			cursor.execute("SELECT DISTINCT page_tags.tag, page_information.id_page, page_information.content_article, page_information.title FROM `page_tags` INNER JOIN page_information ON page_tags.page_id = page_information.id_page")
+			result = cursor.fetchall()
+			return result
+
+\end{lstlisting}
+
+\chapter{input\textunderscore processing.py}
+\begin{lstlisting}[breaklines=true]
+import nltk
+import numpy as np
+import pandas
+import re
+import the_moment as tm
+
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+
+unique_words = []
+words = []
+tags = []
+documents = []
+
+def wordProcessing(content_article):
+	"""
+	Fungsi untuk menghitung banyaknya word dalam suatu artikel
+
+	Args:
+		content_article: Isi dari artikel
+	
+	Sumber library untuk menghitung kata:
+		https://www.nltk.org/book/ch01.html
+		
+	Returns:
+			word_document_dictionary: berupa dictionary untuk menghitung banyaknya 
+		dan beragamnya word dalam suatu document
+	"""
+	tokens = word_tokenize(re.sub('[^ 0-9a-z]+', ' ', content_article.lower())) # Menghilangkan tanda baca   
+	english_stopwords = stopwords.words('english') # Menampilkan daftar stopwords
+	english_stopwords.extend(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']) #menambahkan stopwords
+	tokens_wo_stopwords = [t for t in tokens if t not in english_stopwords] 
+
+	# Menghitung banyaknya word
+	freq = nltk.FreqDist(tokens_wo_stopwords)
+	word_document_dictionary = {}
+
+	# Menampung word tersebut dalam format dictionary
+	# Alasan menggunakan freq.most_common(2000) untuk mendapatkan 2000 kata yg sering muncul
+	for word, count in freq.most_common(2000):
+			word_document_dictionary.update({word: count})
+	
+	unique_words.append(len(word_document_dictionary))
+	words.append(len(tokens_wo_stopwords))
+	# len(word_document_dictionary)
+			
+	# print("Dictionary : ", word_document_dictionary)
+	return word_document_dictionary
+
+def documentWordProcessing(content_article):
+		"""
+		Fungsi untuk membuat dataframe antara document(title) dengan word
+
+		Args:
+			content_article: Isi dari artikel
+			id_article: ID dari artikel
+
+		Returns:
+				word_document: word_document dalam bentuk dataframe
+		"""
+		word_document_dictionary = wordProcessing(content_article)
+		# word_document = pandas.DataFrame(word_document_dictionary,
+		#     index=[id_article]
+		# )
+		return word_document_dictionary
+
+def document_processing(dataset_document):
+	"""
+	Memproses dataset yang masuk, lalu mengolahnya menjadi kumpulan dataframe antara tag dgn dokumen
+	dan dokumen dgn word
+
+	Args:
+		dataset_document: data-data yg diambil dari database dengan isi "tag, id_article, content_article"
+		
+	Returns:
+		matrix_tag_document: matriks antara tag dgn document
+		matrix_document_word: matriks antara document dgn word
+		title_id_document: relasi antara title dan id dari suatu artikel
+	"""
+	
+	# tm.this_moment('Mulai Document Processing :')
+	id_before = dataset_document[0][1]
+	# document_word = []
+	# document_word.append(documentWordProcessing(dataset_document[0][2], dataset_document[0][1]))
+	
+	title_id_document = []
+	title_id_document.append((dataset_document[0][3].replace('| The Hill', ''), dataset_document[0][1]))
+	
+	tag_dictionary = {}
+	tag_dictionary_list = []
+	
+	word_dictionary = {}
+	word_dictionary_list = []
+	word_dictionary_list.append(documentWordProcessing(dataset_document[0][2]))
+	
+	id_list = []
+	# Tempat untuk menghitung banyaknya tag dalam suatu dokumen
+	document_tag = []
+	
+	# tm.this_moment('Mulai looping :')
+	for data in dataset_document:
+		
+		# Jika judul data berbeda dengan id_before
+		if id_before != data[1]:
+			
+			# Menampung tag-tag yg telah didapat di tag_dictionary ke document_tag
+			id_list.append(id_before)
+			tag_dictionary_list.append(tag_dictionary.copy())
+			tags.append(len(tag_dictionary.copy()))
+			# document_tag.append(datafr)
+			tag_dictionary.clear()
+			
+			# Melakukan proses untuk menghitung banyaknya kata dalam suatu dokumen
+			title_id_document.append((data[3].replace('| The Hill', ''), data[1]))
+			word_dictionary_list.append(documentWordProcessing(data[2]))
+			id_before = data[1]
+		
+		#tag yg didapat akan dimasukkan ke tag_dictionary
+		tag_dictionary.update({data[0]: 1})
+
+	id_list.append(id_before)
+	tag_dictionary_list.append(tag_dictionary.copy())
+	tags.append(len(tag_dictionary.copy()))
+	tag_dictionary.clear()
+	
+	# tm.this_moment('Mulai concat docword :')
+	document_word = pandas.DataFrame(word_dictionary_list, index=id_list)
+	document_word = document_word.fillna(0)
+	
+	# tm.this_moment('Mulai concat doctag :')
+	document_tag = pandas.DataFrame(tag_dictionary_list, index=id_list)
+	document_tag = document_tag.fillna(0)
+
+	
+	# tm.this_moment('Mulai membuat matrix :')
+	matrix_tag_document = document_tag.to_numpy().transpose()
+	matrix_document_word = document_word.to_numpy()
+	return matrix_tag_document, matrix_document_word, title_id_document, document_tag.columns, document_word.columns, document_tag, document_word
+
+\end{lstlisting}
+
+\chapter{matrix\textunderscore processing.py}
+\begin{lstlisting}[breaklines=true]
+import numpy as np
+
+def matrixABtoW(A, B):
+	"""
+	Fungsi untuk menggabungkan matriks A dan B menjadi W
+
+	Args:
+		A: Matriks A dengan tag sebagai row dan document sebagai column
+		B: Matriks B dengan document sebagai row dan word sebagai column
+
+	Returns:
+		W: Matriks gabungan antara A dengan B
+	"""
+	AT = A.transpose()
+	BT = B.transpose()
+
+	# Menghitung banyaknya tag, dokumen, dan word
+	tag_count, document_count = A.shape
+	document_count, word_count = B.shape
+
+	# Membuat matriks W dengan panjang dan lebar dari "tag + dokumen + word"
+	all_count = tag_count + document_count + word_count
+	W = np.zeros((all_count, all_count))
+
+	# Menempelkan matriks A ke W
+	for i in range(tag_count):
+		W[i][tag_count:-word_count] = A[i]
+
+	# Menempelkan matriks B Transpose ke W
+	for i in range(1, word_count+1):
+		W[-i][tag_count:-word_count]= BT[-i]
+
+	# Menempelkan matriks A Transpose ke W
+	for i in range(document_count):
+		W[tag_count+i][0:tag_count] = AT[i]
+			
+	# Menempelkan matriks B ke W
+	for i in range(document_count):
+		W[tag_count+i][-word_count:] = B[i]
+	
+	return W
+\end{lstlisting}
+
+\chapter{low\_rank\_approximation\_matrix.py}
+\begin{lstlisting}[breaklines=true]
+import numpy as np
+
+def normalization_vector(vector):
+	vector_power = [np.power(x, 2) for x in vector]
+	vector_normalize = np.sqrt(np.sum(vector_power))
+	return vector_normalize
+
+def lanczos_iteration(A, one_b = 1):
+	"""
+	Melakukan Lanczos iteration dengan membuat matriks Q dan T
+	Kemudian, membuat kedua matriks tersebut menjadi W_hat
+
+	Args:
+		A: Inputan dari matriks W
+		
+	Returns:
+		Q: Hasil perkalian matriks Q 
+	"""
+	
+	k = 50
+	
+	row, column = A.shape
+	
+	# Buat matriks T untuk menampung alpha dan beta
+	T = np.zeros((k, k))
+	
+	# buat matriks Q untuk menampung q_now di setiap looping
+	Q = np.zeros((row, k))
+	
+	beta = 0 
+	q_before = 0
+	b = "" # Bentuk matriks b secara arbitrary (bebas)
+	if (one_b != 1):
+		b = np.random.default_rng().random((row, 1))
+	else:
+		b = np.ones((row, 1)) 
+		
+	# Matriks q_now adalah matriks yg telah normalisasi
+	# panjang q_now = 1, cek panjang q_now dengan np.sqrt(np.sum([x*x for x in q_now]))
+	q_now = b / normalization_vector(b)
+	
+	Q[:, 0] = q_now.transpose()
+	
+	for i in range(1, k):
+		v = A.dot(q_now)
+		alpha = q_now.transpose().dot(v)
+		alpha = alpha[0][0] # Membuat alpha agar menjadi skalar
+		v = v - beta*q_before - alpha*q_now
+		beta = normalization_vector(v)
+		q_before = q_now
+		q_now = v / beta
+		
+		# Tampung alpha dan beta ke matriks T
+		T[i-1, i-1] = alpha
+		if i < row:
+			T[i-1, i] = beta
+			T[i, i-1] = beta
+			
+			# Tampung nilai q_now ke matriks Q
+			Q[:, i] = q_now.transpose()
+
+	return Q, T
+
+def low_rank_approximation_matrix(Q, T):
+	"""
+	Melakukan perkalian matriks Q, T, dan Q transpose
+
+	Args:
+		Q: Matriks Q yang didapat dari Lanczos iteration
+		T: Matriks T yang didapat dari Lanczos iteration
+		
+	Returns:
+		W_hat: Hasil perkalian matriks Q, T, dan Q transpose
+	"""
+	
+	return Q.dot(T).dot(Q.transpose())
+\end{lstlisting}
+
+\chapter{spectral\_recursive\_embedding.py}
+\begin{lstlisting}[breaklines=true]
+import numpy as np
+import scipy as sp
+import normalized_laplacian as nl
+import matrix_processing as mp
+import low_rank_approximation_matrix as lram
+
+import the_moment as tm
+
+def second_largest_singular_vector(W_hat):
+	"""
+		Menghitung singular vector menggunakan W_hat dari library
+		https://docs.scipy.org/doc/scipy/reference/sparse.linalg.svds-lobpcg.html    
+		
+		Args:
+			W_hat: Matrix W_hat
+
+		Returns:
+			second_largest_left: Mengambil vektor U
+			second_largest_right: Mengambil vektor Vh
+	"""
+	
+	U, s, Vh = sp.sparse.linalg.svds(W_hat, solver='lobpcg')
+	# U, s, Vh = sp.linalg.svd(W_hat)
+	second_largest_left = U[:, 1] # Mengambil left singular vector kedua
+	second_largest_right = Vh[1, :] # Mengambil right singular vector kedua
+	
+	return second_largest_left, second_largest_right
+
+def find_cut_point(singular_vector_left, singular_vector_right ):
+	"""
+		Mencari cut point
+
+		Returns:
+			cx: cx
+			cy: cy
+	"""
+	
+	cx = np.median(singular_vector_left)  
+	cy = np.median(singular_vector_right) 
+	return cx, cy
+
+def form_partition(cx, cy, x, y):
+	"""
+		Melakukan form partition
+		
+		Args:
+			cx: cut point untuk x
+			cy: cut point untuk y
+			x: Hasil dari second_largest_left
+			y: Hasil dari second_largest_right
+			
+		Returns:
+			A_partition
+			Ac_partition
+			B_partition
+			Bc_partition
+	"""
+	
+	A_partition = []
+	Ac_partition = []
+	B_partition = []
+	Bc_partition = []
+
+	i = 0
+	for value in x:
+		if value >= cx:
+			A_partition.append(i)
+		else:
+			Ac_partition.append(i)
+		i+=1
+
+	j = 0
+	for value in y:
+		if value >= cy:
+			B_partition.append(j)
+		else:
+			Bc_partition.append(j)
+		j+=1
+	
+	return A_partition, Ac_partition, B_partition, Bc_partition
+
+
+def create_matrix_from_two_vertex(X, Y, W):
+	"""
+		Menggabungkan dua partisi ke dalam satu matrix berdasarkan
+		'Bipartite graph partitioning and data clustering'
+
+		Args:
+			X: Vertex x
+			Y: Vertex y
+			W: Matrix W awal
+
+		Returns:
+			matrix: Matrix dari bipartite graph yg terbaru
+			XY: Tanda untuk pada vertex keberapa ia di klaster ini
+	"""
+	
+	XY = list(set(X).union(set(Y)))
+	len_xy = len(XY)
+	matrix = np.zeros((len_xy , len_xy))
+	
+	# Looping untuk membuat matrix_w hasil partisi
+	for i in range(0, len_xy):
+		xy_i = XY[i]
+		for j in range(0, len_xy):
+			xy_j = XY[j]
+			matrix[i][j] = W[xy_i][xy_j]
+	
+	return matrix, XY
+
+def spectral_recursive_embedding(W_hat, W):
+	"""
+		Melakukan bipartite graph partition dengan menggunakna
+		spectral recursive embedidng
+
+		Args:
+			W_hat: Matrix W_hat
+			Y: Vertex y
+			W: Matrix W awal
+
+		Returns:
+			all_matrix: List Matrix w hasil klasterisasi
+			all_cluster: Klaster
+	"""
+	all_matrix = []
+	all_cluster = []
+	# tm.this_moment("Start :")
+	x, y = second_largest_singular_vector(W_hat)
+	# tm.this_moment("Second Largest Singular Vector :")
+	cx, cy = find_cut_point(x, y)
+	# tm.this_moment("Cut Point :")
+	A, Ac, B, Bc = form_partition(cx, cy, x, y)
+	# tm.this_moment("Form Partition :")
+	matrix, cluster = create_matrix_from_two_vertex(A, B, W)
+	all_matrix.append(matrix)
+	all_cluster.append(cluster)
+	matrix, cluster = create_matrix_from_two_vertex(Ac, Bc, W)
+	all_matrix.append(matrix)
+	all_cluster.append(cluster)
+	# tm.this_moment("Fusion the matrix :")
+	
+	return all_matrix, all_cluster
+\end{lstlisting}
+
+\chapter{assign\_label.py}
+\begin{lstlisting}[breaklines=true]
+def assign_label_for_tag(all_tag_list, all_cluster, index):
+  all_tag_list_with_cluster = []
+  
+  # Looping seluruh isi all_tag_list
+  for tag in all_tag_list:
+    tag_cluster = []
+    tag_index_in_matrix = [] # Kumpulan index dalam satu tag di dalam setiap matrix yg ditempati tag tersebut
+    index_cluster = 0 # index klaster
+    
+    tag_index_in_matrix.append(index)
+    # Looping selurung klaster
+    for cluster in all_cluster:
+      if index in cluster:
+        tag_cluster.append(index_cluster + 1)
+        tag_index_in_matrix.append(cluster.index(index))
+      index_cluster+=1
+      
+    index += 1
+    all_tag_list_with_cluster.append([tag, tag_cluster, tag_index_in_matrix])
+  
+  return index, all_tag_list_with_cluster
+  
+def assign_label_for_document(title_id_document, all_cluster, index):
+  # Memasukkan label klaster ke dalam document
+  all_title_id_document_with_cluster = []
+  
+  # Looping seluruh isi title_id_document
+  for title, id in title_id_document:
+    document_cluster = []
+    document_index_in_matrix = [] # Kumpulan index dalam satu document di dalam setiap matrix yg ditempati document tersebut
+    index_cluster = 0
+
+    document_index_in_matrix.append(index)
+    # Looping isi klaster
+    for cluster in all_cluster:
+      # Jika index tersebut ada di suatu klaster
+      if index in cluster:
+        document_cluster.append(index_cluster + 1)
+        document_index_in_matrix.append(cluster.index(index))
+      index_cluster+=1
+
+    index += 1
+    all_title_id_document_with_cluster.append([[title, id], document_cluster, document_index_in_matrix])
+
+  return index, all_title_id_document_with_cluster
+
+def assign_label_for_word(all_word_list, all_cluster, index):
+  # Memasukkan label klaster ke dalam word
+  all_word_list_with_cluster = []
+  
+  # Looping seluruh word di all_word_list
+  for word in all_word_list:
+    word_cluster = []
+    word_index_in_matrix = [] # Kumpulan index dalam satu word di dalam setiap matrix yg ditempati word tersebut
+    index_cluster = 0
+    
+    word_index_in_matrix.append(index)
+    # Looping isi klaster
+    for cluster in all_cluster:
+      if index in cluster:
+        word_cluster.append(index_cluster + 1)
+        word_index_in_matrix.append(cluster.index(index))
+      index_cluster+=1
+
+    index += 1
+    all_word_list_with_cluster.append([word, word_cluster, word_index_in_matrix])
+  
+  return index, all_word_list_with_cluster
+
+def assign_label_cluster(title_id_document, all_tag_list, all_word_list, all_cluster): 
+  
+  # Memasukkan label klaster ke dalam tag
+  index = 0 # Index row matrix awal
+  index, all_tag_list_with_cluster = assign_label_for_tag(all_tag_list, all_cluster, index)
+  index, all_title_id_document_with_cluster = assign_label_for_document(title_id_document, all_cluster, index)
+  index, all_word_list_with_cluster = assign_label_for_word(all_word_list, all_cluster, index)
+
+  return all_tag_list_with_cluster, all_title_id_document_with_cluster, all_word_list_with_cluster
+\end{lstlisting}
+
+\chapter{node\_rank\_t.py}
+\begin{lstlisting}[breaklines=true]
+import numpy as np
+
+import matrix_processing as mp
+
+def n_recall(matrix_w_origin, matrix_w_partition, node_i_origin):
+	"""
+		Menghitung N Precision dari suatu tag
+
+		Args:
+			matrix_w_origin: matrix w yg dari awal dibuat
+			tag_cluster: 
+			node_i_origin: node di matrix w yg dari awal dibuat
+
+		Returns:
+			nri: N Recall dari suatu tag
+	"""
+	
+	row, col = matrix_w_partition.shape
+	nri_top = sum(matrix_w_origin[node_i_origin]) 
+	nri_bottom = row
+	nri = nri_top / nri_bottom
+	return nri
+
+def rank(npi, nri):
+	"""
+		Menghitung Rank T
+
+		Args:
+			npi: N Precision dari suatu tag
+			nri: N Recall dari suatu tag
+
+		Returns:
+			ranki: Rank dari suatu tag
+	"""
+	ri = npi * np.log(nri)
+	ranki = 0
+	if (ri != 0):
+		ranki =  np.exp(-1 / np.power(ri, 2))
+	
+	return ranki
+
+# Untuk mendapatkan np top di setiap tag
+def get_all_np_top_list(tag_list, all_matrix_partition):
+	np_top_list = []
+	k_list = []
+	
+	for tag, cluster, nodes in tag_list:
+		index_cluster = 0
+		for k in cluster:
+			if not k in k_list:
+				start_range = 0
+				if len(k_list) > 0:
+					start_range = k_list[-1]
+				for ik in range(start_range+1, k+1):
+					k_list.append(ik)
+					np_top_list.append([])
+			
+			npi_top = sum(all_matrix_partition[k-1][nodes[index_cluster + 1]])
+			np_top_list[k-1].append(npi_top)
+			index_cluster += 1
+	
+	return np_top_list
+
+# mendapatkan nilai N Precission di setiap tag
+def get_all_np_list(tag_list, np_top_list):
+	np_list = []
+	k_list = []
+	sum_np_top = []
+	
+	for tag, cluster, nodes in tag_list:
+		index_cluster = 0
+			
+		# Jika klaster k belum ada di k_list
+		for k in cluster:
+			if not k in k_list:
+				start_range = 0
+				if len(k_list) > 0:
+					start_range = k_list[-1]
+				for ik in range(start_range+ 1, k+1):
+					k_list.append(ik)
+					np_list.append([])
+					sum_np_top.append(sum(np_top_list[ik-1]))
+		
+			# Mengammbil np_top
+			np_top_i = np_top_list[k-1][nodes[index_cluster+1]]
+			# Menghitung np_bottom
+			np_bottom = sum_np_top[k-1]
+			
+			# Menghitung np pada suatu tag
+			npi = np_top_i / np_bottom
+			
+			# Menampung nilai np
+			np_list[k-1].append(npi)
+			index_cluster += 1
+		
+	return np_list
+
+
+def node_rankt(tag_list, matrix_w_original, all_matrix_partition):
+	"""
+		Menghitung seluruh nilai Rank T yg ada di dalam tag_list
+
+		Args:
+			tag_list: Kumpulan tag
+			matrix_w_original: Matrix W awal
+			all_matrix_partition: list dari matrixs W yg telah dipartisi
+
+		Returns:
+			all_tag_list_with_rank: Tag list yg telah ada nilai Rank T
+	"""
+	all_tag_list_with_rank = []
+	
+	# Menghitung N Precision dengan menggunakan tag & document
+	all_np_top_list = get_all_np_top_list(tag_list, all_matrix_partition)
+	all_np_list = get_all_np_list(tag_list, all_np_top_list)
+	
+	# Looping seluruh data di tag list
+	for tag, cluster, nodes in tag_list:
+		
+		# nr = n_recall(matrix_w_original, cluster, nodes[0])
+		# Menghitung np & ranki
+		index_cluster = 0
+		rank_i_list = []
+		np_i_list = []
+		for k in cluster:
+			np = all_np_list[k-1][nodes[index_cluster + 1]]
+			# np = n_precision(all_matrix_partition[k-1], nodes[index_cluster + 1])
+			nr = n_recall(matrix_w_original, all_matrix_partition[k-1], nodes[0])
+			ranki = rank(np, nr)
+			index_cluster += 1
+			np_i_list.append(np)
+			rank_i_list.append(ranki)
+		
+		all_tag_list_with_rank.append([tag, cluster, nodes, rank_i_list, nr, np_i_list])
+	
+	return all_tag_list_with_rank
+
+	
+\end{lstlisting}
+
+\chapter{word\_count\_in\_matrix.py}
+\begin{lstlisting}[breaklines=true]
+import numpy as np
+
+
+def word_count_in_matrix(document_list, all_matrix_partition, dataframe_document_word):
+	"""
+		Melakukan perhitungan berapa banyak kata dalam per dokumen
+
+	Args:
+		document_list: Daftar list dokumen
+		all_matrix_partition: sebuah list yang berisi mengenai matriks-matriks yang telah dipartisi
+		
+	Returns:
+		new_document_list: dokumen list dengan tambahan banyaknya kata dalam satu dokumen
+		total_doc: menyimpan hasil berupa jumlah seluruh dokumen yg ada
+		total_doc_per_cluster: banyaknya dokumen per klaster 
+	"""
+	new_document_list = []
+	total_doc = 0 # Menyimpan total doc yg ada
+	total_doc_per_cluster = np.zeros(len(all_matrix_partition)) # Menyimpan total doc di masing-masing klaster
+
+	# Looping sesuai banyaknya dokumen
+	for title_and_id, cluster, nodes in document_list:
+		# index_cluster = 0
+		total_doc += 1
+		
+		# Mengambil row dari matriks partisi yang menandakan dokumen tersebut
+		# row_doc = matrix_origin[nodes[0]]
+		
+		# Menghitung banyaknya kata
+		word_count = sum(dataframe_document_word.loc[title_and_id[1]])
+
+		# Looping klaster
+		for k in cluster:
+			total_doc_per_cluster[k-1] += 1
+		
+		new_document_list.append([title_and_id, cluster, nodes, word_count])
+		
+	return new_document_list, total_doc, total_doc_per_cluster.tolist()
+
+\end{lstlisting}
+
+\chapter{word\_count\_in\_list.py}
+\begin{lstlisting}[breaklines=true]
+import numpy as np
+
+# Versi di mana word yg di cluster dihitung menggunakan jumlah di matrix_origin
+def word_count_in_list(word_list, matrix_origin, all_matrix_partition):
+	"""
+		Menghitung banyaknya word dalam 
+
+	Args:
+		document_list: Daftar list dokumen
+		all_matrix_partition: sebuah list yang berisi mengenai matriks-matriks yang telah dipartisi
+		
+	Returns:
+		new_document_list: dokumen list dengan tambahan banyaknya kata dalam satu dokumen
+		total_doc: menyimpan hasil berupa jumlah seluruh dokumen yg ada
+		total_doc_per_cluster: banyaknya dokumen per klaster 
+	"""
+	new_word_list = [] 
+	total_word = 0 # Menyimpan total word yg ada
+	total_word_per_cluster = np.zeros(len(all_matrix_partition)) # Menyimpan total word di masing-masing klaster
+	
+	# Looping word list
+	# name = nama word
+	# cluster = word tersebut termasuk klaster berapa
+	# indexes = lokasi row index pada suatu matrix
+	for name, cluster, indexes in word_list:
+		sum_word = []
+		
+		# Menghitung banyaknya word yang ada di seluruh dokumen
+		total_of_this_word = sum(matrix_origin[indexes[0]]) # Menghitung seluruh kata tersebut di dalam matrix
+		sum_word.append(total_of_this_word)
+		total_word += total_of_this_word
+		
+		index_cluster = 0
+		for k in cluster:
+			# total_of_this_word_in_cluster = sum(all_matrix_partition[k-1][indexes[index_cluster+1]])
+			# total_of_this_in_cluster = sum(matr)
+			sum_word.append(total_of_this_word)
+			
+			total_word_per_cluster[k-1] += total_of_this_word
+			
+		new_word_list.append([name, cluster, indexes, sum_word])
+		
+	return new_word_list, total_word, total_word_per_cluster
+
+\end{lstlisting}
+
+\chapter{two\_way\_poisson\_mixture\_model.py}
+\begin{lstlisting}[breaklines=true]
+import numpy as np
+import pandas as pd
+
+def set_new_probability_t(doc_list):
+	
+	new_doc_list = []
+	
+	for title_id, cluster, indexes, word_count, m_component, p_im, probability in doc_list:
+		probability = sum(p_im)
+		
+		new_doc_list.append([title_id, cluster, indexes, word_count, m_component, p_im, probability])
+	
+	return new_doc_list
+	
+
+def set_m_component_to_document(doc_list, M, K):
+	"""
+	Melabelkan dokumen dengan m komponen
+
+	Args:
+		doc_list: daftar dari dokumen
+		M: banyaknya m komponen
+		K: banyaknya klaster
+
+	Returns:
+		new_doc_list: prior probability
+		total_doc_in_component: Banyaknya dokumen dalam suatu komponen
+	"""
+	new_doc_list = []
+	total_doc_in_component = np.zeros(M)
+	index_component = np.zeros(K)
+	
+	for title_id, cluster, indexes, word_count in doc_list:
+		m_list = []
+		
+		# cluster = klaster dari dokumen
+		for k in cluster:
+				# Mendapatkan m ke berapa
+				# (M / K)*(k-1) + 1 berguna untuk menentukan titik mulai-nya komponen berdasarkan K dan M
+				# index_component[k-1] % (M / K) berguna untuk membirkan value m secara bergantian setiap klaster
+				m_component = int((int(M / K)*(k-1) + 1) + (index_component[k-1] % int(M / K)))
+				m_list.append(m_component) 
+				total_doc_in_component[m_component - 1] += 1
+				index_component[k-1] += 1
+
+		# Membuat list dokumen terbaru
+		new_doc_list.append([title_id, cluster, indexes, word_count, m_list])
+	
+	return new_doc_list, total_doc_in_component
+
+def set_word_count_in_every_m(doc_list, word_list, M, K, matrix_document_word):
+	"""
+	Menghitung banyaknya masing-masing word di setiap komponen
+
+	Args:
+			doc_list: daftar dari dokumen
+			word_list: daftar word
+			M: banyaknya m komponen
+			K: banyaknya klaster
+			matrix_document_word: matrix relasi antara dokumen sbg row dgn word sbg column
+
+	Returns:
+			new_doc_list: prior probability
+			total_doc_in_component: Banyaknya dokumen dalam suatu komponen
+	"""
+	new_word_list = []
+	row, col = matrix_document_word.shape
+	total_every_word_in_component = np.zeros((M, col)) # Inisiasi word dalam component
+	
+	index = 0
+	# Proses menghitung banyaknya word di dalam suatu komponen doc
+	for title_id, cluster, indexes, word_count, m_component in doc_list:
+		for m in m_component:
+			total_every_word_in_component[m-1] += matrix_document_word[index]
+		index += 1
+	
+
+	index = 0
+	for word, cluster, indexes, word_count in word_list:
+		# Memindahkan total_every_word_in_component ke dalam word_count sesuai word-nya
+		word_count = total_every_word_in_component[..., index]
+		index += 1
+		
+		new_word_list.append([word, cluster, indexes, word_count.tolist()])
+
+	return new_word_list
+
+def first_prior_probability(total_doc, total_doc_in_component):
+	"""
+	Menghitung pi_m dengan cara mencari prior probability setiap m
+	Dengan asumsi banyaknya M adalah banyaknya K
+
+	Args:
+		total_doc: Keseluruhan dokumen dari dataset yang diberikan
+		total_doc_in_component: Keselurhan dokumen dalam satu M
+
+	Returns:
+		pi_m: prior probability
+	"""
+	
+	# Hitung nilai pi_m di setiap M
+	pi_m = np.array(total_doc_in_component) / total_doc
+	return pi_m
+
+def lambda_m_j_list(word_list, total_doc_in_component):
+	"""
+	Menghitung nilai lambda untuk setiap kata
+
+	Args:
+		word_list: list seluruh word yg ada di dataset
+		total_doc_in_component: total dokumen dalam 1 komponen
+
+	Returns:
+		new_word_list: word list terbaru
+	"""
+	
+	new_word_list = [] # word list baru
+	
+	# Looping word list untuk mencari lambda_m_j
+	for word, cluster, indexes, word_count in word_list:
+		lambda_m_j = []
+		index_m = 0
+		for tdic in total_doc_in_component:
+				lambda_m_j.append(word_count[index_m] / tdic)
+				index_m += 1 
+				# lambda_m_j.append(1)
+		
+		new_word_list.append([word, cluster, indexes, word_count, lambda_m_j])
+	
+	return new_word_list
+
+def probability_mass_function(d_ij, lambda_mij):
+	"""
+	Menghitung probability mass function pada suatu word
+
+	Args:
+		d_ij: banyaknya word j dalam dokumen i
+		total_doc_in_cluster: lambda dari word j
+
+	Returns:
+		teta: probability mass function
+	"""
+	
+	teta = np.exp(-lambda_mij) * np.power(lambda_mij, d_ij) / np.prod(np.arange(1, d_ij+1))
+	return teta
+
+def probability(doc_list, pi_m, word_list, dataframe_document_word, M):
+	"""
+	Menghitung P(D = d|C = k) untuk setiap dokumen
+	
+	Args:
+		doc_list: list dari suatu dokumen
+		pi_m: nilai pi_m (prior probability) setiap komponen
+		word_list: list dari suatu word
+		dataframe_document_word: Dataframe relasi antara doc dgn word
+
+	Returns:
+		new_doc_list: list doc dgn tambahan probability
+	"""
+	new_doc_list = []
+	
+	for title_id, cluster, indexes, word_count, m_component in doc_list:
+		probability = [] # Nilai probability yg akan distore di doc list baru
+		
+		# Menghitung teta di setiap kata di dalam 1 dokumen
+		prod_teta_list = np.ones(M)
+		i = 0
+		for word_value in dataframe_document_word.loc[title_id[1]]:
+			if(word_value < 1):
+					i += 1
+					continue
+			
+			for m in m_component:
+				# Memasukkan probability mass function dgn
+				# word_value = banyaknya word dari doc ini
+				# word_list[i][4][m-1] = lambda_mj dari word tersebut
+				prod_teta_list[m-1] *= probability_mass_function(word_value, word_list[i][4][m-1])
+			i+=1
+		
+		# Menghitung probability
+		for m in m_component:
+			# prod_teta_list = np.prod(teta_list[m-1])
+			probability.append(pi_m[m-1] * prod_teta_list[m-1])
+				
+		new_doc_list.append([title_id, cluster, indexes, word_count, m_component, sum(probability)])
+			
+	return new_doc_list
+
+def p_im_list(doc_list, pi_m, word_list, dataframe_document_word, M):
+	"""
+		Memproses p_im
+
+		Args:
+			doc_list: daftar dokumen
+			pi_m: prior probability dari komponen m dgn asumsi banyaknya K = banyaknya M
+			word_list: list dari word
+			dataframe_document_word: dataframe dengan document sebagai row dan word sebagai column
+			
+		Returns:
+			new_doc_list: list doc terbaru 
+	"""
+		
+	new_doc_list = []
+	
+	# Looping doc_list dgn:
+	# title_id: judul dan id dari doc
+	# cluster: klaster dari dokumen
+	# indexes: posisi row index pada matrix w dan matrix w partition
+	# word_count: banyaknya jumlah word dalam dokumen
+	for title_id, cluster, indexes, word_count, m_component, probability in doc_list:
+		p_im = [] # Nilai p_im yg akan distore di doc list baru
+		
+		# Menghitung teta di setiap kata di dalam 1 dokumen
+		prod_teta_list = np.ones(M)
+		i = 0
+		for word_value in dataframe_document_word.loc[title_id[1]]:
+			if(word_value < 1):
+				i += 1
+				continue
+			
+			for m in m_component:
+				# Memasukkan probability mass function dgn
+				# word_value = banyaknya word dari doc ini
+				# word_list[i][4][m-1] = lambda_mj dari word tersebut
+				prod_teta_list[m-1] *= probability_mass_function(word_value, word_list[i][4][m-1])
+			i+=1
+		
+		# Menghitung p_im
+		for m in m_component:
+			p_im.append(pi_m[m-1] * prod_teta_list[m-1])
+				
+		new_doc_list.append([title_id, cluster, indexes, word_count, m_component, p_im, probability])
+			
+	return new_doc_list
+
+def pi_m_with_t(doc_list, M):
+	"""
+		Mencari nilai p_im jika pencarian p_im lebih dari 1 turn
+
+		Args:
+			doc_list: daftar dokumen
+			M: banyaknya komponen
+		Returns:
+			pi_m_list: Daftar pi_m terbaru
+			sum_p_im_list: sum dari p_im pada turn saat ini di setiap komponen
+	"""
+	
+	pi_m_list = np.zeros(M)
+	sum_p_im_list = np.zeros(M)
+
+	# Mencari nilai sum(p_im)
+	for title_id, cluster, indexes, word_count, m_component, p_im, probability in doc_list:
+		index_m = 0
+		for m in m_component:
+			sum_p_im_list[m-1] += p_im[index_m]
+			index_m += 1
+	
+	# Mencari nilai pi_m
+	index = 0
+	for value in sum_p_im_list:
+		pi_m_list[index] = value/sum(sum_p_im_list)
+		index += 1
+
+	return pi_m_list, sum_p_im_list
+
+def lambda_mt(word_list, sum_p_im_list, doc_list, M):
+	"""
+		Mencari nilai lambda jika pencarian lambda lebih dari 1 turn
+
+		Args:
+			word_list: daftar word
+			sum_p_im_list: sum dari p_im pada turn saat ini di setiap komponen
+		Returns:
+			new_word_list: daftar word terbaru
+	"""
+	
+	new_word_list = [] # word list baru
+	top_lambda_mt_list = np.zeros(M) # Untuk perhitungan pada persamaan lambda_mt bagian atas 
+	
+	# Looping setiap dokumen
+	for title_id, cluster, indexes, word_count, m_component, p_im, probability in doc_list:
+			
+		index_m = 0
+		for m in m_component:
+			top_lambda_mt_list[m-1] += p_im[index_m] * word_count
+			index_m += 1
+	
+	# Looping word list untuk mencari lambda_m_j
+	for word, cluster, indexes, word_count, lambda_m_j in word_list:
+			
+		lambda_m_j_temp = []
+		
+		# Kalkulasi nilai lambda berdasarkan word dan klasternya
+		for m in range(1, M+1):
+			bottom_lambda_mt = word_count[m-1] * sum_p_im_list[m-1]
+			
+			# Jika nilai bottom_lambda_mt terbaru bernilai 0 dan mencegah lambda_m_j_temp bernilai inf
+			if bottom_lambda_mt == 0:
+				lambda_m_j_temp.append(0)
+			else:
+				lambda_m_j_temp.append(top_lambda_mt_list[m-1] / word_count[m-1] * sum_p_im_list[m-1])
+				
+		
+		new_word_list.append([word, cluster, indexes, word_count, lambda_m_j_temp])
+	
+	return new_word_list
+
+def p_im_list_t_more_than_1(doc_list, pi_m, word_list, dataframe_document_word):
+	"""
+	Mencari nilai p_im jika pencarian p_im lebih dari 1 turn
+
+	Args:
+		doc_list: daftar dokumen
+		pi_m: prior probability dari komponen m
+		word_list: list dari word
+		dataframe_document_word: dataframe dengan document sebagai row dan word sebagai column
+	Returns:
+	"""
+	
+	new_doc_list = []
+	
+	# Looping doc_list dgn:
+	# title_id: judul dan id dari doc
+	# cluster: klaster dari dokumen
+	# indexes: posisi row index pada matrix w dan matrix w partition
+	# word_count: banyaknya jumlah word dalam dokumen
+	# p_im: Nilai dari p_im
+	for title_id, cluster, indexes, word_count, m_component, p_im, probability in doc_list:
+		p_im = [] # Nilai p_im yg akan distore di doc list baru
+		
+		# Menghitung teta di setiap kata di dalam 1 dokumen
+		teta_list = []
+		i = 0
+		for word_value in dataframe_document_word.loc[title_id[1]]:
+			if(word_value < 1):
+				i += 1
+				continue
+			teta_list.append(probability_mass_function(word_value, word_list[i][4][0]))
+		
+		# Menghitung p_im
+		for m in m_component:
+			prod_teta_list = np.prod(teta_list)
+			p_im.append(pi_m[m-1] * prod_teta_list)
+				
+		new_doc_list.append([title_id, cluster, indexes, word_count, m_component, p_im, probability])
+			
+	return new_doc_list
+
+def get_log_likelihood(doc_list, new_doc_list):
+	log_likelihood = 0
+			
+	# Looping dokumen
+	for i in range(0, len(doc_list)):
+			
+		# Looping sebanyak label m yg ada di dokumen
+		for m in range(0, len(doc_list[i][4])):  
+			log_p_im = np.log(new_doc_list[i][5][m])
+			log_likelihood += doc_list[i][5][m] * log_p_im
+			
+	return log_likelihood
+\end{lstlisting}
+
+\chapter{tag\_recommendation\_for\_new\_document.py}
+\begin{lstlisting}[breaklines=true]
+import pandas
+
+def tag_recommendation(all_tag_list_with_rank, all_cluster, total_doc_in_cluster, p_dt_ck):
+
+	"""
+	Melakukan rekomendasi tag terhadap dokumen baru
+	Args:
+		all_tag_list_with_rank: Daftar tag dgn rank
+		all_cluster: Daftar klaster
+		total_doc_in_cluster: total banyaknya dokumen dalam 1 klaster
+		p_dt_ck: peluangnya
+		
+	Returns:
+		big_rank: Mengurutkan rank
+	"""
+	
+	p_cluster = 1/len(all_cluster) # P(C=k)
+	p_document = [1/tdic for tdic in total_doc_in_cluster] # list P(D = dt) || Setiap klaster berbeda valuenya
+	# p_dt_ck = 0.25
+	
+	R_Ti_dt = [] # Tampungan untuk nilai rank akhir
+	all_tag_name = [] # Tampungan untuk nama tag
+
+	for tag, cluster, nodes, rank, nr, np_i in all_tag_list_with_rank:
+		index_cluster = 0
+		
+		for k in cluster:
+			probability = p_dt_ck * p_cluster / p_document[k-1] # Hitung P(C=k|D=dt)
+			rti = rank[index_cluster] * probability # Hitung R(Ti, dt)
+			R_Ti_dt.append(rti)
+			all_tag_name.append(tag)
+			index_cluster += 1
+
+	# Buat dataframe dgn kolom tag & rank akhir lalu urutkan
+	dff = pandas.DataFrame([all_tag_name, R_Ti_dt], ["Tag", "Value"])
+	dffT = dff.T.sort_values(by=['Value'], ascending=False)
+
+	# Ambil 6 tag dgn rank akhir terbesar
+	big_rank = [tag for tag in dffT.head(6)["Tag"]]
+	
+	return big_rank
+
+def tag_recommendation_mass(doc_list, all_tag_list_with_rank, all_cluster, total_doc_in_cluster):
+	
+	"""
+	Melakukan rekomendasi tag terhadap dokumen baru secara massal
+	Args:
+		all_tag_list_with_rank: Daftar tag dgn rank
+		all_cluster: Daftar klaster
+		total_doc_in_cluster: total banyaknya dokumen dalam 1 klaster
+		doc_list: daftar dokumen
+		
+	Returns:
+		doc_list: daftar dokumen baru
+	"""
+	new_doc_list= []
+	
+	index = 0
+	for doc in doc_list:
+		tag_recommend = tag_recommendation(all_tag_list_with_rank, all_cluster, total_doc_in_cluster, doc[-1])
+		doc_list[index].append(tag_recommend)
+		index += 1
+	
+	return doc_list
+	
+\end{lstlisting}
+
+\chapter{top\_k\_accuracy.py}
+\begin{lstlisting}[breaklines=true]
+import numpy as np
+
+def top_k_accuracy(doc_list, dataframe_document_tag):
+	"""
+		Mengkonversi data testing
+
+	Args:
+		doc_list: Daftar list dokumen
+		dataframe_document_tag: Dataframe untuk dokumen dan tag
+		
+	Returns:
+		success_list: list berapa tebakan yang benar
+	"""
+	success_list = []
+	for doc in doc_list:
+		
+		value = 0
+		for tag in doc[-1]:
+			if tag in dataframe_document_tag.columns:
+				value += dataframe_document_tag.loc[doc[0][1], tag]
+				if(value == 1):
+					success_list.append(1)
+					break
+		
+		if(value == 0):
+			success_list.append(0)
+	
+	return success_list
+\end{lstlisting}
+
+% \chapter{Sampel Kode main.py}
+% \begin{lstlisting}
+% 		<?php 
+% 		defined('BASEPATH') OR 
+% 		exit('No direct script access allowed');
+		
+% 		class Anggota_model extends CI_Model
+% 		{
+% 			private $_table = "anggota";
+% 			public $id_anggota;
+% 			public $nama;
+% 			public $tgl_daftar;
+% 			public $nim;
+% 			public $tgl_lahir;
+% 			public $jabatan;
+% 			public $bagian;
+% 			public $fakultas;
+% 			public $prodi;
+% 			public $angkatan;
+% 			public $no_telp;
+% 			public $username;
+% 			public $email;
+% 			public $pass;
+% 			public $periode;
+		
+% 			public function rules()
+% 			{
+% 				return [
+% 				['field' => 'nama',
+% 				'label' => 'Nama',
+% 				'rules' => 'required'],
+				
+% 				['field' => 'tgl_daftar',
+% 				'label' => 'Tanggal Daftar',
+% 				'rules' => 'required'],
+				
+% 				['field' => 'nim',
+% 				'label' => 'NIM',
+% 				'rules' => 'numeric'],
+				
+% 				['field' => 'tgl_lahir',
+% 				'label' => 'Tanggal Lahir',
+% 				'rules' => 'required'],
+				
+% 				['field' => 'fakultas',
+% 				'label' => 'Fakultas',
+% 				'rules' => 'required'],
+				
+% 				['field' => 'prodi',
+% 				'label' => 'Program Studi',
+% 				'rules' => 'required'],
+				
+% 				['field' => 'angkatan',
+% 				'label' => 'Angkatan',
+% 				'rules' => 'required'],
+				
+% 				['field' => 'no_telp',
+% 				'label' => 'Nomor Telepon',
+% 				'rules' => 'numeric'],
+				
+% 				['field' => 'username',
+% 				'label' => 'Username',
+% 				'rules' => 'required'],
+				
+% 				['field' => 'email',
+% 				'label' => 'E-mail',
+% 				'rules' => 'required']
+% 				];
+% 			}
+			
+% 			public function getAll()
+% 			{
+% 				return $this->db->get($this->_table)->result();
+% 			}
+			
+% 			public function getById($id_anggota)
+% 			{
+% 				return $this->db->get_where($this->_table, 
+% 				["id_anggota" => $id_anggota])->row();
+% 			}
+			
+% 			public function save()
+% 			{
+% 				$post = $this->input->post();
+% 				$query = $this->db->get('anggota');
+% 				$kode1 = $query->num_rows()+1;
+% 				if($post["fakultas"] == 'Fakultas Ilmu Pendidikan' ) {
+% 					$kode2 = 'I';
+% 				}
+% 				elseif($post["fakultas"] == 
+% 				'Fakultas Bahasa dan Seni' ) {
+% 					$kode2 = 'II';
+% 				}
+% 				elseif($post["fakultas"] == 
+% 				'Fakultas Matematika dan Ilmu Pengetahuan Alam' ) {
+% 					$kode2 = 'III';
+% 				}
+% 				elseif($post["fakultas"] == 
+% 				'Fakultas Ilmu Sosial' ) {
+% 					$kode2 = 'IV';
+% 				}
+% 				elseif($post["fakultas"] == 
+% 				'Fakultas Teknik' ) {
+% 					$kode2 = 'V';
+% 				}
+% 				elseif($post["fakultas"] == 
+% 				'Fakultas Ilmu Keolahragaan' ) {
+% 					$kode2 = 'VI';
+% 				}
+% 				elseif($post["fakultas"] == 
+% 				'Fakultas Ekonomi' ) {
+% 					$kode2 = 'VII';
+% 				}
+% 				elseif($post["fakultas"] == 
+% 				'Fakultas Pendidikan Psikologi' ) {
+% 					$kode2 = 'VIII';
+% 				}
+% 				$kode4 = date('y', strtotime($post["tgl_daftar"]));
+% 				$this->id_anggota = $kode1.$kode2."KOPMA".$kode4;
+% 				$this->nama = $post["nama"];
+% 				$this->tgl_daftar = $post["tgl_daftar"];
+% 				$this->nim = $post["nim"];
+% 				$this->tgl_lahir = $post["tgl_lahir"];
+% 				$this->fakultas = $post["fakultas"];
+% 				$this->prodi = $post["prodi"];
+% 				$this->angkatan = $post["angkatan"];
+% 				$this->no_telp = $post["no_telp"];
+% 				$this->username = $post["username"];
+% 				$this->email = $post["email"];
+% 				$this->pass = $kode1.$kode2."KOPMA".$kode4;
+% 				$tahun = date('Y', strtotime($post["tgl_daftar"]));
+% 				$this->periode = $tahun;
+% 				$this->db->insert($this->_table, $this);
+% 			}
+				
+% 			public function ganti_status($id_anggota)
+% 			{
+% 				$data = array(
+% 				'status_user' => 2
+% 				);
+% 				$this->db->where('id_anggota', $id_anggota);
+% 				return $this->db->update('anggota',$data);
+% 			}
+			
+% 			public function terima_status($id_anggota)
+% 			{
+% 				$data = array(
+% 				'status_user' => 1
+% 				);
+% 				$this->db->where('id_anggota', $id_anggota);
+% 				return $this->db->update('anggota',$data);
+% 			}
+			
+% 			public function hapus_admin($id_anggota)
+% 			{
+% 				$data = array(
+% 				'level' => anggota
+% 				);
+% 				$this->db->where('id_anggota', $id_anggota);
+% 				return $this->db->update('anggota',$data);
+% 			}
+			
+% 			public function hapus_pengawas($id_anggota)
+% 			{
+% 				$data = array(
+% 				'level' => anggota
+% 				);
+% 				$this->db->where('id_anggota', $id_anggota);
+% 				return $this->db->update('anggota',$data);
+% 			}
+			
+% 			public function NewAdmin($id_anggota)
+% 			{
+% 			$data = array(
+% 			'level' => admin
+% 			);
+			
+% 			$this->db->where('id_anggota', $id_anggota);
+% 			return $this->db->update('anggota',$data);
+% 			}
+			
+% 			public function NewPengawas($id_anggota)
+% 			{
+% 				$data = array(
+% 				'level' => pengawas
+% 				);
+% 				$this->db->where('id_anggota', $id_anggota);
+% 				return $this->db->update('anggota',$data);
+% 			}
+			
+% 			public function resetPass($id_anggota)
+% 			{
+% 				$data = array(
+% 				'pass' => $id_anggota
+% 				);
+% 				$this->db->where('id_anggota', $id_anggota);
+% 				return $this->db->update('anggota',$data);
+% 			}
+			
+% 			public function lanjut_periode($id_anggota)
+% 			{
+% 				$anggota = $this->db->get_where("anggota", 
+% 				["id_anggota" => $id_anggota])->row();
+% 				$data = array(
+% 				'keuangan' => $anggota->keuangan + $anggota->simpanan_anggota,
+% 				'simpanan_anggota' => 0,
+% 				'total_transaksi' => 0,
+% 				'shu_transaksi' => 0,
+% 				'shu_simpanan' => 0,
+% 				'periode' => $anggota->periode + 1
+% 				);
+% 				$this->db->where('id_anggota', $id_anggota);
+% 				return $this->db->update('anggota',$data);
+% 			}
+			
+% 			public function update()
+% 			{
+% 				$post = $this->input->post();
+% 				$this->id_anggota = $post["id_anggota"];
+% 				$this->nama = $post["nama"];
+% 				$this->tgl_daftar = $post["tgl_daftar"];
+% 				$this->nim = $post["nim"];
+% 				$this->tgl_lahir = $post["tgl_lahir"];
+% 				$this->jabatan = $post["jabatan"];
+% 				$this->bagian = $post["bagian"];
+% 				$this->fakultas = $post["fakultas"];
+% 				$this->prodi = $post["prodi"];
+% 				$this->angkatan = $post["angkatan"];
+% 				$this->no_telp = $post["no_telp"];
+% 				$this->username = $post["username"];
+% 				$this->email = $post["email"];
+% 				$this->pass = $post["pass"];
+% 				$this->periode = $post["periode"];
+% 				$this->db->update($this->_table, $this, 
+% 				array('id_anggota' => $post['id_anggota']));
+% 			}
+			
+% 			public function delete($id_anggota)
+% 			{
+% 				return $this->db->delete($this->_table, 
+% 				array("id_anggota" => $id_anggota));
+% 			}
+			
+% 			public function getByPendaftar($status_user=0)
+% 			{
+% 				return $this->db->get_where($this->_table, 
+% 				["status_user" => $status_user])->result();
+% 			}
+			
+% 			public function getByAnggota($status_user=1)
+% 			{
+% 				return $this->db->get_where($this->_table, 
+% 				["status_user" => $status_user])->result();
+% 			}
+			
+% 			public function getByAP($status_user=2)
+% 			{
+% 				return $this->db->get_where($this->_table, 
+% 				["status_user" => $status_user])->result();
+% 			}
+			
+% 			public function getByKelola($level='admin')
+% 			{
+% 				return $this->db->get_where($this->_table, 
+% 				["level" => $level])->result();
+% 			}
+			
+% 			public function getByKelolaP($level='pengawass')
+% 			{
+% 				return $this->db->get_where($this->_table, 
+% 				["level" => $level])->result();
+% 			}
+			
+% 			public function getByNonAdmin($level='anggota', 
+% 			$status_user=1)
+% 			{
+% 				return $this->db->get_where($this->_table, 
+% 				["level" => $level, "status_user" => $status_user])->result();
+% 			}
+			
+			
+			
+			
+			
+			
+% 			public function getByNonPengawas($level='anggota', 
+% 			$status_user=1)
+% 			{
+% 				return $this->db->get_where($this->_table, 
+% 				["level" => $level, "status_user" => $status_user])->result();
+% 			}
+% 		}	
+% \end{lstlisting}
+
+% \chapter{Sampel Kode \textit{View Admin} pada Daftar Anggota}
+% \begin{lstlisting}
+% 		<!DOCTYPE html>
+% 		<html lang="en">
+% 		<head>
+% 			<?php $this->load->view("admin/_partials/head.php") ?>
+% 		</head>
+% 		<body id="page-top">
+% 			<?php $this->load->view("admin/_partials/navbar.php") ?>
+% 		<div id="wrapper">
+% 			<?php $this->load->view("admin/_partials/sidebar.php") ?>		
+% 			<div id="content-wrapper">		
+% 				<div class="container-fluid">		
+% 					<?php //$this->load->view("admin/_partials/breadcrumb.php") ?>		
+% 					<div class="card mb-3">
+% 						<div class="card-header">
+% 							<a href="<?php echo site_url('admin/anggota/add') ?>">
+% 							<i class="fas fa-plus"></i> Tambah Anggota</a>
+% 							<strong>|</strong>
+% 							<a href="<?php echo site_url('admin/anggota/cetak') ?>">
+% 							<i class="fas fa-print"></i> Cetak Data</a>
+% 						</div>
+% 							<div class="card-body">		
+% 								<div class="table-responsive">
+% 									<table class="table table-hover" id="dataTable" 
+% 									width="100%" cellspacing="0">
+% 										<thead>
+% 											<tr>
+% 											<th>Nama</th>
+% 											<th>Jabatan</th>
+% 											<th>Bagian</th>
+% 											<th>Prodi</th>
+% 											<th>Simpanan</th>
+% 											<th>Transaksi</th>
+% 											<th>Periode</th>
+% 											<th>Action</th>
+% 											</tr>
+% 										</thead>
+% 											<tbody>
+% 												<?php foreach ($anggota as $anggota):?>
+% 											<tr>
+% 											<td>
+% 												<?php echo $anggota->nama ?>
+% 											</td>
+% 											<td>
+% 												<?php echo $anggota->jabatan ?>
+% 											</td>
+% 											<td>
+% 												<?php echo $anggota->bagian ?>
+% 											</td>
+% 											<td>
+% 												<?php echo $anggota->prodi ?>
+% 											</td>
+% 												<?php echo $anggota->no_telp ?>
+% 											</td>
+% 											<td>
+% 												<?php echo $anggota->username ?>
+% 											</td>
+% 											<td>
+% 												<?php echo $anggota->email ?>
+% 												<?php echo $anggota->pass ?>
+% 											<td style="text-align:right;">
+% 												<?php echo $anggota->simpanan_anggota ?>
+% 											</td>
+% 											<td style="text-align:right;">
+% 												<?php echo $anggota->total_transaksi ?>
+% 											</td>
+% 											<td style="text-align:right;">
+% 												<?php echo $anggota->periode?>
+% 											</td>
+% 											<td>
+% 												<a href="<?php echo 
+% 												site_url('admin/anggota/detail/'.$anggota->id_anggota) ?>"
+% 												class="btn btn-small"><i class="fas fa-list-ul" 
+% 												data-toggle="tooltip" title="Detail"></i></a>
+% 												<a onclick="putihConfirm('<?php echo 
+% 												site_url('admin/anggota/putih/'.$anggota->id_anggota) ?>')"
+% 												href="#1!" class="btn btn-small text-success">
+% 												<i class="fas fa-hand-paper" data-toggle="tooltip" 
+% 												title="Putihkan"></i></a>
+% 												<a href="<?php echo 
+% 												site_url('admin/anggota/edit/'.$anggota->id_anggota
+% 												) ?>"
+% 												class="btn btn-small"><i class="fas fa-edit" 
+% 												data-toggle="tooltip" title="Sunting"></i></a>
+% 												<a onclick="resetConfirm('<?php 
+% 												echo site_url('admin/anggota/reset_pass/'.$anggota->id_anggota)
+% 												 ?>')"
+% 												href="#2!" class="btn btn-small text-warning">
+% 												<i class="fas fa-sync" data-toggle="tooltip" 
+% 												title="Reset Password"></i></a>
+% 												<a onclick="baruConfirm('<?php echo 
+% 												site_url('admin/anggota/baru/'.$anggota->id_anggota) ?>')"
+% 												href="#2!" class="btn btn-small text-success">
+% 												<i class="fas fa-external-link-square-alt" 
+% 												data-toggle="tooltip" title="Lanjut Periode"></i></a>
+% 												<a onclick="deleteConfirm('<?php echo 
+% 												site_url('admin/anggota/delete/'.$anggota->id_anggota) ?>')"
+% 												href="#!" class="btn btn-small text-danger">
+% 												<i class="fas fa-trash" data-toggle="tooltip" 
+% 												title="Hapus"></i></a>
+% 											</td>
+% 											</tr>
+% 												<?php endforeach; ?>
+% 												</tbody>
+% 									</table>
+% 								</div>
+% 							</div>
+% 						</div>		
+% 					</div>
+% 		<?php $this->load->view("admin/_partials/scrolltop.php") ?>
+% 		<?php $this->load->view("admin/_partials/modal.php") ?>
+% 		<?php $this->load->view("admin/_partials/js.php") ?>
+% 		<script>
+% 			function deleteConfirm(url){
+% 				$('#btn-delete').attr('href', url);
+% 				$('#deleteModal').modal();
+% 			}
+% 			function putihConfirm(url){
+% 				$('#btn-putih').attr('href', url);
+% 				$('#putihModal').modal();
+% 			}
+% 			function resetConfirm(url){
+% 				$('#btn-reset').attr('href', url);
+% 				$('#resetModal').modal();
+% 			}
+% 			function baruConfirm(url){
+% 				$('#btn-baru').attr('href', url);
+% 				$('#baruModal').modal();
+% 			}
+% 				$(document).ready(function(){
+% 				$('[data-toggle="tooltip"]').tooltip();
+% 			});
+% 			</script>		
+% 		</body>		
+% 		</html>		
+% \end{lstlisting}
