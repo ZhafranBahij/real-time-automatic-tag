@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.4.2)  30 AUG 2023 11:44
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.4.2)  30 AUG 2023 11:52
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -606,7 +606,7 @@ Package: lscape 2020/05/28 v3.02 Landscape Pages (DPC)
 Package pdflscape Info: Auto-detected driver: pdftex on input line 81.
 ))
 \c@lstlisting=\count332
-<gambar/Logo-unj.png, id=280, 333.4056pt x 426.6339pt>
+<gambar/Logo-unj.png, id=276, 333.4056pt x 426.6339pt>
 File: gambar/Logo-unj.png Graphic file (type png)
 <use gambar/Logo-unj.png>
 Package pdftex.def Info: gambar/Logo-unj.png  used on input line 91.
@@ -676,7 +676,7 @@ Overfull \hbox (15.53441pt too wide) in paragraph at lines 134--142
 
  (./bab1.tex
 BAB I.
-<gambar/Top Search Engine.png, id=526, 1541.76pt x 1156.32pt>
+<gambar/Top Search Engine.png, id=522, 1541.76pt x 1156.32pt>
 File: gambar/Top Search Engine.png Graphic file (type png)
 <use gambar/Top Search Engine.png>
 Package pdftex.def Info: gambar/Top Search Engine.png  used on input line 15.
@@ -686,25 +686,25 @@ Package pdftex.def Info: gambar/Top Search Engine.png  used on input line 15.
 
 
  <./gambar/Top Search Engine.png>]
-<gambar/Skema Search Engine Google.png, id=541, 517.935pt x 421.575pt>
+<gambar/Skema Search Engine Google.png, id=537, 517.935pt x 421.575pt>
 File: gambar/Skema Search Engine Google.png Graphic file (type png)
 <use gambar/Skema Search Engine Google.png>
 Package pdftex.def Info: gambar/Skema Search Engine Google.png  used on input line 26.
 (pdftex.def)             Requested size: 305.15585pt x 248.39258pt.
  [2 <./gambar/Skema Search Engine Google.png>]
-<gambar/Skema singkat General Suffix Tree.png, id=557, 366.61969pt x 111.41624pt>
+<gambar/Skema singkat General Suffix Tree.png, id=553, 366.61969pt x 111.41624pt>
 File: gambar/Skema singkat General Suffix Tree.png Graphic file (type png)
 <use gambar/Skema singkat General Suffix Tree.png>
 Package pdftex.def Info: gambar/Skema singkat General Suffix Tree.png  used on input line 44.
 (pdftex.def)             Requested size: 406.87448pt x 123.65648pt.
  [3 <./gambar/Skema singkat General Suffix Tree.png>]
-<gambar/skema automatic tag.PNG, id=569, 213.79875pt x 121.20282pt>
+<gambar/skema automatic tag.PNG, id=565, 213.79875pt x 121.20282pt>
 File: gambar/skema automatic tag.PNG Graphic file (type png)
 <use gambar/skema automatic tag.PNG>
 Package pdftex.def Info: gambar/skema automatic tag.PNG  used on input line 59.
 (pdftex.def)             Requested size: 305.15585pt x 173.00615pt.
  [4 <./gambar/skema automatic tag.PNG>]
-<gambar/mashup tag api.PNG, id=587, 557.58313pt x 209.78375pt>
+<gambar/mashup tag api.PNG, id=583, 557.58313pt x 209.78375pt>
 File: gambar/mashup tag api.PNG Graphic file (type png)
 <use gambar/mashup tag api.PNG>
 Package pdftex.def Info: gambar/mashup tag api.PNG  used on input line 72.
@@ -714,7 +714,7 @@ Package pdftex.def Info: gambar/mashup tag api.PNG  used on input line 72.
 
  (./bab2.tex
 BAB II.
-<gambar/Bipartite Graph.PNG, id=627, 267.24844pt x 118.19156pt>
+<gambar/Bipartite Graph.PNG, id=622, 267.24844pt x 118.19156pt>
 File: gambar/Bipartite Graph.PNG Graphic file (type png)
 <use gambar/Bipartite Graph.PNG>
 Package pdftex.def Info: gambar/Bipartite Graph.PNG  used on input line 31.
@@ -725,13 +725,13 @@ Package pdftex.def Info: gambar/Bipartite Graph.PNG  used on input line 31.
 
 
  <./gambar/Bipartite Graph.PNG>] [9] [10]
-<gambar/Smoothed Ranking Function.PNG, id=659, 347.04657pt x 237.88875pt>
+<gambar/Smoothed Ranking Function.PNG, id=655, 347.04657pt x 237.88875pt>
 File: gambar/Smoothed Ranking Function.PNG Graphic file (type png)
 <use gambar/Smoothed Ranking Function.PNG>
 Package pdftex.def Info: gambar/Smoothed Ranking Function.PNG  used on input line 126.
 (pdftex.def)             Requested size: 305.15585pt x 209.17938pt.
  [11]
-<gambar/Two Bipartite Graph of Tag Document Word.PNG, id=671, 211.54031pt x 120.45pt>
+<gambar/Two Bipartite Graph of Tag Document Word.PNG, id=667, 211.54031pt x 120.45pt>
 File: gambar/Two Bipartite Graph of Tag Document Word.PNG Graphic file (type png)
 <use gambar/Two Bipartite Graph of Tag Document Word.PNG>
 Package pdftex.def Info: gambar/Two Bipartite Graph of Tag Document Word.PNG  used on input line 147.
@@ -739,13 +739,13 @@ Package pdftex.def Info: gambar/Two Bipartite Graph of Tag Document Word.PNG  us
  [12 <./gambar/Smoothed Ranking Function.PNG>]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 155.
  [13 <./gambar/Two Bipartite Graph of Tag Document Word.PNG>] [14]
-<gambar/Poisson Distribution in Two Cluster.PNG, id=714, 375.65344pt x 320.69812pt>
+<gambar/Poisson Distribution in Two Cluster.PNG, id=710, 375.65344pt x 320.69812pt>
 File: gambar/Poisson Distribution in Two Cluster.PNG Graphic file (type png)
 <use gambar/Poisson Distribution in Two Cluster.PNG>
 Package pdftex.def Info: gambar/Poisson Distribution in Two Cluster.PNG  used on input line 193.
 (pdftex.def)             Requested size: 305.15585pt x 260.53232pt.
  [15] [16 <./gambar/Poisson Distribution in Two Cluster.PNG>] [17] [18] [19]
-<gambar/Difference-between-Gaussian-and-Poisson-distributions-Graph-shows-two-Poisson-and-two.png, id=766, 853.1875pt x 568.1225pt>
+<gambar/Difference-between-Gaussian-and-Poisson-distributions-Graph-shows-two-Poisson-and-two.png, id=762, 853.1875pt x 568.1225pt>
 File: gambar/Difference-between-Gaussian-and-Poisson-distributions-Graph-shows-two-Poisson-and-two.png Graphic file (type png)
 <use gambar/Difference-between-Gaussian-and-Poisson-distributions-Graph-shows-two-Poisson-and-two.png>
 Package pdftex.def Info: gambar/Difference-between-Gaussian-and-Poisson-distributions-Graph-shows-two-Poisson-and-two.png  used on input line 362.
@@ -755,7 +755,7 @@ Package pdftex.def Info: gambar/Difference-between-Gaussian-and-Poisson-distribu
 
  (./bab3.tex
 BAB III.
-<gambar/Tahapan penelitian.png, id=781, 963.6pt x 401.5pt>
+<gambar/Tahapan penelitian.png, id=777, 963.6pt x 401.5pt>
 File: gambar/Tahapan penelitian.png Graphic file (type png)
 <use gambar/Tahapan penelitian.png>
 Package pdftex.def Info: gambar/Tahapan penelitian.png  used on input line 15.
@@ -766,19 +766,19 @@ Package pdftex.def Info: gambar/Tahapan penelitian.png  used on input line 15.
 
 
  <./gambar/Tahapan penelitian.png>]
-<gambar/Tag Flowchart.drawio.png, id=799, 694.595pt x 362.35374pt>
+<gambar/Tag Flowchart.drawio.png, id=795, 694.595pt x 362.35374pt>
 File: gambar/Tag Flowchart.drawio.png Graphic file (type png)
 <use gambar/Tag Flowchart.drawio.png>
 Package pdftex.def Info: gambar/Tag Flowchart.drawio.png  used on input line 75.
 (pdftex.def)             Requested size: 406.87448pt x 212.26083pt.
  [22]
-<gambar/Online Recommendation Flowchart.png, id=805, 603.25375pt x 161.60374pt>
+<gambar/Online Recommendation Flowchart.png, id=801, 603.25375pt x 161.60374pt>
 File: gambar/Online Recommendation Flowchart.png Graphic file (type png)
 <use gambar/Online Recommendation Flowchart.png>
 Package pdftex.def Info: gambar/Online Recommendation Flowchart.png  used on input line 82.
 (pdftex.def)             Requested size: 406.87448pt x 108.99644pt.
  [23 <./gambar/Tag Flowchart.drawio.png> <./gambar/Online Recommendation Flowchart.png>] [24]
-<gambar/Bipartite Graph Simple.png, id=823, 250.9375pt x 250.9375pt>
+<gambar/Bipartite Graph Simple.png, id=819, 250.9375pt x 250.9375pt>
 File: gambar/Bipartite Graph Simple.png Graphic file (type png)
 <use gambar/Bipartite Graph Simple.png>
 Package pdftex.def Info: gambar/Bipartite Graph Simple.png  used on input line 134.
@@ -797,12 +797,12 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 
  (./bab4.tex
 BAB IV.
-<gambar/bab_4_image/the-hill.png, id=904, 1927.2pt x 1084.05pt>
+<gambar/bab_4_image/the-hill.png, id=900, 1927.2pt x 1084.05pt>
 File: gambar/bab_4_image/the-hill.png Graphic file (type png)
 <use gambar/bab_4_image/the-hill.png>
 Package pdftex.def Info: gambar/bab_4_image/the-hill.png  used on input line 22.
 (pdftex.def)             Requested size: 305.15585pt x 171.64854pt.
-<gambar/bab_4_image/dataset.jpg, id=905, 760.8425pt x 372.39125pt>
+<gambar/bab_4_image/dataset.jpg, id=901, 760.8425pt x 372.39125pt>
 File: gambar/bab_4_image/dataset.jpg Graphic file (type jpg)
 <use gambar/bab_4_image/dataset.jpg>
 Package pdftex.def Info: gambar/bab_4_image/dataset.jpg  used on input line 36.
@@ -813,96 +813,96 @@ Package pdftex.def Info: gambar/bab_4_image/dataset.jpg  used on input line 36.
 
 
  <./gambar/bab_4_image/the-hill.png>]
-<gambar/bab_4_image/dataset tag.jpg, id=911, 334.75063pt x 262.48062pt>
+<gambar/bab_4_image/dataset tag.jpg, id=907, 334.75063pt x 262.48062pt>
 File: gambar/bab_4_image/dataset tag.jpg Graphic file (type jpg)
 <use gambar/bab_4_image/dataset tag.jpg>
 Package pdftex.def Info: gambar/bab_4_image/dataset tag.jpg  used on input line 44.
 (pdftex.def)             Requested size: 406.87448pt x 319.0604pt.
-<gambar/bab_4_image/dataset article.jpg, id=912, 759.33687pt x 351.3125pt>
+<gambar/bab_4_image/dataset article.jpg, id=908, 759.33687pt x 351.3125pt>
 File: gambar/bab_4_image/dataset article.jpg Graphic file (type jpg)
 <use gambar/bab_4_image/dataset article.jpg>
 Package pdftex.def Info: gambar/bab_4_image/dataset article.jpg  used on input line 52.
 (pdftex.def)             Requested size: 406.87448pt x 188.24783pt.
  [33 <./gambar/bab_4_image/dataset.jpg> <./gambar/bab_4_image/dataset tag.jpg>]
-<gambar/bab_4_image/pengambilan data.jpg, id=917, 745.28438pt x 142.03062pt>
+<gambar/bab_4_image/pengambilan data.jpg, id=913, 745.28438pt x 142.03062pt>
 File: gambar/bab_4_image/pengambilan data.jpg Graphic file (type jpg)
 <use gambar/bab_4_image/pengambilan data.jpg>
 Package pdftex.def Info: gambar/bab_4_image/pengambilan data.jpg  used on input line 67.
 (pdftex.def)             Requested size: 406.87448pt x 77.53842pt.
-<gambar/bab_4_image/matrix tag document dan matrix document word.jpg, id=919, 239.39438pt x 206.7725pt>
+<gambar/bab_4_image/matrix tag document dan matrix document word.jpg, id=915, 239.39438pt x 206.7725pt>
 File: gambar/bab_4_image/matrix tag document dan matrix document word.jpg Graphic file (type jpg)
 <use gambar/bab_4_image/matrix tag document dan matrix document word.jpg>
 Package pdftex.def Info: gambar/bab_4_image/matrix tag document dan matrix document word.jpg  used on input line 90.
 (pdftex.def)             Requested size: 305.15585pt x 263.592pt.
  [34 <./gambar/bab_4_image/dataset article.jpg> <./gambar/bab_4_image/pengambilan data.jpg>]
-<gambar/bab_4_image/matrix w.jpg, id=925, 230.36063pt x 124.96687pt>
+<gambar/bab_4_image/matrix w.jpg, id=921, 230.36063pt x 124.96687pt>
 File: gambar/bab_4_image/matrix w.jpg Graphic file (type jpg)
 <use gambar/bab_4_image/matrix w.jpg>
 Package pdftex.def Info: gambar/bab_4_image/matrix w.jpg  used on input line 102.
 (pdftex.def)             Requested size: 305.15585pt x 165.55362pt.
  [35 <./gambar/bab_4_image/matrix tag document dan matrix document word.jpg> <./gambar/bab_4_image/matrix w.jpg>]
-<gambar/bab_4_image/Matrix q.jpg, id=930, 346.79562pt x 182.18062pt>
+<gambar/bab_4_image/Matrix q.jpg, id=926, 346.79562pt x 182.18062pt>
 File: gambar/bab_4_image/Matrix q.jpg Graphic file (type jpg)
 <use gambar/bab_4_image/Matrix q.jpg>
 Package pdftex.def Info: gambar/bab_4_image/Matrix q.jpg  used on input line 121.
 (pdftex.def)             Requested size: 305.15585pt x 160.31108pt.
-<gambar/bab_4_image/Matrix t.jpg, id=931, 365.86688pt x 188.705pt>
+<gambar/bab_4_image/Matrix t.jpg, id=927, 365.86688pt x 188.705pt>
 File: gambar/bab_4_image/Matrix t.jpg Graphic file (type jpg)
 <use gambar/bab_4_image/Matrix t.jpg>
 Package pdftex.def Info: gambar/bab_4_image/Matrix t.jpg  used on input line 128.
 (pdftex.def)             Requested size: 305.15585pt x 157.39966pt.
-<gambar/bab_4_image/matrix w hat.jpg, id=932, 385.94188pt x 176.66pt>
+<gambar/bab_4_image/matrix w hat.jpg, id=928, 385.94188pt x 176.66pt>
 File: gambar/bab_4_image/matrix w hat.jpg Graphic file (type jpg)
 <use gambar/bab_4_image/matrix w hat.jpg>
 Package pdftex.def Info: gambar/bab_4_image/matrix w hat.jpg  used on input line 140.
 (pdftex.def)             Requested size: 305.15585pt x 139.68117pt.
  [36 <./gambar/bab_4_image/Matrix q.jpg> <./gambar/bab_4_image/Matrix t.jpg>]
-<gambar/bab_4_image/matrix partisi.jpg, id=937, 366.36874pt x 92.345pt>
+<gambar/bab_4_image/matrix partisi.jpg, id=933, 366.36874pt x 92.345pt>
 File: gambar/bab_4_image/matrix partisi.jpg Graphic file (type jpg)
 <use gambar/bab_4_image/matrix partisi.jpg>
 Package pdftex.def Info: gambar/bab_4_image/matrix partisi.jpg  used on input line 157.
 (pdftex.def)             Requested size: 406.87448pt x 102.5605pt.
-<gambar/bab_4_image/pelabelan dokumen.jpg, id=938, 741.26938pt x 233.37187pt>
+<gambar/bab_4_image/pelabelan dokumen.jpg, id=934, 741.26938pt x 233.37187pt>
 File: gambar/bab_4_image/pelabelan dokumen.jpg Graphic file (type jpg)
 <use gambar/bab_4_image/pelabelan dokumen.jpg>
 Package pdftex.def Info: gambar/bab_4_image/pelabelan dokumen.jpg  used on input line 174.
 (pdftex.def)             Requested size: 406.87448pt x 128.09497pt.
  [37 <./gambar/bab_4_image/matrix w hat.jpg> <./gambar/bab_4_image/matrix partisi.jpg>]
-<gambar/bab_4_image/Node Rank T.jpg, id=944, 539.51563pt x 245.91875pt>
+<gambar/bab_4_image/Node Rank T.jpg, id=940, 539.51563pt x 245.91875pt>
 File: gambar/bab_4_image/Node Rank T.jpg Graphic file (type jpg)
 <use gambar/bab_4_image/Node Rank T.jpg>
 Package pdftex.def Info: gambar/bab_4_image/Node Rank T.jpg  used on input line 198.
 (pdftex.def)             Requested size: 406.87448pt x 185.463pt.
  [38 <./gambar/bab_4_image/pelabelan dokumen.jpg> <./gambar/bab_4_image/Node Rank T.jpg>]
-<gambar/bab_4_image/all_prior_probability_m.jpg, id=952, 268.00125pt x 116.435pt>
+<gambar/bab_4_image/all_prior_probability_m.jpg, id=948, 268.00125pt x 116.435pt>
 File: gambar/bab_4_image/all_prior_probability_m.jpg Graphic file (type jpg)
 <use gambar/bab_4_image/all_prior_probability_m.jpg>
 Package pdftex.def Info: gambar/bab_4_image/all_prior_probability_m.jpg  used on input line 222.
 (pdftex.def)             Requested size: 305.15585pt x 132.57559pt.
-<gambar/bab_4_image/all word list lamda mj.jpg, id=953, 732.23563pt x 236.885pt>
+<gambar/bab_4_image/all word list lamda mj.jpg, id=949, 732.23563pt x 236.885pt>
 File: gambar/bab_4_image/all word list lamda mj.jpg Graphic file (type jpg)
 <use gambar/bab_4_image/all word list lamda mj.jpg>
 Package pdftex.def Info: gambar/bab_4_image/all word list lamda mj.jpg  used on input line 234.
 (pdftex.def)             Requested size: 406.87448pt x 131.62814pt.
  [39 <./gambar/bab_4_image/all_prior_probability_m.jpg>]
-<gambar/bab_4_image/pim in document.jpg, id=958, 736.25063pt x 340.77313pt>
+<gambar/bab_4_image/pim in document.jpg, id=954, 736.25063pt x 340.77313pt>
 File: gambar/bab_4_image/pim in document.jpg Graphic file (type jpg)
 <use gambar/bab_4_image/pim in document.jpg>
 Package pdftex.def Info: gambar/bab_4_image/pim in document.jpg  used on input line 245.
 (pdftex.def)             Requested size: 305.15585pt x 141.24661pt.
  [40 <./gambar/bab_4_image/all word list lamda mj.jpg> <./gambar/bab_4_image/pim in document.jpg>]
-<gambar/bab_4_image/rekomendasi tag.jpg, id=970, 486.31688pt x 125.46875pt>
+<gambar/bab_4_image/rekomendasi tag.jpg, id=966, 486.31688pt x 125.46875pt>
 File: gambar/bab_4_image/rekomendasi tag.jpg Graphic file (type jpg)
 <use gambar/bab_4_image/rekomendasi tag.jpg>
 Package pdftex.def Info: gambar/bab_4_image/rekomendasi tag.jpg  used on input line 277.
 (pdftex.def)             Requested size: 406.87448pt x 104.97182pt.
-<gambar/bab_4_image/Akurasi.jpg, id=971, 468.24937pt x 129.48375pt>
+<gambar/bab_4_image/Akurasi.jpg, id=967, 468.24937pt x 129.48375pt>
 File: gambar/bab_4_image/Akurasi.jpg Graphic file (type jpg)
 <use gambar/bab_4_image/Akurasi.jpg>
 Package pdftex.def Info: gambar/bab_4_image/Akurasi.jpg  used on input line 292.
 (pdftex.def)             Requested size: 406.87448pt x 112.51755pt.
  [41 <./gambar/bab_4_image/rekomendasi tag.jpg>]
-<gambar/bab_4_image/teta_list.jpg, id=977, 781.92125pt x 74.2775pt>
+<gambar/bab_4_image/teta_list.jpg, id=973, 781.92125pt x 74.2775pt>
 File: gambar/bab_4_image/teta_list.jpg Graphic file (type jpg)
 <use gambar/bab_4_image/teta_list.jpg>
 Package pdftex.def Info: gambar/bab_4_image/teta_list.jpg  used on input line 320.
@@ -986,21 +986,21 @@ LAMPIRAN M.
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `template-skripsi.out' has not changed.
-(rerunfilecheck)             Checksum: CE5D98E2DE4426F1D53D4A1972165D52;12184.
+(rerunfilecheck)             Checksum: 6F143033BE352208B7A2153A4CE7DAB5;12051.
  ) 
 Here is how much of TeX's memory you used:
- 19233 strings out of 476017
- 313709 string characters out of 5793767
- 2039660 words of memory out of 5000000
- 37715 multiletter control sequences out of 15000+600000
+ 19232 strings out of 476017
+ 313697 string characters out of 5793767
+ 2038660 words of memory out of 5000000
+ 37714 multiletter control sequences out of 15000+600000
  555738 words of font info for 81 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,22n,76p,2282b,1941s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/texlive/2023/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb><c:/texlive/2023/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/texlive/2023/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on template-skripsi.pdf (99 pages, 2689872 bytes).
+Output written on template-skripsi.pdf (99 pages, 2689922 bytes).
 PDF statistics:
- 2879 PDF objects out of 2984 (max. 8388607)
- 2646 compressed objects within 27 object streams
+ 2875 PDF objects out of 2984 (max. 8388607)
+ 2642 compressed objects within 27 object streams
  1590 named destinations out of 1728 (max. 500000)
- 723 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 715 words of extra memory for PDF output out of 10000 (max. 10000000)
 
