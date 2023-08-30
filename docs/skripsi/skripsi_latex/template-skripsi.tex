@@ -1,0 +1,238 @@
+%-------------------------------------------------------------------------------
+%                      Template Naskah Skripsi
+%               	Berdasarkan format JTETI FT UGM
+% 						(c) @gunturdputra 2014
+%-------------------------------------------------------------------------------
+
+%Template pembuatan naskah skripsi.
+\documentclass{jtetiskripsi}
+
+%Untuk prefiks pada daftar gambar dan tabel
+\usepackage[titles]{tocloft}
+\renewcommand\cftfigpresnum{Gambar\  }
+\renewcommand\cfttabpresnum{Tabel\   }
+
+%Untuk hyperlink dan table of content
+\usepackage[hidelinks]{hyperref}
+\newlength{\mylenf}
+\settowidth{\mylenf}{\cftfigpresnum}
+\setlength{\cftfignumwidth}{\dimexpr\mylenf+2em}
+\setlength{\cfttabnumwidth}{\dimexpr\mylenf+2em}
+
+%Untuk Bold Face pada Keterangan Gambar
+\usepackage[labelfont=bf]{caption}
+
+%Untuk caption dan subcaption
+\usepackage{caption}
+\usepackage{subcaption}
+
+%pdf
+\usepackage{pdfpages}
+
+%table
+\usepackage{graphics}
+
+\usepackage{wrapfig}
+
+%bibliography
+\usepackage{natbib}
+
+%equation
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+%algoritma
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%listing
+\usepackage{listings}
+
+%table
+\usepackage{array}
+
+%-----------------------------------------------------------------
+%Disini awal masukan untuk data proposal skripsi
+%-----------------------------------------------------------------
+\titleind{\emph{Automatic Tagging dengan Menggunakan Algoritma Bipartite Graph Partition dan Two Way Poisson Mixture Model}}
+
+\fullname{Muhammad Zhafran Bahij}
+
+\idnum{1313619012}
+
+%\approvaldate{12 Februari 2019}
+\approvaldate{.. ... 2023}
+
+\degree{Sarjana Ilmu Komputer}
+
+\yearsubmit{2023}
+
+\program{Ilmu Komputer}
+
+\dept{Ilmu Komputer}
+
+\firstsupervisor{Muhammad Eka Suryana, M. Kom.}
+\firstnip{198512232012121002}
+
+\secondsupervisor{Med Irzal, M. Kom.}
+\secondnip{198512232012121002}
+
+%-----------------------------------------------------------------
+%Disini akhir masukan untuk data proposal skripsi
+%-----------------------------------------------------------------
+
+\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\hbadness=10000
+
+\begin{document}
+
+\cover
+
+\include{pengesahan}
+\include{persetujuan}
+\include{orisinalitas}
+
+%-----------------------------------------------------------------
+%Disini awal masukan Acknowledment
+%-----------------------------------------------------------------
+% \acknowledgment
+% \begin{flushright}
+% 	\emph{Untuk Ayah dan Ibu.}
+% \end{flushright}
+%-----------------------------------------------------------------
+%Disini awal masukan untuk Prakata
+%-----------------------------------------------------------------
+\preface
+
+Ungkapan Puji dan Syukur penulis panjatkan kehadirat Tuhan Yang Maha Esa, atas segala rahmat dan karunia-Nya sehingga penulis dapat menyelesaikan skripsi ini dengan baik. Adapun jenis penelitian yang dengan judul \textit{Automatic Tagging dengan Menggunakan Algoritma Bipartite Graph Partition dan Two Way Poisson Mixture Model}
+
+Dalam menyelesaikan skripsi ini, penulis selalu mendapat dorongan dan bantuan. Oleh karena itu, penulis menyampaikan terima kasih kepada:
+
+\begin{enumerate}
+  \item Para petinggi di lingkungan FMIPA Universitas Negeri Jakarta.
+  \item Ibu Dr. Ria Arafiyah, M.Si. selaku Koordinator Program Studi Ilmu Komputer.
+  \item Bapak Muhammad Eka Suryana, M.Kom. selaku Dosen Pembimbing I yang telah membimbing, mengarahkan, serta memberikan saran dan koreksi terhadap skripsi ini.
+  \item Bapak Med Irzal M.Kom. selaku Dosen Pembimbing II yang telah membimbing, mengarahkan, serta memberikan saran dan koreksi terhadap skripsi ini.
+  \item Ayah dan Ibu penulis yang selama ini telah mendukung penulis dalam menyelesaikan skripsi ini dalam berbagai hal.
+  \item Sepupu penulis yang telah menginspirasi penulis untuk menjalani kehidupan di Program Studi Ilmu Komputer.
+  \item Teman-teman Ilmu Komputer 2019 yang telah menyemangati penulis dalam penulisan skripsi.
+  \item Rekan-rekan PT Fhadira Inovasi Teknologi yang telah mendukung penulis untuk menyelesaikan skripsi.
+  \item Teman-teman KANAU yang secara tidak langsung melatih penulis agar terbiasa melakukan penulisan.
+  \item Kawan-kawan penulis yang tidak bisa disebutkan satu persatu.
+\end{enumerate}
+
+Dalam penulisan skripsi ini, penulis menyadari bahwa dengan keterbatasan ilmu dan pengetahuan penulis, skripsi ini masih jauh dari sempurna, baik dari segi penulisan, penyajian materi, maupun bahasa. Oleh karena itu, penulis sangat membutuhkan kritik dan saran yang dapat dijadikan sebagai pembelajaran serta dapat membangun penulis agar lebih baik lagi kedepannya.
+
+Akhir kata, penulis berharap ini bermanfaat bagi semua pihak khususnya penulis sendiri, serta menjadi semangat dan motivasi bagi rekan-rekan yang akan melaksanakan skripsi berikutnya. Semoga Tuhan Yang Maha Esa senantiasa membalas kebaikan semua pihak yang telah membantu penulis dalam menyelesaikan proposal ini.
+
+%\vspace{.5cm}
+
+\begin{tabular}{p{8.5cm}r}
+	&Terima kasih,\\
+	&Jakarta, 10 Agustus 2023\\
+	&\\
+	&\\
+%	&\\
+	&Penulis
+\end{tabular}
+
+%-----------------------------------------------------------------
+%Disini awal masukan Intisari
+%-----------------------------------------------------------------
+\begin{abstractind}
+\textbf{MUHAMMAD ZHAFRAN BAHIJ}. \emph{Automatic Tagging} dengan Menggunakan Algoritma \emph{Bipartite Graph Partition} dan \emph{Two Way Poisson Mixture Model}. Skripsi. Fakultas Matematika dan Ilmu Pengetahuan Alam, Universitas Negeri Jakarta. 2023. Di bawah bimbingan Muhammad Eka Suryana, M. Kom. dan Med Irzal, M. Kom.
+\vskip1cm
+  % \textit{Automatic Tagging} merupakan hal yang dilakukan untuk menentukan
+  % suatu kata kunci atau frasa kunci yang relevan pada suatu artikel, dokumen, gambar,
+  % atau video secara otomatis. Untuk melakukan hal ini diperlukan algoritma
+  % \textit{Bipartite Graph Partition} dan \textit{Two Way Poisson Mixture Model}.
+  % Penelitian ini merupakan bagian dari
+
+  \textit{Automatic Tagging} merupakan hal yang dilakukan untuk menentukan
+  suatu kata kunci atau frasa kunci yang relevan pada suatu artikel, dokumen, gambar,
+  atau video secara otomatis. Penelitian ini merupakan salah satu payung penelitian dari
+  mesin pencari atau \textit{search engine Telusuri}. Agar bisa melakukan pencarian dengan lebih efisien, salah satu caranya adalah pencarian melalui \textit{tag}. 
+  Sebelum mencapai tahap pencarian melalui \textit{tag},
+  langkah awal yang diperlukan adalah membuat program \textit{Automatic Tagging}. Dalam penelitian ini, 
+  algoritma yang digunakan adalah \textit{Bipartite Graph Partition} dan \textit{Two Way Poisson Mixture Model} dengan
+  menggunakan data latih dari suatu \textit{website} \textit{thehill.com}. Proses pembentukkan algoritma tersebut
+  menggunakan bahasa pemrograman \textit{Python}. Hasil akhir dari penelitian ini adalah mampu memberikan enam 
+  \textit{tag} dengan ketepatan akurasi sebesar 37\% dengan menggunakan data 229 dokumen atau artikel dan 723 \textit{tag}. 
+  Hal ini terjadi karena program yang telah dibuat tidak bisa membagi \textit{Bipartite Graph Partition} sebanyak $K$ lebih dari dua.
+
+  
+	\bigskip
+	\noindent
+
+	\textbf{Kata kunci :} \textit{tagging}, \textit{database}, \textit{bipartite graph}, \textit{Poisson Mixture Model}
+\end{abstractind}
+
+\begin{abstracteng}
+
+\textbf {MUHAMMAD ZHAFRAN BAHIJ}. \emph{Automatic Tagging Using Bipartite Graph Partition and Two Way Poisson Mixture Model. Thesis. Faculty of Mathematics and Natural Sciences, State University of Jakarta. 2021. Supervised by} Muhammad Eka Suryana, M. Kom. \emph{and} Med Irzal, M. Kom. 
+\vskip1cm
+
+\textit{Automatic Tagging is finding relevant key words or key phrases in article, document, image, and video automatically.
+This research is under search engine Telusuri's research. Another way to increase efficiency of Telusuri is searching with tag.
+Before do searching with tag, the first step is create an Automatic Tagging. 
+Two algorithm to build this program are Bipartite Graph Partition and Two Way Poisson Mixture Model with data from thehill.com . This program created by Python language.
+The final result of this research is Automatic Tagging can give six tag with 37\% accuration with 229 document and 723 tag. The accuration is too low because
+the program cannot partition the Bipartite Grap Partition with K more than two.
+}
+
+\bigskip
+\noindent
+\textbf {Keywords:} \textit{tagging}, \textit{database}, \textit{bipartite graph}, \textit{Poisson Mixture Model}
+\end{abstracteng}
+%-----------------------------------------------------------------
+%Disini akhir masukan Intisari
+%-----------------------------------------------------------------
+%-----------------------------------------------------------------
+
+%-----------------------------------------------------------------
+%Disini akhir masukan untuk muka skripsi
+%-----------------------------------------------------------------
+
+\tableofcontents 
+\addcontentsline{toc}{chapter}{DAFTAR ISI}
+\listoffigures
+\addcontentsline{toc}{chapter}{DAFTAR GAMBAR}
+% \listoftables
+% \addcontentsline{toc}{chapter}{DAFTAR TABEL}
+
+\begin{counterpage}
+\end{counterpage}
+%Disini awal masukan untuk Bab
+%-----------------------------------------------------------------
+\include{bab1}
+\include{bab2}
+\include{bab3}
+\include{bab4}
+\include{bab5}
+
+%-----------------------------------------------------------------
+%Disini akhir masukan Bab
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+% Disini awal masukan untuk Daftar Pustaka
+% - Daftar pustaka diambil dari file .bib yang ada pada folder ini
+%   juga.
+% - Untuk memudahkan dalam memanajemen dan menggenerate file .bib
+%   gunakan reference manager seperti Mendeley, Zotero, EndNote,
+%   dll.
+%-----------------------------------------------------------------
+\bibliographystyle{apalike}
+\bibliography{daftar-pustaka}
+\addcontentsline{toc}{chapter}{DAFTAR PUSTAKA}
+%-----------------------------------------------------------------
+%Disini akhir masukan Daftar Pustaka
+%-----------------------------------------------------------------
+
+% Lampiran ditaruh setelah Daftar Pustaka
+\include{lampiran}
+
+\end{document}

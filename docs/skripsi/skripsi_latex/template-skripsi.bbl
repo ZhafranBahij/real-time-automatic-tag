@@ -1,0 +1,74 @@
+\begin{thebibliography}{}
+
+\bibitem[Brin \& Page, 1998]{brin1998anatomy}
+Brin, S. \& Page, L. (1998).
+\newblock The anatomy of a large-scale hypertextual web search engine.
+
+\bibitem[Christ, 2022]{reliablesoft2022}
+Christ, A. (2022).
+\newblock Top 10 search engines in the world (2022 update).
+
+\bibitem[Farooq et~al., 2007]{farooq_social_bookmarking}
+Farooq, U., Song, Y., Caroll, J.~M., \& Giles, C.~L. (2007).
+\newblock Social bookmarking for scholarly digital libraries.
+
+\bibitem[Golub \& Loan, 1996]{golub_matrix_computation_3_edition}
+Golub, G.~H. \& Loan, C. F.~V. (1996).
+\newblock {\em Matrix Computations Third Edition}.
+\newblock Matrix Computations. The John Hopkins University Press.
+
+\bibitem[Khatulistiwa, 2022]{khatulistiwa_2022_searchengine}
+Khatulistiwa, L. (2022).
+\newblock Perancangan arsitektur search engine dengan mengintegrasikan web crawler, algoritma page ranking, dan document ranking.
+
+\bibitem[Li \& Zha, 2004]{jia_2004_two_way_poisson_model}
+Li, J. \& Zha, H. (2004).
+\newblock Two-way poisson mixture models for simultaneous document classification and word clustering.
+
+\bibitem[Parra et~al., 2018]{parra2018videotag}
+Parra, E., Escobar-Avila, J., \& Haiduc, S. (2018).
+\newblock Automatic tag recommendation for software development video tutorials.
+
+\bibitem[Pratama, 2022]{pratama2022igst}
+Pratama, Z. (2022).
+\newblock Perancangan modul pengindeks pada search engine berupa induced generalized suffix tree untuk keperluan perangkingan dokumen.
+
+\bibitem[Reynolds, 2009]{reynolds_gaussian_mixture_model}
+Reynolds, D. (2009).
+\newblock Gaussian mixture model.
+
+\bibitem[Rzeszotarski, 1999]{rzeszotarski_physics_tutorial}
+Rzeszotarski, M. (1999).
+\newblock The aapm/rsna physics tutorial for residents1.
+\newblock {\em RadioGraphics}, 19:765--782.
+
+\bibitem[Seymour et~al., 2011]{seymour2011history}
+Seymour, T., Frantsvog, D., \& Kumar, S. (2011).
+\newblock History of search engines.
+\newblock {\em International Journal of Management \& Information Systems (IJMIS)}, 15(4):47--58.
+
+\bibitem[Shi et~al., 2016]{shi2016mashuptag}
+Shi, M., Liu, J., Tang, M., Xie, F., \& Zhang, T. (2016).
+\newblock A probabilistic topic model for mashup tag recommendation.
+
+\bibitem[Song et~al., 2011]{song2011autotag}
+Song, Y., Zhuang, L., \& Giles, L. (2011).
+\newblock Real-time automatic tag recommendation.
+
+\bibitem[Song et~al., 2008]{song2008autotag}
+Song, Y., Zhuang, Z., Li, H., Zhao, Q., Li, J., Lee, W.-C., \& Giles, L. (2008).
+\newblock Real-time automatic tag recommendation.
+
+\bibitem[Sood, 2007]{sood2007tagassist}
+Sood, S. (2007).
+\newblock Tagassist: Automatic tag suggestion for blog posts.
+
+\bibitem[Won et~al., 2020]{won2020musictag}
+Won, M., Ferraro, A., Bogdanov, D., \& Serra, X. (2020).
+\newblock Evaluation of cnn-based automatic music tagging models.
+
+\bibitem[Zha et~al., 2001]{zha2001bgp}
+Zha, H., He, X., Ding, C., Simon, H., \& Gu, M. (2001).
+\newblock Bipartite graph partitioning and data clustering.
+
+\end{thebibliography}
