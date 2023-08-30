@@ -1,7 +1,6 @@
 This is BibTeX, Version 0.99d (TeX Live 2023)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: template-skripsi.aux
-A level-1 auxiliary file: pengesahan.aux
 A level-1 auxiliary file: persetujuan.aux
 A level-1 auxiliary file: orisinalitas.aux
 A level-1 auxiliary file: bab1.aux
@@ -29,7 +28,7 @@ Warning--empty journal in won2020musictag
 Warning--empty journal in zha2001bgp
 You've used 17 entries,
             1935 wiz_defined-function locations,
-            551 strings with 6012 characters,
+            550 strings with 5998 characters,
 and the built_in function-call counts, 5638 in all, are:
 = -- 508
 > -- 275

@@ -1,8 +1,8 @@
-PWD c:/Fran/Semester 8/Research/real-time-automatic-tag/docs/skripsi
+PWD c:/Fran/Semester 8/Research/real-time-automatic-tag/docs/skripsi/skripsi_latex
 INPUT c:/texlive/2023/texmf.cnf
 INPUT c:/texlive/2023/texmf-dist/web2c/texmf.cnf
 INPUT c:/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt
-INPUT c:/Fran/Semester 8/Research/real-time-automatic-tag/docs/skripsi/template-skripsi.tex
+INPUT c:/Fran/Semester 8/Research/real-time-automatic-tag/docs/skripsi/skripsi_latex/template-skripsi.tex
 OUTPUT template-skripsi.log
 INPUT ./jtetiskripsi.cls
 INPUT ./jtetiskripsi.cls
@@ -864,9 +864,6 @@ INPUT c:/texlive/2023/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT ./template-skripsi.aux
 INPUT template-skripsi.aux
 INPUT template-skripsi.aux
-INPUT ./pengesahan.aux
-INPUT pengesahan.aux
-INPUT pengesahan.aux
 INPUT ./persetujuan.aux
 INPUT persetujuan.aux
 INPUT persetujuan.aux
@@ -966,25 +963,26 @@ INPUT ./gambar/Logo-unj.png
 INPUT gambar/Logo-unj.png
 INPUT ./gambar/Logo-unj.png
 INPUT ./gambar/Logo-unj.png
-INPUT ./pengesahan.tex
-INPUT ./pengesahan.tex
-INPUT ./pengesahan.tex
+INPUT ./persetujuan.tex
+INPUT ./persetujuan.tex
+INPUT ./persetujuan.tex
 INPUT c:/texlive/2023/texmf-dist/fonts/vf/adobe/times/ptmbi8t.vf
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmbi8r.tfm
 INPUT c:/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map
 INPUT c:/texlive/2023/texmf-dist/fonts/enc/dvips/base/8r.enc
 INPUT c:/texlive/2023/texmf-dist/fonts/vf/adobe/times/ptmb8t.vf
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmb8r.tfm
-OUTPUT pengesahan.aux
-INPUT ./pengesahan.tex
-INPUT ./pengesahan.tex
-INPUT ./pengesahan.tex
-INPUT pengesahan.tex
-INPUT ./pengesahan.tex
-INPUT pengesahan.tex
+OUTPUT persetujuan.aux
+INPUT ./persetujuan.tex
+INPUT ./persetujuan.tex
+INPUT ./persetujuan.tex
+INPUT persetujuan.tex
+INPUT ./persetujuan.tex
+INPUT persetujuan.tex
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmr8t.tfm
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmb8t.tfm
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmb8t.tfm
+INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmbi8t.tfm
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmr8.tfm
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmr6.tfm
@@ -1020,23 +1018,12 @@ INPUT c:/texlive/2023/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm7.tfm
 INPUT c:/texlive/2023/texmf-dist/fonts/vf/adobe/times/ptmb8t.vf
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmb8r.tfm
-INPUT c:/texlive/2023/texmf-dist/fonts/vf/adobe/times/ptmr8t.vf
-INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmr8r.tfm
-INPUT c:/texlive/2023/texmf-dist/fonts/vf/adobe/times/ptmb8t.vf
-INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmb8r.tfm
-INPUT ./persetujuan.tex
-INPUT ./persetujuan.tex
-INPUT ./persetujuan.tex
-OUTPUT persetujuan.aux
-INPUT ./persetujuan.tex
-INPUT ./persetujuan.tex
-INPUT ./persetujuan.tex
-INPUT persetujuan.tex
-INPUT ./persetujuan.tex
-INPUT persetujuan.tex
-INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmbi8t.tfm
 INPUT c:/texlive/2023/texmf-dist/fonts/vf/adobe/times/ptmbi8t.vf
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmbi8r.tfm
+INPUT c:/texlive/2023/texmf-dist/fonts/vf/adobe/times/ptmb8t.vf
+INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmb8r.tfm
+INPUT c:/texlive/2023/texmf-dist/fonts/vf/adobe/times/ptmr8t.vf
+INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmr8r.tfm
 INPUT ./orisinalitas.tex
 INPUT ./orisinalitas.tex
 INPUT ./orisinalitas.tex
@@ -1305,9 +1292,6 @@ INPUT c:/texlive/2023/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmr8c.tfm
 INPUT c:/texlive/2023/texmf-dist/fonts/vf/adobe/times/ptmr8c.vf
 INPUT template-skripsi.aux
-INPUT ./pengesahan.aux
-INPUT pengesahan.aux
-INPUT pengesahan.aux
 INPUT ./persetujuan.aux
 INPUT persetujuan.aux
 INPUT persetujuan.aux
